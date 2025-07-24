@@ -175,6 +175,18 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   return (
     <>
       <LoadingOverlay isVisible={isLoading} />
+
+      {/* Ad Preview Section */}
+      <AdPreview
+        initialImage="/lovable-uploads/20b5647d-061e-4695-80b4-a0c7c6e23d08.png"
+        initialHeadline="Beautiful Home in Prime Location"
+        initialAdCopy="Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!"
+        onAdUpdate={(data) => {
+          console.log("Ad updated:", data);
+          // Here you can handle the ad update, save to state, API, etc.
+        }}
+      />
+
       <section className="w-full flex flex-col items-center">
         <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px]" />
 
