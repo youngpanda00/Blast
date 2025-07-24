@@ -48,7 +48,18 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const handleEdit = () => {
     setTempHeadline(headline);
     setTempAdCopy(adCopy);
+    setSelectedTemplate("custom");
     setIsEditing(true);
+  };
+
+  const handleTemplateSelect = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    if (templateId !== "custom") {
+      const template = adCopyTemplates.find(t => t.id === templateId);
+      if (template) {
+        setTempAdCopy(template.copy);
+      }
+    }
   };
 
   const handleSave = () => {
