@@ -32,19 +32,19 @@ export const Hero: React.FC = () => {
                 <p className="mb-6 text-[20px] font-medium">
                   Blast By Lofty: AI-Powered Lead Generation On Autopilot!
                 </p>
-                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-center">
+                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-start">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
                   1-Click Launch – No setup, no hassle.
                 </div>
-                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-center">
+                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-start">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
                   Floods Your Pipeline – AI optimizes advertising to attract buyers 24/7.
                 </div>
-                <div className="text-[15px] flex items-center max-md:justify-center">
+                <div className="text-[15px] flex items-center max-md:justify-start">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
