@@ -25,6 +25,7 @@ export const Hero: React.FC = () => {
             />
           </div>
 
+          {/* Text content with horizontal layout */}
           <div className="flex w-full max-w-[1210px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
             {/* Left Column - Main Headline */}
             <div className="flex-1 max-md:text-center max-md:mb-8">
