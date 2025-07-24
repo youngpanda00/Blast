@@ -60,8 +60,9 @@ export const Hero: React.FC = () => {
 
             {/* Trusted by section with 100px spacing */}
             <div style={{ marginTop: "100px" }} className="max-md:mt-16">
-              <div className="flex items-center justify-center overflow-hidden">
-                <div className="flex flex-wrap justify-center items-center gap-6 max-w-full">
+              <div className="flex flex-col items-center justify-center overflow-hidden gap-6">
+                {/* First row - 6 logos */}
+                <div className="flex justify-center items-center gap-6 max-md:gap-4 max-md:flex-wrap">
                   <img
                     src="/lovable-uploads/ac09241f-cdd8-44fd-9a0e-a6c6ee1d7c08.png"
                     className="object-contain opacity-70"
@@ -98,29 +99,33 @@ export const Hero: React.FC = () => {
                     style={{ width: "120px", height: "48px" }}
                     alt="Partner Logo 6"
                   />
+                </div>
+
+                {/* Second row - 6 logos */}
+                <div className="flex justify-center items-center gap-6 max-md:gap-4 max-md:flex-wrap">
                   <img
                     src="/lovable-uploads/557e5e14-fda5-46db-9158-60830cc48982.png"
-                    className="object-contain opacity-70"
-                    style={{ width: "120px", height: "48px" }}
-                    alt="Partner Logo 8"
-                  />
-                  <img
-                    src="/lovable-uploads/893a4e60-aaac-48df-8bcc-6aea700af8ea.png"
-                    className="object-contain opacity-70"
-                    style={{ width: "120px", height: "48px" }}
-                    alt="Partner Logo 10"
-                  />
-                  <img
-                    src="/lovable-uploads/4d4455ae-6bb3-43d8-96bd-7197ea336a42.png"
                     className="object-contain opacity-70"
                     style={{ width: "120px", height: "48px" }}
                     alt="Partner Logo 7"
                   />
                   <img
-                    src="/lovable-uploads/53c8450d-1671-4a74-90b9-3bf7c6316bf6.png"
+                    src="/lovable-uploads/893a4e60-aaac-48df-8bcc-6aea700af8ea.png"
+                    className="object-contain opacity-70"
+                    style={{ width: "120px", height: "48px" }}
+                    alt="Partner Logo 8"
+                  />
+                  <img
+                    src="/lovable-uploads/4d4455ae-6bb3-43d8-96bd-7197ea336a42.png"
                     className="object-contain opacity-70"
                     style={{ width: "120px", height: "48px" }}
                     alt="Partner Logo 9"
+                  />
+                  <img
+                    src="/lovable-uploads/53c8450d-1671-4a74-90b9-3bf7c6316bf6.png"
+                    className="object-contain opacity-70"
+                    style={{ width: "120px", height: "48px" }}
+                    alt="Partner Logo 10"
                   />
                   <img
                     src="/lovable-uploads/628f2910-f954-4b25-ba86-edb7a9173144.png"
