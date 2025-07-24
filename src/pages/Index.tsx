@@ -986,7 +986,7 @@ const Index = () => {
                   </button>
                 )}
                 {/* Device Toggle Icons */}
-                <div className="flex items-center gap-2 mb-4 mt-2 z-20">
+                <div className="flex items-center gap-2 mb-8 mt-4 z-20">
                   <button
                     onClick={() => setViewMode("desktop")}
                     className={`p-2 rounded-lg transition-colors ${
