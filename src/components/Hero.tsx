@@ -58,8 +58,8 @@ export const Hero: React.FC = () => {
               </div>
             </div>
 
-            {/* Trusted by section with 60px spacing */}
-            <div style={{ marginTop: "60px" }} className="max-md:mt-8">
+            {/* Trusted by section with 120px spacing */}
+            <div style={{ marginTop: "120px" }} className="max-md:mt-16">
               <div className="flex items-center justify-center overflow-hidden">
                 <div className="flex flex-wrap justify-center items-center gap-6 max-w-full">
                   <img
