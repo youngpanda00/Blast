@@ -2,7 +2,7 @@ import React from "react";
 
 export const PartnerLogos: React.FC = () => {
   return (
-    <section className="bg-[rgba(0,28,188,1)] py-8">
+    <section className="py-8">
       <div className="flex flex-col items-center justify-center overflow-hidden gap-6 max-w-[1210px] mx-auto px-[22px]">
         {/* First row - 6 logos */}
         <div className="flex justify-center items-center gap-6 max-md:gap-4 max-md:flex-wrap">
