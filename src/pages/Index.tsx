@@ -964,6 +964,7 @@ const Index = () => {
     <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC]">
       <PurchaseNotification listingCity={listingCity} />
       <Hero />
+      <PartnerLogos />
 
       <main className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0">
         <div className="w-full max-w-[1140px] max-md:max-w-full">
