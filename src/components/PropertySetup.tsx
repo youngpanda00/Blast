@@ -339,14 +339,14 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
             </Card>
           </div>
 
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <div className="p-4 rounded-lg border" style={{ backgroundColor: "#3b5cdf", borderColor: "#3b5cdf" }}>
             <Label
               className="text-base font-normal mb-3 block"
               style={{
                 fontSize: "16px",
                 fontWeight: "400",
                 lineHeight: "30px",
-                color: "#1135c5",
+                color: "#ffffff",
               }}
             >
               <strong>Not your listing?</strong>
@@ -369,67 +369,16 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
             </form>
           </div>
 
-          <Separator className="my-4" />
-
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              Edit Your Ads
-            </h3>
-
-            <div>
-              <Label
-                className="text-base font-normal text-gray-900 block mb-[10px]"
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "400",
-                  lineHeight: "30px",
-                }}
-              >
-                Your Ad Main Text
-              </Label>
-              <Input
-                placeholder="Edit this main text to attract leads efficiently"
-                className="h-12 text-base border focus:border-blue-500 transition-colors"
-                style={{ borderWidth: "1px" }}
-              />
-            </div>
-
-            <div>
-              <Label
-                className="text-base font-normal text-gray-900 block mb-[10px]"
-                style={{
-                  fontSize: "16px",
-                  fontWeight: "400",
-                  lineHeight: "30px",
-                }}
-              >
-                Feature Image
-              </Label>
-              <Card
-                className="shadow-sm transition-none border-0"
-              >
-                <CardContent className="p-0">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer">
-                    <div className="flex flex-col items-center">
-                      <svg
-                        className="w-8 h-8 text-gray-400 mb-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      <p className="text-gray-500 text-sm font-medium">Upload Image</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+            <div className="mt-4">
+              <div>
+                <Card
+                  className="shadow-sm transition-none border-0"
+                >
+                  <CardContent className="p-0">
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </div>
