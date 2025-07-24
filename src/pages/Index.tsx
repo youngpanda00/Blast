@@ -963,8 +963,23 @@ const Index = () => {
   return (
     <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC]">
       <PurchaseNotification listingCity={listingCity} />
-      <Hero />
-      <PartnerLogos />
+
+      {/* Unified banner section with background covering Hero and PartnerLogos */}
+      <div className="relative bg-[rgba(0,28,188,1)] w-full">
+        {/* Background image overlay */}
+        <div
+          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-20"
+          style={{
+            backgroundImage: `url('/lovable-uploads/bed1e00c-5b9a-4161-ab64-92c708d251cf.png')`,
+          }}
+        />
+
+        {/* Content wrapper with relative positioning */}
+        <div className="relative z-10">
+          <Hero />
+          <PartnerLogos />
+        </div>
+      </div>
 
       <main className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0">
         <div className="w-full max-w-[1140px] max-md:max-w-full">
