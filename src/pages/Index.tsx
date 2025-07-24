@@ -1086,7 +1086,7 @@ const Index = () => {
                     />
                   )}
 
-                  <div className="flex items-center gap-2 text-sm text-[rgba(81,86,102,1)] font-normal uppercase leading-none mt-4">
+                  <div className="flex items-center gap-2 text-sm text-[rgba(81,86,102,1)] font-normal uppercase leading-none mt-8">
                     <img
                       src={currentSet.platformIcon}
                       className="aspect-[1] object-contain w-4 shrink-0"
