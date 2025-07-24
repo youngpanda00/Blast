@@ -13,6 +13,24 @@ interface AdPreviewProps {
   onAdUpdate?: (data: { image: string; headline: string; adCopy: string }) => void;
 }
 
+const adCopyTemplates = [
+  {
+    id: "luxury",
+    name: "Luxury Focus",
+    copy: "Experience luxury living at its finest! This exquisite property offers premium amenities, stunning architecture, and an unbeatable location. Schedule your exclusive viewing today!"
+  },
+  {
+    id: "family",
+    name: "Family-Friendly",
+    copy: "Your perfect family home awaits! Spacious rooms, safe neighborhood, great schools nearby. Everything your family needs for comfortable living. Don't miss this opportunity!"
+  },
+  {
+    id: "investment",
+    name: "Investment Opportunity",
+    copy: "Smart investors, take notice! Prime location, strong rental potential, and excellent growth prospects. This property won't last long. Contact us for detailed investment analysis!"
+  }
+];
+
 export const AdPreview: React.FC<AdPreviewProps> = ({
   initialImage = "/lovable-uploads/20b5647d-061e-4695-80b4-a0c7c6e23d08.png",
   initialHeadline = "Beautiful Home in Prime Location",
@@ -25,6 +43,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [image, setImage] = useState(initialImage);
   const [tempHeadline, setTempHeadline] = useState(headline);
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
 
   const handleEdit = () => {
     setTempHeadline(headline);
