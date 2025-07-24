@@ -193,21 +193,64 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 <div>
-                  <Label htmlFor="adCopy" className="text-sm font-medium text-gray-700">
-                    Ad Copy
+                  <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                    Ad Copy Templates
                   </Label>
-                  <Textarea
-                    id="adCopy"
-                    value={tempAdCopy}
-                    onChange={(e) => setTempAdCopy(e.target.value)}
-                    placeholder="Write your ad copy here..."
-                    className="mt-1"
-                    rows={4}
-                    maxLength={200}
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    {tempAdCopy.length}/200 characters
-                  </p>
+
+                  {/* Template Selection */}
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {adCopyTemplates.map((template) => (
+                      <button
+                        key={template.id}
+                        onClick={() => handleTemplateSelect(template.id)}
+                        className={`p-3 text-left text-sm rounded-lg border transition-all ${
+                          selectedTemplate === template.id
+                            ? "border-blue-500 bg-blue-50 text-blue-700"
+                            : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="font-medium">{template.name}</div>
+                        <div className="text-xs mt-1 line-clamp-2 opacity-70">
+                          {template.copy.substring(0, 60)}...
+                        </div>
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => handleTemplateSelect("custom")}
+                      className={`p-3 text-left text-sm rounded-lg border transition-all ${
+                        selectedTemplate === "custom"
+                          ? "border-blue-500 bg-blue-50 text-blue-700"
+                          : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="font-medium">Custom</div>
+                      <div className="text-xs mt-1 opacity-70">
+                        Write your own copy
+                      </div>
+                    </button>
+                  </div>
+
+                  {/* Ad Copy Textarea */}
+                  <div>
+                    <Label htmlFor="adCopy" className="text-sm font-medium text-gray-700">
+                      {selectedTemplate === "custom" ? "Custom Ad Copy" : "Ad Copy (Editable)"}
+                    </Label>
+                    <Textarea
+                      id="adCopy"
+                      value={tempAdCopy}
+                      onChange={(e) => {
+                        setTempAdCopy(e.target.value);
+                        setSelectedTemplate("custom");
+                      }}
+                      placeholder="Write your ad copy here..."
+                      className="mt-1"
+                      rows={4}
+                      maxLength={200}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {tempAdCopy.length}/200 characters
+                    </p>
+                  </div>
                 </div>
 
                 <div>
