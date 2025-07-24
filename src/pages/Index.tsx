@@ -8,6 +8,7 @@ import {
   X,
 } from "lucide-react";
 import { Hero } from "@/components/Hero";
+import { PartnerLogos } from "@/components/PartnerLogos";
 import { PropertySetup } from "@/components/PropertySetup";
 import { PackageSelection } from "@/components/PackageSelection";
 import { ClientTestimonials } from "@/components/ClientTestimonials";
