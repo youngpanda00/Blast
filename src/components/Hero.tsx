@@ -4,18 +4,8 @@ import { Separator } from "@/components/ui/separator";
 export const Hero: React.FC = () => {
   return (
     <>
-      <header className="relative bg-[rgba(0,28,188,1)] flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px]">
-        {/* Background image overlay */}
-        <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-20"
-          style={{
-            backgroundImage: `url('/lovable-uploads/bed1e00c-5b9a-4161-ab64-92c708d251cf.png')`,
-          }}
-        />
-
-        {/* Content wrapper with relative positioning */}
-
-        <div className="relative z-10 w-full h-full flex flex-col">
+      <header className="flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px]">
+        <div className="w-full h-full flex flex-col">
           {/* Logo positioned at top left */}
           <div className="mb-[27px]">
             <img
