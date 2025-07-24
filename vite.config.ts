@@ -19,6 +19,12 @@ export default defineConfig(({ mode }) => ({
         secure: false,
         cookieDomainRewrite: "",
       },
+      "/api-blast": {
+        target: TARGETURL,
+        changeOrigin: true,
+        secure: false,
+        cookieDomainRewrite: "",
+      },
       "/site-api": {
         target: TARGETURL,
         changeOrigin: true,
