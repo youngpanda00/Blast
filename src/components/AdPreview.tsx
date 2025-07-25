@@ -207,28 +207,28 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       <button
                         key={template.id}
                         onClick={() => handleTemplateSelect(template.id)}
-                        className={`p-4 text-left text-sm rounded-lg border-2 transition-all duration-200 ${
+                        className={`p-4 text-left text-sm rounded-lg border-2 transition-all duration-200 h-20 flex flex-col ${
                           selectedTemplate === template.id
                             ? "border-primary bg-primary/5 text-primary shadow-sm"
                             : "border-border bg-card text-card-foreground hover:border-primary/30 hover:bg-accent/50"
                         }`}
                       >
-                        <div className="font-semibold mb-1">{template.name}</div>
-                        <div className="text-xs opacity-70 line-clamp-2">
-                          {template.copy.substring(0, 60)}...
+                        <div className="font-semibold mb-1 line-clamp-1">{template.name}</div>
+                        <div className="text-xs opacity-70 line-clamp-2 flex-1 overflow-hidden">
+                          {template.copy}
                         </div>
                       </button>
                     ))}
                     <button
                       onClick={() => handleTemplateSelect("custom")}
-                      className={`p-4 text-left text-sm rounded-lg border-2 transition-all duration-200 ${
+                      className={`p-4 text-left text-sm rounded-lg border-2 transition-all duration-200 h-20 flex flex-col ${
                         selectedTemplate === "custom"
                           ? "border-primary bg-primary/5 text-primary shadow-sm"
                           : "border-border bg-card text-card-foreground hover:border-primary/30 hover:bg-accent/50"
                       }`}
                     >
-                      <div className="font-semibold mb-1">Custom</div>
-                      <div className="text-xs opacity-70">
+                      <div className="font-semibold mb-1 line-clamp-1">Custom</div>
+                      <div className="text-xs opacity-70 line-clamp-2 flex-1 overflow-hidden">
                         Write your own copy
                       </div>
                     </button>
