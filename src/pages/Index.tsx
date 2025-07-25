@@ -386,11 +386,11 @@ const Index = () => {
         {/* Header */}
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full border border-gray-200 bg-gray-100 flex items-center justify-center overflow-hidden">
+            <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center overflow-hidden">
               <img
-                src="https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png"
-                alt="Profile"
-                className="w-full h-full object-cover"
+                src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
+                alt="Lofty Logo"
+                className="w-full h-full object-contain"
               />
             </div>
             <div className="flex flex-col">
