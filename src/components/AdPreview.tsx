@@ -44,6 +44,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [tempHeadline, setTempHeadline] = useState(headline);
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
+  const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
 
   const handleEdit = () => {
     setTempHeadline(headline);
