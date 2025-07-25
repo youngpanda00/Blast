@@ -90,6 +90,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   const [currentPackage, setCurrentPackage] = useState("");
   const [currentPrice, setCurrentPrice] = useState("");
   const [currentAvatar, setCurrentAvatar] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   const packages = [
     { name: "Starter Pack", price: "$79", probability: 0.6 },
