@@ -273,8 +273,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
                   {/* Ad Copy Textarea */}
                   <div className="space-y-3">
-                    <Label htmlFor="adCopy" className="text-sm font-semibold text-foreground">
+                    <Label htmlFor="adCopy" className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <span className="w-3 h-3 bg-blue-400 rounded-full"></span>
                       {selectedTemplate === "custom" ? "Custom Ad Copy" : "Ad Copy (Editable)"}
+                      <span className="text-xs text-muted-foreground font-normal">(main post content)</span>
                     </Label>
                     <Textarea
                       id="adCopy"
@@ -283,8 +285,16 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         setTempAdCopy(e.target.value);
                         setSelectedTemplate("custom");
                       }}
+                      onMouseEnter={() => setHighlightedArea('adCopy')}
+                      onMouseLeave={() => setHighlightedArea(null)}
+                      onFocus={() => setHighlightedArea('adCopy')}
+                      onBlur={() => setHighlightedArea(null)}
                       placeholder="Write your ad copy here..."
-                      className="border-border bg-background min-h-[100px]"
+                      className={`border-border bg-background min-h-[100px] transition-all duration-300 ${
+                        highlightedArea === 'adCopy'
+                          ? 'border-blue-400 shadow-md ring-2 ring-blue-200'
+                          : ''
+                      }`}
                       rows={4}
                       maxLength={200}
                     />
