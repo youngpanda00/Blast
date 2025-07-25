@@ -763,11 +763,11 @@ const Index = () => {
                 {/* Profile section */}
                 <div className="absolute top-[11px] left-0 flex items-center gap-2">
                   {/* Avatar */}
-                  <div className="w-5 h-5 rounded-full bg-white overflow-hidden">
+                  <div className="w-5 h-5 rounded-full bg-white overflow-hidden flex items-center justify-center">
                     <img
-                      src="https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png"
-                      alt=""
-                      className="w-full h-full object-cover"
+                      src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
+                      alt="Lofty Logo"
+                      className="w-full h-full object-contain"
                     />
                   </div>
 
