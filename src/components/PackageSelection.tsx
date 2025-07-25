@@ -21,7 +21,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   onOpenCongratulationsModal,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
-    "one-time",
+    "monthly",
   );
   const [selectedPackage, setSelectedPackage] = useState<
     "starter" | "boost" | "growth" | "mastery"
