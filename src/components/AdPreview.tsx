@@ -85,10 +85,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   };
 
   return (
-    <section className="w-full flex flex-col items-center">
-      <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px]" />
-      
-      <div className="w-full max-w-[1140px] mt-10 max-md:px-6">
+    <section className="w-full flex flex-col items-center bg-background">
+      <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-border mt-[29px]" />
+
+      <div className="w-full max-w-[1140px] mt-12 max-md:px-6 px-4">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-bold text-foreground">
             Preview Your Ad
