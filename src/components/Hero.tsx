@@ -1,21 +1,10 @@
 import React, { useState } from "react";
-import { Separator } from "@/components/ui/separator";
 
 export const Hero: React.FC = () => {
   return (
     <>
-      <header className="relative bg-[rgba(0,28,188,1)] flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px]">
-        {/* Background image overlay */}
-        <div
-          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-20"
-          style={{
-            backgroundImage: `url('/lovable-uploads/bed1e00c-5b9a-4161-ab64-92c708d251cf.png')`,
-          }}
-        />
-
-        {/* Content wrapper with relative positioning */}
-
-        <div className="relative z-10 w-full h-full flex flex-col">
+      <header className="flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px] bg-[rgba(0,28,188,1)]">
+        <div className="w-full h-full flex flex-col">
           {/* Logo positioned at top left */}
           <div className="mb-[27px]">
             <img
@@ -25,31 +14,36 @@ export const Hero: React.FC = () => {
             />
           </div>
 
-          <div className="flex w-full max-w-[1210px] flex-col text-center mx-auto max-md:max-w-full flex-1 justify-center">
-            <h1 className="text-[50px] font-medium text-[#FFB700] tracking-[-1.5px] max-md:text-[40px]">
-              AI-Powered Blast: 1-Click Listing to Leads—Zero Work, Instant
-              Results!
-            </h1>
+          {/* Text content with horizontal layout */}
+          <div className="flex w-full max-w-[1210px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
+            {/* Left Column - Main Headline */}
+            <div className="flex-1 max-md:text-center max-md:mb-8">
+              <h1 className="text-[50px] font-medium text-[#FFB700] tracking-[-1.5px] max-md:text-[40px] leading-tight">
+                AI-Powered Blast:<br />
+                1 - Click Listing To Leads,<br />
+                Zero Work, Instant Results!
+              </h1>
+            </div>
 
-            <div className="w-[900px] mx-auto mt-4 max-md:w-full">
-              <div className="text-[18px] font-normal text-[#D8DEF8] text-left max-w-fit mx-auto">
-                <p className="mb-4">
-                  Blast by Lofty: AI-Powered Lead Generation on Autopilot!
+            {/* Right Column - Description and Features */}
+            <div className="flex-1 max-md:text-center">
+              <div className="text-[18px] font-normal text-[#D8DEF8] max-md:max-w-fit max-md:mx-auto">
+                <p className="mb-6 text-[20px] font-medium">
+                  Blast By Lofty: AI-Powered Lead Generation On Autopilot!
                 </p>
-                <div className="text-[15px] mb-[10px] flex items-center">
+                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-start">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
                   1-Click Launch – No setup, no hassle.
                 </div>
-                <div className="text-[15px] mb-[10px] flex items-center">
+                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-start">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
-                  Floods Your Pipeline – AI optimizes advertising to attract
-                  buyers 24/7.
+                  Floods Your Pipeline – AI optimizes advertising to attract buyers 24/7.
                 </div>
-                <div className="text-[15px] flex items-center">
+                <div className="text-[15px] flex items-center max-md:justify-start">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
