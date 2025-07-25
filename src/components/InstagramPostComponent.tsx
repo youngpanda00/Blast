@@ -32,11 +32,11 @@ export const InstagramPostComponent: React.FC<InstagramPostComponentProps> = ({
           <div className="flex items-center justify-between p-2 border-b border-gray-100">
             <div className="flex items-center gap-2">
               {/* Profile Avatar */}
-              <div className="w-5 h-5 rounded-full overflow-hidden">
+              <div className="w-5 h-5 rounded-full overflow-hidden bg-white flex items-center justify-center">
                 <img
-                  src="https://cdn.lofty.com/image/fs/servicetool/2025717/7/original_ec07ec59d797461a.png"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
+                  src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
+                  alt="Lofty Logo"
+                  className="w-full h-full object-contain"
                 />
               </div>
               {/* Username */}
