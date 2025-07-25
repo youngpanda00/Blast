@@ -172,15 +172,15 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
           </div>
 
           {/* Editing Panel */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-foreground mb-6">
               Edit Your Ad Content
             </h3>
-            
+
             {isEditing ? (
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="headline" className="text-sm font-medium text-gray-700">
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <Label htmlFor="headline" className="text-sm font-semibold text-foreground">
                     Headline
                   </Label>
                   <Input
@@ -188,55 +188,55 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     value={tempHeadline}
                     onChange={(e) => setTempHeadline(e.target.value)}
                     placeholder="Enter your ad headline"
-                    className="mt-1"
+                    className="border-border bg-background"
                     maxLength={60}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted-foreground">
                     {tempHeadline.length}/60 characters
                   </p>
                 </div>
 
-                <div>
-                  <Label className="text-sm font-medium text-gray-700 mb-3 block">
+                <div className="space-y-4">
+                  <Label className="text-sm font-semibold text-foreground block">
                     Ad Copy Templates
                   </Label>
 
                   {/* Template Selection */}
-                  <div className="grid grid-cols-2 gap-2 mb-4">
+                  <div className="grid grid-cols-2 gap-3">
                     {adCopyTemplates.map((template) => (
                       <button
                         key={template.id}
                         onClick={() => handleTemplateSelect(template.id)}
-                        className={`p-3 text-left text-sm rounded-lg border transition-all ${
+                        className={`p-4 text-left text-sm rounded-lg border-2 transition-all duration-200 ${
                           selectedTemplate === template.id
-                            ? "border-blue-500 bg-blue-50 text-blue-700"
-                            : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                            ? "border-primary bg-primary/5 text-primary shadow-sm"
+                            : "border-border bg-card text-card-foreground hover:border-primary/30 hover:bg-accent/50"
                         }`}
                       >
-                        <div className="font-medium">{template.name}</div>
-                        <div className="text-xs mt-1 line-clamp-2 opacity-70">
+                        <div className="font-semibold mb-1">{template.name}</div>
+                        <div className="text-xs opacity-70 line-clamp-2">
                           {template.copy.substring(0, 60)}...
                         </div>
                       </button>
                     ))}
                     <button
                       onClick={() => handleTemplateSelect("custom")}
-                      className={`p-3 text-left text-sm rounded-lg border transition-all ${
+                      className={`p-4 text-left text-sm rounded-lg border-2 transition-all duration-200 ${
                         selectedTemplate === "custom"
-                          ? "border-blue-500 bg-blue-50 text-blue-700"
-                          : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                          ? "border-primary bg-primary/5 text-primary shadow-sm"
+                          : "border-border bg-card text-card-foreground hover:border-primary/30 hover:bg-accent/50"
                       }`}
                     >
-                      <div className="font-medium">Custom</div>
-                      <div className="text-xs mt-1 opacity-70">
+                      <div className="font-semibold mb-1">Custom</div>
+                      <div className="text-xs opacity-70">
                         Write your own copy
                       </div>
                     </button>
                   </div>
 
                   {/* Ad Copy Textarea */}
-                  <div>
-                    <Label htmlFor="adCopy" className="text-sm font-medium text-gray-700">
+                  <div className="space-y-3">
+                    <Label htmlFor="adCopy" className="text-sm font-semibold text-foreground">
                       {selectedTemplate === "custom" ? "Custom Ad Copy" : "Ad Copy (Editable)"}
                     </Label>
                     <Textarea
@@ -247,65 +247,67 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         setSelectedTemplate("custom");
                       }}
                       placeholder="Write your ad copy here..."
-                      className="mt-1"
+                      className="border-border bg-background min-h-[100px]"
                       rows={4}
                       maxLength={200}
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-muted-foreground">
                       {tempAdCopy.length}/200 characters
                     </p>
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="image" className="text-sm font-medium text-gray-700">
+                <div className="space-y-3">
+                  <Label htmlFor="image" className="text-sm font-semibold text-foreground">
                     Ad Image
                   </Label>
-                  <div className="mt-1 flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <img
                       src={image}
                       alt="Current ad image"
-                      className="w-16 h-16 object-cover rounded border"
+                      className="w-20 h-20 object-cover rounded-lg border-2 border-border shadow-sm"
                     />
-                    <div>
+                    <div className="flex-1 space-y-2">
                       <Input
                         id="image"
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
-                        className="text-sm"
+                        className="text-sm border-border bg-background"
                       />
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-muted-foreground">
                         Recommended: 1200x630px
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-3 pt-4">
-                  <Button onClick={handleSave} className="flex-1">
+                <div className="flex gap-3 pt-6 border-t border-border">
+                  <Button onClick={handleSave} className="flex-1 bg-primary hover:bg-primary/90">
                     Save Changes
                   </Button>
-                  <Button onClick={handleCancel} variant="outline" className="flex-1">
+                  <Button onClick={handleCancel} variant="outline" className="flex-1 border-border">
                     Cancel
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4 text-sm">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-700 mb-2">Current Ad Settings:</h4>
-                  <div className="space-y-2">
+              <div className="space-y-4">
+                <div className="p-6 bg-accent/30 rounded-lg border border-border">
+                  <h4 className="font-semibold text-foreground mb-4">Current Ad Settings:</h4>
+                  <div className="space-y-3">
                     <div>
-                      <span className="font-medium">Headline:</span> {headline}
+                      <span className="font-semibold text-foreground">Headline:</span>
+                      <span className="ml-2 text-muted-foreground">{headline}</span>
                     </div>
                     <div>
-                      <span className="font-medium">Ad Copy:</span> {adCopy}
+                      <span className="font-semibold text-foreground">Ad Copy:</span>
+                      <span className="ml-2 text-muted-foreground">{adCopy}</span>
                     </div>
                   </div>
                 </div>
-                <p className="text-gray-600">
-                  Click "Edit Ad" to customize your ad headline, copy, and image. 
+                <p className="text-muted-foreground leading-relaxed">
+                  Click "Edit Ad" to customize your ad headline, copy, and image.
                   Your changes will be reflected in the preview in real-time.
                 </p>
               </div>
