@@ -135,17 +135,28 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   };
 
   const updateAllData = () => {
-    const name = getRandomName();
-    const city = getRandomCity();
-    const avatar = getRandomAvatar();
-    const pkg = getRandomPackage();
+    // Fade out first
+    setIsVisible(false);
 
-    // Update all state in the same render cycle to ensure synchronization
-    setCurrentName(name);
-    setCurrentCity(city);
-    setCurrentAvatar(avatar);
-    setCurrentPackage(pkg.name);
-    setCurrentPrice(pkg.price);
+    // After fade out completes, update data and fade in
+    setTimeout(() => {
+      const name = getRandomName();
+      const city = getRandomCity();
+      const avatar = getRandomAvatar();
+      const pkg = getRandomPackage();
+
+      // Update all state in the same render cycle to ensure synchronization
+      setCurrentName(name);
+      setCurrentCity(city);
+      setCurrentAvatar(avatar);
+      setCurrentPackage(pkg.name);
+      setCurrentPrice(pkg.price);
+
+      // Fade back in
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 50);
+    }, 300);
   };
 
   // Initialize with random data
