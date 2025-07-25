@@ -283,7 +283,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 <div className="flex gap-3 pt-6 border-t border-border">
-                  <Button onClick={handleSave} className="flex-1 bg-primary hover:bg-primary/90">
+                  <Button onClick={handleSave} className="flex-1" style={{backgroundColor: '#3b5cde'}} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2d4bcc'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3b5cde'}>
                     Save Changes
                   </Button>
                   <Button onClick={handleCancel} variant="outline" className="flex-1 border-border">
