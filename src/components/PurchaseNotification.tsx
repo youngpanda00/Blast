@@ -90,6 +90,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   const [currentPackage, setCurrentPackage] = useState("");
   const [currentPrice, setCurrentPrice] = useState("");
   const [currentAvatar, setCurrentAvatar] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   const packages = [
     { name: "Starter Pack", price: "$79", probability: 0.6 },
@@ -134,22 +135,47 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   };
 
   const updateAllData = () => {
+    // Fade out first
+    setIsVisible(false);
+
+    // After fade out completes, update data and fade in
+    setTimeout(() => {
+      const name = getRandomName();
+      const city = getRandomCity();
+      const avatar = getRandomAvatar();
+      const pkg = getRandomPackage();
+
+      // Update all state in the same render cycle to ensure synchronization
+      setCurrentName(name);
+      setCurrentCity(city);
+      setCurrentAvatar(avatar);
+      setCurrentPackage(pkg.name);
+      setCurrentPrice(pkg.price);
+
+      // Fade back in
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 50);
+    }, 300);
+  };
+
+  // Initialize with random data
+  useEffect(() => {
     const name = getRandomName();
     const city = getRandomCity();
     const avatar = getRandomAvatar();
     const pkg = getRandomPackage();
 
-    // Update all state in the same render cycle to ensure synchronization
     setCurrentName(name);
     setCurrentCity(city);
     setCurrentAvatar(avatar);
     setCurrentPackage(pkg.name);
     setCurrentPrice(pkg.price);
-  };
 
-  // Initialize with random data
-  useEffect(() => {
-    updateAllData();
+    // Show initial notification after a brief delay
+    setTimeout(() => {
+      setIsVisible(true);
+    }, 500);
   }, [listingCity]);
 
   // Update data every 3 seconds
@@ -162,7 +188,11 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   }, [listingCity]);
 
   return (
-    <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 duration-300 max-w-[310px] sm:max-w-none hidden sm:block">
+    <div className={`fixed top-4 right-4 z-50 max-w-[310px] sm:max-w-none hidden sm:block transition-all duration-300 ease-in-out transform ${
+      isVisible
+        ? 'opacity-100 translate-y-0'
+        : 'opacity-0 -translate-y-2'
+    }`}>
       <div className="flex w-full sm:w-[310px] h-[70px] p-2 pr-4 pl-2 items-center gap-2.5 bg-white rounded-[100px] shadow-[0px_2px_15px_0px_rgba(32,36,55,0.15)] hover:shadow-[0px_4px_20px_0px_rgba(32,36,55,0.20)] transition-shadow duration-200 mx-2 sm:mx-0">
         {/* Avatar */}
         <div className="flex w-[59px] h-[58px] justify-center items-center rounded-[60px] flex-shrink-0">
