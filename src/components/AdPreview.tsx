@@ -160,7 +160,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 {/* Ad image */}
-                <div className={`relative transition-all duration-300 ${
+                <div className={`transition-all duration-300 ${
                   highlightedArea === 'image'
                     ? 'ring-4 ring-blue-300 shadow-lg'
                     : ''
@@ -168,25 +168,27 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                   <img
                     src={image}
                     alt="Property"
-                    className="w-full h-52 object-cover"
+                    className="w-full h-52 object-cover rounded-t-lg"
                   />
-                  <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 transition-all duration-300 ${
+                </div>
+
+                {/* Headline section - below image */}
+                <div className={`p-4 border-t border-border transition-all duration-300 ${
+                  highlightedArea === 'headline'
+                    ? 'bg-yellow-50 border-yellow-300 shadow-md'
+                    : 'bg-gray-50'
+                }`}>
+                  <h4 className={`font-semibold text-sm mb-2 transition-all duration-300 relative ${
                     highlightedArea === 'headline'
-                      ? 'ring-2 ring-yellow-400 bg-gradient-to-t from-blue-900/90 to-transparent'
-                      : ''
+                      ? 'text-yellow-800 text-base font-bold'
+                      : 'text-gray-800'
                   }`}>
-                    <h4 className={`text-white font-semibold text-sm mb-1 transition-all duration-300 ${
-                      highlightedArea === 'headline'
-                        ? 'text-yellow-200 text-base font-bold'
-                        : ''
-                    }`}>
-                      {highlightedArea === 'headline' && (
-                        <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
-                      )}
-                      {headline}
-                    </h4>
-                    <p className="text-white/90 text-xs">loftyblast.com</p>
-                  </div>
+                    {highlightedArea === 'headline' && (
+                      <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
+                    )}
+                    {headline}
+                  </h4>
+                  <p className="text-gray-600 text-xs">loftyblast.com</p>
                 </div>
 
                 {/* Facebook engagement */}
