@@ -221,7 +221,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                               .split("|")[0]
                               .trim()
                           : null) ||
-                        "/lovable-uploads/20b5647d-061e-4695-80b4-a0c7c6e23d08.png"
+                        "https://images.pexels.com/photos/3555615/pexels-photo-3555615.jpeg"
                       }
                       className="w-full h-full object-cover"
                       alt="Property"
