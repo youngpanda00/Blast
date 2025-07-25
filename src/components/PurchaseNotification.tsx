@@ -161,7 +161,21 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
 
   // Initialize with random data
   useEffect(() => {
-    updateAllData();
+    const name = getRandomName();
+    const city = getRandomCity();
+    const avatar = getRandomAvatar();
+    const pkg = getRandomPackage();
+
+    setCurrentName(name);
+    setCurrentCity(city);
+    setCurrentAvatar(avatar);
+    setCurrentPackage(pkg.name);
+    setCurrentPrice(pkg.price);
+
+    // Show initial notification after a brief delay
+    setTimeout(() => {
+      setIsVisible(true);
+    }, 500);
   }, [listingCity]);
 
   // Update data every 3 seconds
