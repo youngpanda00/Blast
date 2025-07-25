@@ -207,15 +207,25 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
             {isEditing ? (
               <div className="space-y-6">
                 <div className="space-y-3">
-                  <Label htmlFor="headline" className="text-sm font-semibold text-foreground">
+                  <Label htmlFor="headline" className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <span className="w-3 h-3 bg-yellow-400 rounded-full"></span>
                     Headline
+                    <span className="text-xs text-muted-foreground font-normal">(appears on image overlay)</span>
                   </Label>
                   <Input
                     id="headline"
                     value={tempHeadline}
                     onChange={(e) => setTempHeadline(e.target.value)}
+                    onMouseEnter={() => setHighlightedArea('headline')}
+                    onMouseLeave={() => setHighlightedArea(null)}
+                    onFocus={() => setHighlightedArea('headline')}
+                    onBlur={() => setHighlightedArea(null)}
                     placeholder="Enter your ad headline"
-                    className="border-border bg-background"
+                    className={`border-border bg-background transition-all duration-300 ${
+                      highlightedArea === 'headline'
+                        ? 'border-yellow-400 shadow-md ring-2 ring-yellow-200'
+                        : ''
+                    }`}
                     maxLength={60}
                   />
                   <p className="text-xs text-muted-foreground">
