@@ -32,7 +32,7 @@ const adCopyTemplates = [
 ];
 
 export const AdPreview: React.FC<AdPreviewProps> = ({
-  initialImage = "https://images.pexels.com/photos/3555615/pexels-photo-3555615.jpeg",
+  initialImage = "https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg",
   initialHeadline = "Beautiful Home in Prime Location",
   initialAdCopy = "Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!",
   onAdUpdate,

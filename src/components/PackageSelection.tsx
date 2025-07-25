@@ -178,7 +178,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       {/* Ad Preview Section */}
       <AdPreview
-        initialImage="https://images.pexels.com/photos/3555615/pexels-photo-3555615.jpeg"
+        initialImage="https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
         initialHeadline="Beautiful Home in Prime Location"
         initialAdCopy="Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!"
         onAdUpdate={(data) => {
