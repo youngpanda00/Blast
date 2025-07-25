@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Separator } from "@/components/ui/separator";
 
 export const Hero: React.FC = () => {
   return (
