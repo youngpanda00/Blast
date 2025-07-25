@@ -132,19 +132,45 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 {/* Ad content */}
-                <div className="p-4">
-                  <p className="text-sm text-card-foreground leading-relaxed">{adCopy}</p>
+                <div className={`p-4 transition-all duration-300 ${
+                  highlightedArea === 'adCopy'
+                    ? 'bg-blue-50 border-2 border-blue-300 shadow-md'
+                    : ''
+                }`}>
+                  <p className="text-sm text-card-foreground leading-relaxed relative">
+                    {highlightedArea === 'adCopy' && (
+                      <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
+                    )}
+                    {adCopy}
+                  </p>
                 </div>
 
                 {/* Ad image */}
-                <div className="relative">
+                <div className={`relative transition-all duration-300 ${
+                  highlightedArea === 'image'
+                    ? 'ring-4 ring-blue-300 shadow-lg'
+                    : ''
+                }`}>
                   <img
                     src={image}
                     alt="Property"
                     className="w-full h-52 object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-                    <h4 className="text-white font-semibold text-sm mb-1">{headline}</h4>
+                  <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 transition-all duration-300 ${
+                    highlightedArea === 'headline'
+                      ? 'ring-2 ring-yellow-400 bg-gradient-to-t from-blue-900/90 to-transparent'
+                      : ''
+                  }`}>
+                    <h4 className={`text-white font-semibold text-sm mb-1 transition-all duration-300 ${
+                      highlightedArea === 'headline'
+                        ? 'text-yellow-200 text-base font-bold'
+                        : ''
+                    }`}>
+                      {highlightedArea === 'headline' && (
+                        <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
+                      )}
+                      {headline}
+                    </h4>
                     <p className="text-white/90 text-xs">loftyblast.com</p>
                   </div>
                 </div>
