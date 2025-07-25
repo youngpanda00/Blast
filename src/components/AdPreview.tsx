@@ -110,12 +110,12 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
             <h3 className="text-xl font-bold text-foreground mb-6">
               Facebook Ad Preview
             </h3>
-            <Card className="max-w-md mx-auto lg:mx-0 shadow-lg">
+            <Card className="max-w-md mx-auto lg:mx-0 shadow-xl border-border bg-card">
               <CardContent className="p-0">
                 {/* Facebook header */}
-                <div className="flex items-center justify-between p-3 border-b">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full overflow-hidden bg-white flex items-center justify-center">
+                <div className="flex items-center justify-between p-4 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full overflow-hidden bg-background border-2 border-border flex items-center justify-center">
                       <img
                         src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
                         alt="Lofty Logo"
@@ -123,11 +123,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       />
                     </div>
                     <div>
-                      <div className="font-semibold text-sm">Lofty Real Estate</div>
-                      <div className="text-xs text-gray-500">Sponsored</div>
+                      <div className="font-semibold text-sm text-card-foreground">Lofty Real Estate</div>
+                      <div className="text-xs text-muted-foreground">Sponsored</div>
                     </div>
                   </div>
-                  <MoreHorizontal className="w-4 h-4 text-gray-500" />
+                  <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
                 </div>
 
                 {/* Ad content */}
