@@ -131,8 +131,8 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 {/* Ad content */}
-                <div className="p-3">
-                  <p className="text-sm text-gray-800 mb-3">{adCopy}</p>
+                <div className="p-4">
+                  <p className="text-sm text-card-foreground leading-relaxed">{adCopy}</p>
                 </div>
 
                 {/* Ad image */}
@@ -140,27 +140,27 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                   <img
                     src={image}
                     alt="Property"
-                    className="w-full h-48 object-cover"
+                    className="w-full h-52 object-cover"
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                    <h4 className="text-white font-semibold text-sm">{headline}</h4>
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+                    <h4 className="text-white font-semibold text-sm mb-1">{headline}</h4>
                     <p className="text-white/90 text-xs">loftyblast.com</p>
                   </div>
                 </div>
 
                 {/* Facebook engagement */}
-                <div className="p-3 border-t">
-                  <div className="flex items-center justify-between text-gray-500">
-                    <div className="flex items-center gap-4">
-                      <button className="flex items-center gap-1 text-sm hover:bg-gray-100 px-2 py-1 rounded">
+                <div className="p-4 border-t border-border bg-accent/20">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded transition-colors">
                         <Heart className="w-4 h-4" />
                         Like
                       </button>
-                      <button className="flex items-center gap-1 text-sm hover:bg-gray-100 px-2 py-1 rounded">
+                      <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded transition-colors">
                         <MessageCircle className="w-4 h-4" />
                         Comment
                       </button>
-                      <button className="flex items-center gap-1 text-sm hover:bg-gray-100 px-2 py-1 rounded">
+                      <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded transition-colors">
                         <Share className="w-4 h-4" />
                         Share
                       </button>
