@@ -89,14 +89,14 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
       <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px]" />
       
       <div className="w-full max-w-[1140px] mt-10 max-md:px-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-black text-xl font-bold">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-foreground">
             Preview Your Ad
           </h2>
           <Button
             onClick={isEditing ? undefined : handleEdit}
             variant="outline"
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
             disabled={isEditing}
           >
             <Pencil className="w-4 h-4" />
@@ -104,10 +104,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           {/* Facebook-style Ad Preview */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-foreground mb-6">
               Facebook Ad Preview
             </h3>
             <Card className="max-w-md mx-auto lg:mx-0 shadow-lg">
