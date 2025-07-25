@@ -369,24 +369,82 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="p-6 bg-accent/30 rounded-lg border border-border">
-                  <h4 className="font-semibold text-foreground mb-4">Current Ad Settings:</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <span className="font-semibold text-foreground">Headline:</span>
-                      <span className="ml-2 text-muted-foreground">{headline}</span>
+              <div className="space-y-6">
+                {/* Preview Overview Card */}
+                <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-xl border-2 border-blue-100 shadow-lg">
+                  {/* Header with icon */}
+                  <div className="flex items-center gap-3 p-6 pb-4">
+                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
                     </div>
-                    <div>
-                      <span className="font-semibold text-foreground">Ad Copy:</span>
-                      <span className="ml-2 text-muted-foreground">{adCopy}</span>
+                    <h4 className="text-xl font-bold text-gray-800">Your Ad Preview</h4>
+                  </div>
+
+                  {/* Content Grid */}
+                  <div className="px-6 pb-6 space-y-4">
+                    {/* Headline Preview */}
+                    <div className="group p-4 bg-white/70 rounded-lg border border-yellow-200 hover:border-yellow-400 transition-all duration-300 hover:shadow-md">
+                      <div className="flex items-start gap-3">
+                        <div className="w-4 h-4 bg-yellow-400 rounded-full mt-1 flex-shrink-0"></div>
+                        <div className="flex-1">
+                          <div className="text-sm font-semibold text-gray-600 mb-1">Headline</div>
+                          <div className="text-gray-800 font-medium leading-relaxed group-hover:text-yellow-800 transition-colors">
+                            "{headline}"
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Ad Copy Preview */}
+                    <div className="group p-4 bg-white/70 rounded-lg border border-blue-200 hover:border-blue-400 transition-all duration-300 hover:shadow-md">
+                      <div className="flex items-start gap-3">
+                        <div className="w-4 h-4 bg-blue-400 rounded-full mt-1 flex-shrink-0"></div>
+                        <div className="flex-1">
+                          <div className="text-sm font-semibold text-gray-600 mb-1">Ad Copy</div>
+                          <div className="text-gray-800 leading-relaxed group-hover:text-blue-800 transition-colors line-clamp-3">
+                            "{adCopy}"
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Image Preview */}
+                    <div className="group p-4 bg-white/70 rounded-lg border border-green-200 hover:border-green-400 transition-all duration-300 hover:shadow-md">
+                      <div className="flex items-center gap-3">
+                        <div className="w-4 h-4 bg-green-400 rounded-full flex-shrink-0"></div>
+                        <div className="flex-1">
+                          <div className="text-sm font-semibold text-gray-600 mb-2">Current Image</div>
+                          <img
+                            src={image}
+                            alt="Current ad image"
+                            className="w-full h-24 object-cover rounded-md border border-gray-200 group-hover:scale-[1.02] transition-transform duration-300"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Decorative Elements */}
+                  <div className="absolute top-2 right-2 w-20 h-20 bg-blue-100 rounded-full opacity-50 -z-10"></div>
+                  <div className="absolute bottom-2 left-2 w-16 h-16 bg-purple-100 rounded-full opacity-50 -z-10"></div>
                 </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  Click "Edit Ad" to customize your ad headline, copy, and image.
-                  Your changes will be reflected in the preview in real-time.
-                </p>
+
+                {/* Call to Action */}
+                <div className="text-center p-6 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200">
+                  <div className="inline-flex items-center gap-2 text-gray-600 mb-2">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                    <span className="font-medium">Ready to Customize?</span>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed max-w-md mx-auto">
+                    Click <span className="font-semibold text-blue-600">"Edit Ad"</span> above to customize your headline, copy, and image.
+                    See your changes reflected in real-time on the left preview.
+                  </p>
+                </div>
               </div>
             )}
           </div>
