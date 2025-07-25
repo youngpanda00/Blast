@@ -186,11 +186,11 @@ const Index = () => {
             {/* Facebook Header */}
             <div className="absolute left-[8px] top-[10px] w-[155px] h-[22px]">
               {/* Profile Avatar */}
-              <div className="w-5 h-5 rounded-full overflow-hidden border border-gray-300">
+              <div className="w-5 h-5 rounded-full overflow-hidden border border-gray-300 bg-white flex items-center justify-center">
                 <img
-                  src="https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png"
-                  alt="Profile"
-                  className="w-full h-full object-cover"
+                  src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
+                  alt="Lofty Logo"
+                  className="w-full h-full object-contain"
                 />
               </div>
 
