@@ -15,9 +15,9 @@ interface AdPreviewProps {
 
 const adCopyTemplates = [
   {
-    id: "luxury",
-    name: "Luxury Focus",
-    copy: "Experience luxury living at its finest! This exquisite property offers premium amenities, stunning architecture, and an unbeatable location. Schedule your exclusive viewing today!"
+    id: "default",
+    name: "Default",
+    copy: "🏡 NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!"
   },
   {
     id: "family",
