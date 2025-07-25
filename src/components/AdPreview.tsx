@@ -305,14 +305,24 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="image" className="text-sm font-semibold text-foreground">
+                  <Label htmlFor="image" className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <span className="w-3 h-3 bg-green-400 rounded-full"></span>
                     Ad Image
+                    <span className="text-xs text-muted-foreground font-normal">(main visual content)</span>
                   </Label>
-                  <div className="flex items-center gap-4">
+                  <div
+                    className="flex items-center gap-4"
+                    onMouseEnter={() => setHighlightedArea('image')}
+                    onMouseLeave={() => setHighlightedArea(null)}
+                  >
                     <img
                       src={image}
                       alt="Current ad image"
-                      className="w-20 h-20 object-cover rounded-lg border-2 border-border shadow-sm"
+                      className={`w-20 h-20 object-cover rounded-lg border-2 shadow-sm transition-all duration-300 ${
+                        highlightedArea === 'image'
+                          ? 'border-green-400 shadow-lg ring-2 ring-green-200 scale-105'
+                          : 'border-border'
+                      }`}
                     />
                     <div className="flex-1 space-y-2">
                       <Input
@@ -320,7 +330,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
-                        className="text-sm border-border bg-background"
+                        className={`text-sm bg-background transition-all duration-300 ${
+                          highlightedArea === 'image'
+                            ? 'border-green-400 ring-2 ring-green-200'
+                            : 'border-border'
+                        }`}
                       />
                       <p className="text-xs text-muted-foreground">
                         Recommended: 1200x630px
