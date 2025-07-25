@@ -105,13 +105,27 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 relative">
+          {/* Connection Line - only visible on desktop */}
+          {highlightedArea && (
+            <div className="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+              <div className="w-8 h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-pulse"></div>
+              <div className="w-0.5 h-8 bg-gradient-to-b from-transparent via-blue-400 to-transparent mx-auto animate-pulse"></div>
+            </div>
+          )}
+
           {/* Facebook-style Ad Preview */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold text-foreground mb-6">
+          <div className="space-y-6 relative">
+            <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
               Facebook Ad Preview
+              {highlightedArea && (
+                <span className="text-sm font-normal text-muted-foreground animate-pulse">
+                  ← {highlightedArea === 'headline' ? 'Headline' : highlightedArea === 'adCopy' ? 'Ad Copy' : 'Image'} highlighted
+                </span>
+              )}
             </h3>
-            <Card className="max-w-md mx-auto lg:mx-0 shadow-xl border-border bg-card">
+            <Card className="max-w-md mx-auto lg:mx-0 shadow-xl border-border bg-card relative">
               <CardContent className="p-0">
                 {/* Facebook header */}
                 <div className="flex items-center justify-between p-4 border-b border-border">
