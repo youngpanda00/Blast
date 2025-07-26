@@ -32,7 +32,7 @@ const adCopyTemplates = [
 ];
 
 export const AdPreview: React.FC<AdPreviewProps> = ({
-  initialImage = "https://images.pexels.com/photos/3555615/pexels-photo-3555615.jpeg",
+  initialImage = "https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg",
   initialHeadline = "Beautiful Home in Prime Location",
   initialAdCopy = "Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!",
   onAdUpdate,
@@ -138,7 +138,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       />
                     </div>
                     <div>
-                      <div className="font-semibold text-sm text-card-foreground">Lofty Real Estate</div>
+                      <div className="font-semibold text-sm text-card-foreground"><p>Real Estate Service</p></div>
                       <div className="text-xs text-muted-foreground">Sponsored</div>
                     </div>
                   </div>
@@ -353,7 +353,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         }`}
                       />
                       <p className="text-xs text-muted-foreground">
-                        Recommended: 1200x630px
+                        <p>Recommended Aspect Ratio: 1:1 or 4:5</p>
                       </p>
                     </div>
                   </div>
