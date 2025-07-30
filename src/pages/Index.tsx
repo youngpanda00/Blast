@@ -187,11 +187,15 @@ const Index = () => {
             <div className="absolute left-[8px] top-[10px] w-[155px] h-[22px]">
               {/* Profile Avatar */}
               <div className="w-5 h-5 rounded-full overflow-hidden border border-gray-300 bg-white flex items-center justify-center">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
-                  alt="Lofty Logo"
-                  className="w-full h-full object-contain"
-                />
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                    backgroundSize: "auto 100%",
+                    backgroundPosition: "5px",
+                    backgroundRepeat: "no-repeat"
+                  }}
+                ></div>
               </div>
 
               {/* User Info */}
@@ -387,11 +391,15 @@ const Index = () => {
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full border border-gray-200 bg-white flex items-center justify-center overflow-hidden">
-              <img
-                src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
-                alt="Lofty Logo"
-                className="w-full h-full object-contain"
-              />
+              <div
+                className="w-full h-full"
+                style={{
+                  backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                  backgroundSize: "auto 100%",
+                  backgroundPosition: "5px",
+                  backgroundRepeat: "no-repeat"
+                }}
+              ></div>
             </div>
             <div className="flex flex-col">
               <h3 className="text-xs font-bold text-[#202437] leading-tight">
@@ -428,7 +436,7 @@ const Index = () => {
             <img
               src={
                 selectedPreviewPicture ||
-                "https://api.builder.io/api/v1/image/assets/TEMP/2982bc2d070b384f9652a02067261e9d01d6e9d0?width=720"
+                "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
               }
               alt="Modern white house with pool"
               className="w-full h-full object-cover"
@@ -496,7 +504,7 @@ const Index = () => {
               <img
                 src={
                   selectedPreviewPicture ||
-                  "https://api.builder.io/api/v1/image/assets/TEMP/a852f524a9aa7db7f0e781600b557ef2de2c35ee?width=342"
+                  "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
                 }
                 alt=""
                 className="w-full h-full object-cover filter blur-[30px]"
@@ -508,7 +516,7 @@ const Index = () => {
               <img
                 src={
                   selectedPreviewPicture ||
-                  "https://api.builder.io/api/v1/image/assets/TEMP/e51d8a501905d2f5a7ea551717e7d7cba6192bc9?width=342"
+                  "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
                 }
                 alt=""
                 className="w-full h-[200px] object-cover rounded-t-[20px]"
@@ -532,11 +540,15 @@ const Index = () => {
               <div className="flex items-center justify-between px-2 py-2 mt-2">
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 rounded-full bg-white overflow-hidden flex items-center justify-center">
-                    <img
-                      src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
-                      alt="Lofty Logo"
-                      className="w-full h-full object-contain"
-                    />
+                    <div
+                      className="w-full h-full"
+                      style={{
+                        backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                        backgroundSize: "auto 100%",
+                        backgroundPosition: "5px",
+                        backgroundRepeat: "no-repeat"
+                      }}
+                    ></div>
                   </div>
                   <div className="flex flex-col gap-0.5">
                     <div className="text-[8px] font-bold text-white leading-[12px] tracking-[-0.16px]">
@@ -632,7 +644,7 @@ const Index = () => {
           <img
             src={
               selectedPreviewPicture ||
-              "https://api.builder.io/api/v1/image/assets/TEMP/a70e1bfd010ea4d4b6d86e7afa9bb107303fb0ab?width=740"
+              "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
             }
             alt=""
             className="absolute inset-0 w-full h-full object-cover blur-[30px] rounded-xl"
@@ -642,7 +654,7 @@ const Index = () => {
           <img
             src={
               selectedPreviewPicture ||
-              "https://api.builder.io/api/v1/image/assets/TEMP/8190fd48be2b21c02f1c2330267dc01d8816107a?width=740"
+              "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
             }
             alt="Lakefront homes with reflection"
             className="absolute top-0 left-0 w-full h-[230px] object-cover rounded-t-lg"
@@ -659,11 +671,15 @@ const Index = () => {
             {/* Header info */}
             <div className="absolute top-[22px] left-[10px] flex items-center gap-3">
               <div className="w-[30px] h-[30px] rounded-full overflow-hidden bg-white flex items-center justify-center">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
-                  alt="Lofty Logo"
-                  className="w-full h-full object-contain"
-                />
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                    backgroundSize: "auto 100%",
+                    backgroundPosition: "5px",
+                    backgroundRepeat: "no-repeat"
+                  }}
+                ></div>
               </div>
 
               <div className="flex flex-col">
@@ -746,7 +762,7 @@ const Index = () => {
               <img
                 src={
                   selectedPreviewPicture ||
-                  "https://api.builder.io/api/v1/image/assets/TEMP/ecfd758ab80a91a7c570bd2190878bf61887eead?width=342"
+                  "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
                 }
                 alt="Lakefront homes"
                 className="absolute left-0 top-[52px] w-full h-[150px] object-cover"
@@ -764,11 +780,15 @@ const Index = () => {
                 <div className="absolute top-[11px] left-0 flex items-center gap-2">
                   {/* Avatar */}
                   <div className="w-5 h-5 rounded-full bg-white overflow-hidden flex items-center justify-center">
-                    <img
-                      src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
-                      alt="Lofty Logo"
-                      className="w-full h-full object-contain"
-                    />
+                    <div
+                      className="w-full h-full"
+                      style={{
+                        backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                        backgroundSize: "auto 100%",
+                        backgroundPosition: "5px",
+                        backgroundRepeat: "no-repeat"
+                      }}
+                    ></div>
                   </div>
 
                   {/* Profile info */}
@@ -873,7 +893,7 @@ const Index = () => {
           <img
             src={
               selectedPreviewPicture ||
-              "https://api.builder.io/api/v1/image/assets/TEMP/8ccc034a0d57df0971765cd91cd78d29b04f81ab?width=748"
+              "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
             }
             alt="Lakefront homes with reflection"
             className="absolute left-0 top-[60px] w-full h-[180px] object-cover"
@@ -890,11 +910,15 @@ const Index = () => {
             {/* Profile section */}
             <div className="absolute top-[12px] left-0 flex items-center gap-3">
               <div className="w-[30px] h-[30px] rounded-full bg-white overflow-hidden flex items-center justify-center">
-                <img
-                  src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
-                  alt="Lofty Logo"
-                  className="w-full h-full object-contain"
-                />
+                <div
+                  className="w-full h-full"
+                  style={{
+                    backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                    backgroundSize: "auto 100%",
+                    backgroundPosition: "5px",
+                    backgroundRepeat: "no-repeat"
+                  }}
+                ></div>
               </div>
 
               <div className="flex flex-col">
@@ -1070,7 +1094,7 @@ const Index = () => {
                     <InstagramPostComponent
                       imageUrl={
                         selectedPreviewPicture ||
-                        "https://api.builder.io/api/v1/image/assets/TEMP/ecfd758ab80a91a7c570bd2190878bf61887eead?width=342"
+                        "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
                       }
                       viewMode={viewMode}
                     />

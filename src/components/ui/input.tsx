@@ -5,14 +5,36 @@ import {
   AddressSearchSelect,
   type AddressSearchSelectProps,
 } from "./address-search-select";
+import { useToast } from "@/hooks/use-toast";
 
 interface InputProps extends React.ComponentProps<"input"> {
   isAddressSearch?: boolean;
   onAddressSelect?: AddressSearchSelectProps["onAddressSelect"];
+  maxFileSize?: number; // File size limit in bytes, default 20MB
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, isAddressSearch, onAddressSelect, ...props }, ref) => {
+  ({ className, type, isAddressSearch, onAddressSelect, maxFileSize = 20 * 1024 * 1024, ...props }, ref) => {
+    const { toast } = useToast();
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (type === "file" && event.target.files) {
+        const file = event.target.files[0];
+        if (file && file.size > maxFileSize) {
+          toast({
+            variant: "destructive",
+            title: "File size error",
+            description: `File size cannot exceed ${Math.round(maxFileSize / 1024 / 1024)}MB`,
+          });
+          event.target.value = "";
+          return;
+        }
+      }
+      if (props.onChange) {
+        props.onChange(event);
+      }
+    };
+
     if (isAddressSearch) {
       return (
         <AddressSearchSelect
@@ -41,6 +63,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         ref={ref}
         {...props}
+        onChange={type === "file" ? handleFileChange : props.onChange}
       />
     );
   },
