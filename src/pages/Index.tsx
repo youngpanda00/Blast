@@ -190,9 +190,8 @@ const Index = () => {
                 <div
                   className="w-full h-full"
                   style={{
-                    backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                    backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                     backgroundSize: "auto 100%",
-                    backgroundPosition: "5px",
                     backgroundRepeat: "no-repeat"
                   }}
                 ></div>
@@ -542,9 +541,8 @@ const Index = () => {
                     <div
                       className="w-full h-full"
                       style={{
-                        backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                        backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                         backgroundSize: "auto 100%",
-                        backgroundPosition: "5px",
                         backgroundRepeat: "no-repeat"
                       }}
                     ></div>
@@ -781,9 +779,8 @@ const Index = () => {
                     <div
                       className="w-full h-full"
                       style={{
-                        backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+                        backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                         backgroundSize: "auto 100%",
-                        backgroundPosition: "5px",
                         backgroundRepeat: "no-repeat"
                       }}
                     ></div>
