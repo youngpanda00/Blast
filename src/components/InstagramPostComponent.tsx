@@ -34,7 +34,7 @@ export const InstagramPostComponent: React.FC<InstagramPostComponentProps> = ({
               {/* Profile Avatar */}
               <div className="w-5 h-5 rounded-full overflow-hidden bg-white flex items-center justify-center">
                 <img
-                  src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
+                  src="https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png"
                   alt="Lofty Logo"
                   className="w-full h-full object-contain"
                 />
@@ -146,14 +146,13 @@ export const InstagramPostComponent: React.FC<InstagramPostComponentProps> = ({
   return (
     <div className="w-[calc(100vw-65px)] max-w-[390px] h-[366px] bg-white rounded-xl shadow-[0px_4px_30px_0px_rgba(32,36,55,0.08)] relative overflow-hidden">
       {/* Header */}
-      <div className="absolute top-[11px] left-[15px] h-[30px] flex items-center justify-between">
+      <div className="absolute top-[11px] left-[15px] h-[30px] w-[360px] flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div
             className="w-[30px] h-[30px] rounded-full border border-[#DEDFE0] bg-white"
             style={{
-              backgroundImage: "url('https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true')",
+              backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
               backgroundSize: "auto 100%",
-              backgroundPosition: "5px",
               backgroundRepeat: "no-repeat"
             }}
           ></div>

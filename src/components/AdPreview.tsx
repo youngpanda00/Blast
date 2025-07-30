@@ -132,7 +132,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-background border-2 border-border flex items-center justify-center">
                       <img
-                        src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
+                        src="https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png"
                         alt="Lofty Logo"
                         className="w-full h-full object-contain"
                       />
