@@ -12,11 +12,13 @@ import { LoadingOverlay } from "./ui/loading-overlay";
 import { useIsMobile } from "../hooks/use-mobile";
 
 interface PackageSelectionProps {
+  previewPicture?: string | null
   selectedAddressId?: string | null;
   onOpenCongratulationsModal: (email: string) => void;
 }
 
 export const PackageSelection: React.FC<PackageSelectionProps> = ({
+  previewPicture,
   selectedAddressId,
   onOpenCongratulationsModal,
 }) => {
@@ -178,7 +180,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       {/* Ad Preview Section */}
       <AdPreview
-        initialImage="https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+        initialImage={previewPicture??"https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"}
         initialHeadline="Beautiful Home in Prime Location"
         initialAdCopy="Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!"
         onAdUpdate={(data) => {

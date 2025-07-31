@@ -30,6 +30,7 @@ const Index = () => {
     beds?: number;
     baths?: number;
     address?: string;
+    previewPicture?: string
   } | null>(null);
   const [isCongratulationsModalOpen, setIsCongratulationsModalOpen] =
     useState(false);
@@ -80,6 +81,7 @@ const Index = () => {
         beds: addressData.data.bedrooms || addressData.data.beds,
         baths: addressData.data.bathrooms || addressData.data.baths,
         address: addressData.data.fullAddress,
+        previewPicture: addressData.data.previewPicture
       });
     }
   }, []);
@@ -1119,6 +1121,8 @@ const Index = () => {
         </div>
 
         <PackageSelection
+          key={selectedAddressId}
+          previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
           onOpenCongratulationsModal={(email) => {
             setCongratulationsEmail(email);
