@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -45,6 +45,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
   const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
+
+  useEffect(()=>{
+    setImage(initialImage)
+  }, [initialImage])
 
   const handleEdit = () => {
     setTempHeadline(headline);
