@@ -5,6 +5,7 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Pencil, Heart, MessageCircle, Share, MoreHorizontal } from "lucide-react";
+import { trackMixPanel } from "@/lib/utils";
 
 interface AdPreviewProps {
   initialImage?: string;
@@ -55,6 +56,12 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     setTempAdCopy(adCopy);
     setSelectedTemplate("custom");
     setIsEditing(true);
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "Edit Ad",
+      click_action: "edit"
+    });
   };
 
   const handleTemplateSelect = (templateId: string) => {
