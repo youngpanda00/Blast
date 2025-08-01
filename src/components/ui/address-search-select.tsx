@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Check, ChevronDown, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, trackMixPanel } from "@/lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -142,7 +142,14 @@ const AddressSearchSelect = React.forwardRef<
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild onClick={()=>{
+          trackMixPanel("click", {
+            page_name: "ListingBlastSP",
+            feature_name: "ListingBlast",
+            click_item: "Enter the property address",
+            click_action: "property"
+          });
+        }}>
           <Button
             ref={ref}
             variant="outline"

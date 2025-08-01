@@ -10,6 +10,7 @@ import {
 } from "./ui/tooltip";
 import { LoadingOverlay } from "./ui/loading-overlay";
 import { useIsMobile } from "../hooks/use-mobile";
+import { trackMixPanel } from "@/lib/utils";
 
 interface PackageSelectionProps {
   previewPicture?: string | null
@@ -162,6 +163,12 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const handleCardClick = async (
     packageType: "starter" | "boost" | "growth" | "mastery",
   ) => {
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: packageType,
+      click_action: "package"
+    });
     if (isMobile) {
       // On mobile, select package and trigger checkout
       await handlePackageSelect(packageType);
@@ -207,6 +214,12 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                       const duration = packageToDuration[selectedPackage];
                       savePackageSelection(duration);
                     }
+                    trackMixPanel("click", {
+                      page_name: "ListingBlastSP",
+                      feature_name: "ListingBlast",
+                      click_item: "one-time",
+                      click_action: "charge"
+                    });
                   }}
                   className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] px-2.5 rounded-[15px] transition-all ${
                     selectedPlan === "one-time"
@@ -223,6 +236,12 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                       const duration = packageToDuration[selectedPackage];
                       savePackageSelection(duration);
                     }
+                    trackMixPanel("click", {
+                     page_name: "ListingBlastSP",
+                     feature_name: "ListingBlast",
+                     click_item: "monthly",
+                     click_action: "charge"
+                   });
                   }}
                   className={`flex min-h-[30px] items-center whitespace-nowrap justify-center w-[152px] px-2.5 rounded-[15px] transition-all ${
                     selectedPlan === "monthly"
