@@ -1,19 +1,21 @@
 import React, { useState } from "react";
+import { FixedNavigation } from "./FixedNavigation";
 
-export const Hero: React.FC = () => {
+export const Hero: React.FC<{ page?: "listing" }> = ({ page }) => {
   return (
     <>
-      <header className="flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px] bg-[rgba(0,28,188,1)]">
+      { page === 'listing' && <FixedNavigation /> }
+      <section className={page !== 'listing' ? "flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px] bg-[rgba(0,28,188,1)]" :
+"flex w-full flex-col items-stretch px-[22px] pt-[90px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px] max-md:pt-[80px] bg-[rgba(0,28,188,1)]" }>
         <div className="w-full h-full flex flex-col">
           {/* Logo positioned at top left */}
-          <div className="mb-[27px]">
+          {page !== 'listing' && <div className="mb-[27px]">
             <img
               src="https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/413dc641e0fcb15ee6fb4e31ee9f16be41c5456d?placeholderIfAbsent=true"
               className="aspect-[2.72] object-contain w-[87px]"
               alt="Blast Logo"
             />
-          </div>
-
+          </div>}
           {/* Text content with horizontal layout */}
           <div className="flex w-full max-w-[1210px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
             {/* Left Column - Main Headline */}
@@ -51,11 +53,9 @@ export const Hero: React.FC = () => {
                 </div>
               </div>
             </div>
-
-
           </div>
         </div>
-      </header>
+      </section>
     </>
   );
 };

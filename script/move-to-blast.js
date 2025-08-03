@@ -121,6 +121,10 @@ function main() {
       "./dist/index.html",
       `../${CRM}/crm-blast/public/checkout.html`,
     );
+    processIndexHtml(
+      "./dist/listingblast.html",
+      `../${CRM}/crm-blast/public/listingblast.html`,
+    );
 
     copyIndexHtml(
       `../${CRM}/crm-blast/public/checkout.html`,

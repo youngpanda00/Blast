@@ -6,12 +6,12 @@ import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = ({ page }:{ page?: 'listing'}) => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <Index />
+      <Index page={page} />
     </TooltipProvider>
   </QueryClientProvider>
 );
