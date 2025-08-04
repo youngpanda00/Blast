@@ -188,7 +188,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   }, [listingCity]);
 
   return (
-    <div className={`fixed top-4 right-4 z-50 max-w-[310px] sm:max-w-none hidden sm:block transition-all duration-300 ease-in-out transform ${
+    <div className={`fixed top-16 right-4 z-40 max-w-[310px] sm:max-w-none hidden sm:block transition-all duration-300 ease-in-out transform ${
       isVisible
         ? 'opacity-100 translate-y-0'
         : 'opacity-0 -translate-y-2'

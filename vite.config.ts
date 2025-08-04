@@ -63,6 +63,10 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        listingblast: path.resolve(__dirname, 'listingblast.html'),
+      },
       external: ["jquery", "fabric", "vue", "vuex", "crm", "common", "broker"],
       output: {
         globals: {

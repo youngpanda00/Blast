@@ -11,12 +11,13 @@ import { Hero } from "@/components/Hero";
 import { PropertySetup } from "@/components/PropertySetup";
 import { PackageSelection } from "@/components/PackageSelection";
 import { ClientTestimonials } from "@/components/ClientTestimonials";
+import { FrequentlyAskedQuestions } from "@/components/FrequentlyAskedQuestions";
 import { ContactFooter } from "@/components/ContactFooter";
 import PurchaseNotification from "@/components/PurchaseNotification";
 import { CongratulationsModal } from "@/components/CongratulationsModal";
 import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 
-const Index = () => {
+const Index = ({ page }: { page?: "listing" }) => {
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const [selectedPreviewPicture, setSelectedPreviewPicture] = useState<
@@ -24,13 +25,13 @@ const Index = () => {
   >(null);
   const [listingCity, setListingCity] = useState<string | null>(null);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(
-    null,
+    null
   );
   const [currentListingData, setCurrentListingData] = useState<{
     beds?: number;
     baths?: number;
     address?: string;
-    previewPicture?: string
+    previewPicture?: string;
   } | null>(null);
   const [isCongratulationsModalOpen, setIsCongratulationsModalOpen] =
     useState(false);
@@ -65,7 +66,7 @@ const Index = () => {
   }, [listingId, selectedAddressId]);
 
   // Callback function to handle address selection from PropertySetup
-  const handleAddressSelect = React.useCallback((addressData: any) => {
+  const handleAddressSelect = React.useCallback((addressData) => {
     if (addressData?.data?.previewPicture) {
       // Handle multiple images separated by "|", take the first one
       const firstImage = addressData.data.previewPicture.split("|")[0].trim();
@@ -81,7 +82,7 @@ const Index = () => {
         beds: addressData.data.bedrooms || addressData.data.beds,
         baths: addressData.data.bathrooms || addressData.data.baths,
         address: addressData.data.fullAddress,
-        previewPicture: addressData.data.previewPicture
+        previewPicture: addressData.data.previewPicture,
       });
     }
   }, []);
@@ -192,9 +193,10 @@ const Index = () => {
                 <div
                   className="w-full h-full"
                   style={{
-                    backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
+                    backgroundImage:
+                      "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                     backgroundSize: "auto 100%",
-                    backgroundRepeat: "no-repeat"
+                    backgroundRepeat: "no-repeat",
                   }}
                 ></div>
               </div>
@@ -395,9 +397,10 @@ const Index = () => {
               <div
                 className="w-full h-full"
                 style={{
-                  backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
+                  backgroundImage:
+                    "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                   backgroundSize: "auto 100%",
-                  backgroundRepeat: "no-repeat"
+                  backgroundRepeat: "no-repeat",
                 }}
               ></div>
             </div>
@@ -543,9 +546,10 @@ const Index = () => {
                     <div
                       className="w-full h-full"
                       style={{
-                        backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
+                        backgroundImage:
+                          "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                         backgroundSize: "auto 100%",
-                        backgroundRepeat: "no-repeat"
+                        backgroundRepeat: "no-repeat",
                       }}
                     ></div>
                   </div>
@@ -673,9 +677,10 @@ const Index = () => {
                 <div
                   className="w-full h-full"
                   style={{
-                    backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
+                    backgroundImage:
+                      "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                     backgroundSize: "auto 100%",
-                    backgroundRepeat: "no-repeat"
+                    backgroundRepeat: "no-repeat",
                   }}
                 ></div>
               </div>
@@ -781,9 +786,10 @@ const Index = () => {
                     <div
                       className="w-full h-full"
                       style={{
-                        backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
+                        backgroundImage:
+                          "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                         backgroundSize: "auto 100%",
-                        backgroundRepeat: "no-repeat"
+                        backgroundRepeat: "no-repeat",
                       }}
                     ></div>
                   </div>
@@ -910,9 +916,10 @@ const Index = () => {
                 <div
                   className="w-full h-full"
                   style={{
-                    backgroundImage: "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
+                    backgroundImage:
+                      "url('https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png')",
                     backgroundSize: "auto 100%",
-                    backgroundRepeat: "no-repeat"
+                    backgroundRepeat: "no-repeat",
                   }}
                 ></div>
               </div>
@@ -982,7 +989,7 @@ const Index = () => {
   return (
     <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC]">
       <PurchaseNotification listingCity={listingCity} />
-      <Hero />
+      <Hero page={page} />
 
       <main className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0">
         <div className="w-full max-w-[1140px] max-md:max-w-full">
@@ -1132,6 +1139,7 @@ const Index = () => {
       </main>
 
       <ClientTestimonials />
+      {page === 'listing' && <FrequentlyAskedQuestions />}
       <ContactFooter />
 
       {/* Zoom Modal */}
