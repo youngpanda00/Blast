@@ -35,7 +35,7 @@ export const FixedNavigation: React.FC = () => {
         {/* Navigation Menu - next to logo on left */}
         <div className="flex items-center max-md:hidden h-full">
           <a
-            href="/"
+            href="/home?anchor=Products"
             onClick={handleNavClick}
             className={`relative font-medium text-sm h-full flex items-center group ${
               isAtTop ? 'text-white' : 'text-[#515666]'
@@ -56,7 +56,7 @@ export const FixedNavigation: React.FC = () => {
             ></span>
           </a>
           <a
-            href="/"
+            href="/home?anchor=CampaignCalculator"
             onClick={handleNavClick}
             className={`relative font-medium text-sm h-full flex items-center group ${
               isAtTop ? 'text-white' : 'text-[#515666]'
@@ -77,7 +77,7 @@ export const FixedNavigation: React.FC = () => {
             ></span>
           </a>
           <a
-            href="/"
+            href="/home?anchor=Contact"
             onClick={handleNavClick}
             className={`relative font-medium text-sm h-full flex items-center group ${
               isAtTop ? 'text-white' : 'text-[#515666]'
