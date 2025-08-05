@@ -185,7 +185,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   }, [listingInfo, hasUserSelectedAddress]);
 
   return (
-    <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-6">
+    <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-6" data-section="property-setup">
       <div className="self-stretch my-auto max-md:max-w-full max-md:mt-10">
         <div className="mb-6">
           <h2 className="text-xl font-bold text-gray-900 mb-2 md:max-[1240px]:mt-8">
