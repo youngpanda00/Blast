@@ -63,6 +63,32 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     // Use selectedAddressId if available, otherwise fall back to URL listingId
     const currentListingId = selectedAddressId || listingId;
     if (!currentListingId) {
+      // 如果没有选房源，滚动到PropertySetup模块并对form元素添加动画
+      const propertySetupSection = document.querySelector('[data-section="property-setup"]');
+      const addressForm = propertySetupSection.querySelector('form');
+
+      if (propertySetupSection) {
+        // 平滑滚动到PropertySetup模块
+        propertySetupSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+
+        // 延迟动画，等待滚动完成
+        if (addressForm) {
+          // 对form元素添加缩放动画和黑色边框
+          addressForm.style.transformOrigin = 'center';
+          addressForm.style.transform = 'scale(1.02)';
+          addressForm.style.transition = 'all 0.3s ease-in-out';
+          addressForm.querySelector('button').focus()
+
+          // 3秒后恢复原状
+          setTimeout(() => {
+            addressForm.style.transform = '';
+          }, 3000);
+        }
+      }
+
       console.error(
         "No listing ID available (neither from address selection nor URL)",
       );
