@@ -178,13 +178,23 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
     }, 500);
   }, [listingCity]);
 
-  // Update data every 3 seconds
+  // Update data with random intervals for realistic effect
   useEffect(() => {
-    const interval = setInterval(() => {
-      updateAllData();
-    }, 3000);
+    const scheduleNextUpdate = () => {
+      // Random interval between 4-12 seconds for more realistic timing
+      const randomInterval = Math.floor(Math.random() * 8000) + 4000;
 
-    return () => clearInterval(interval);
+      const timeout = setTimeout(() => {
+        updateAllData();
+        scheduleNextUpdate(); // Schedule the next update
+      }, randomInterval);
+
+      return timeout;
+    };
+
+    const initialTimeout = scheduleNextUpdate();
+
+    return () => clearTimeout(initialTimeout);
   }, [listingCity]);
 
   return (
