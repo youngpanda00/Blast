@@ -345,13 +345,15 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
               style={{
                 fontSize: "16px",
                 fontWeight: "400",
-                lineHeight: "30px",
+                lineHeight: "24px",
                 color: "#ffffff",
               }}
             >
-              <strong>Not your listing?</strong>
+              <strong>Promote your new listing online and turn views into inquiries!</strong>
               <br />
-              Easily enter an address and boost this listing.
+              <span className="text-sm opacity-90">
+                Easily enter an address and boost this listing.
+              </span>
             </Label>
 
             <form onSubmit={handleAddressSubmit} className="relative">
