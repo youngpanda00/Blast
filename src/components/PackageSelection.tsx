@@ -743,7 +743,9 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             style={{
             touchAction: 'pan-x',
             WebkitOverflowScrolling: 'touch',
-            scrollPaddingLeft: '1rem'
+            scrollPaddingLeft: '1rem',
+            scrollBehavior: 'smooth',
+            overscrollBehaviorX: 'contain'
           }}>
             {/* Mobile Starter Pack */}
             <div className="flex-shrink-0 w-[260px] snap-start first:ml-0">
