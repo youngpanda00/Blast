@@ -1000,7 +1000,7 @@ const Index = ({ page }: { page?: "listing" }) => {
               onCityUpdate={handleCityUpdate}
             />
 
-            <section className="w-6/12 ml-5 max-md:w-full max-md:ml-0 flex max-md:order-first">
+            <section className="w-6/12 ml-5 max-md:w-full max-md:ml-0 flex max-md:hidden">
               <div className="flex flex-col items-center bg-[#F6F7FB] mx-auto px-[30px] py-4 rounded-xl max-md:max-w-full max-md:mt-0 max-md:px-4 max-md:mx-0 flex-1 overflow-hidden relative max-md:bg-gray-50">
                 {/* Zoom Icon - Only show on mobile view */}
                 {viewMode === "mobile" && (
