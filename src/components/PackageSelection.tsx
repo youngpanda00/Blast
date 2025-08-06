@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PricingCard } from "./PricingCard";
 import { AdPreview } from "./AdPreview";
 import { Info, Diamond } from "lucide-react";
@@ -32,6 +32,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useIsMobile();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const searchParams = new URLSearchParams(window.location.search);
 
   // Get listingId from URL
@@ -207,6 +208,14 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const paymentText = selectedPlan === "one-time" ? "Pay one-time" : "Monthly";
 
+  // Initialize mobile scroll position to show starter pack fully
+  useEffect(() => {
+    if (isMobile && scrollContainerRef.current) {
+      // Reset scroll to beginning to ensure starter pack is fully visible
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+  }, [isMobile]);
+
   return (
     <>
       <LoadingOverlay isVisible={isLoading} />
@@ -225,14 +234,14 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       <section className="w-full flex flex-col items-center">
         <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px]" />
 
-        <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6">
-          <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full">
+        <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-4 max-md:flex-col max-md:gap-4">
+          <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full max-md:text-lg max-md:text-center">
             Select Your Package: Boost Views, Get Leads
           </h2>
 
-          <div className="flex items-center gap-3">
-            <div className="bg-[rgba(246,247,251,1)] border flex min-h-10 flex-col items-stretch text-sm leading-6 justify-center p-[5px] rounded-[20px] border-[rgba(235,236,241,1)] border-solid">
-              <div className="flex min-h-[30px] w-full max-w-[310px] gap-[5px]">
+          <div className="flex items-center gap-3 max-md:justify-center max-md:flex-wrap">
+            <div className="bg-[rgba(246,247,251,1)] border flex min-h-10 flex-col items-stretch text-sm leading-6 justify-center p-[5px] rounded-[20px] border-[rgba(235,236,241,1)] border-solid max-md:w-full max-md:max-w-[280px]">
+              <div className="flex min-h-[30px] w-full max-w-[310px] gap-[5px] max-md:max-w-full">
                 <button
                   onClick={() => {
                     setSelectedPlan("one-time");
@@ -247,7 +256,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                       click_action: "charge"
                     });
                   }}
-                  className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] px-2.5 rounded-[15px] transition-all ${
+                  className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] px-2.5 rounded-[15px] transition-all max-md:flex-1 max-md:w-auto ${
                     selectedPlan === "one-time"
                       ? "shadow-[0px_2px_5px_0px_rgba(0,0,0,0.05)] text-[#3B5CDE] bg-white"
                       : "text-[#797E8B] font-[510]"
@@ -269,7 +278,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                      click_action: "charge"
                    });
                   }}
-                  className={`flex min-h-[30px] items-center whitespace-nowrap justify-center w-[152px] px-2.5 rounded-[15px] transition-all ${
+                  className={`flex min-h-[30px] items-center whitespace-nowrap justify-center w-[152px] px-2.5 rounded-[15px] transition-all max-md:flex-1 max-md:w-auto ${
                     selectedPlan === "monthly"
                       ? "shadow-[0px_2px_5px_0px_rgba(0,0,0,0.05)] text-[#3B5CDE] bg-white font-bold"
                       : "text-[#797E8B] font-[510]"
@@ -308,10 +317,25 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        {/* Package cards layout - All same height (330px) */}
-        <div className="grid grid-cols-4 gap-4 w-full max-w-[1140px] mt-5 max-md:grid-cols-1 items-center">
-          {/* Starter Pack - 330px height */}
-          <div className="max-md:px-6">
+        {/* Package cards layout - Desktop: Grid, Mobile: Horizontal scroll */}
+        <div className="w-full max-w-[1140px] mt-5">
+          {/* Desktop layout */}
+          <div className="hidden md:grid grid-cols-4 gap-4 items-center">
+            {/* Desktop cards will go here */}
+          </div>
+
+          {/* Mobile horizontal scroll */}
+          <div className="md:hidden px-4">
+            <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+              {/* Mobile cards will go here */}
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Package Cards */}
+        <div className="hidden md:grid grid-cols-4 gap-4 w-full max-w-[1140px] items-center">
+          {/* Desktop Starter Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("starter")}
               className={`relative rounded-[24px] p-6 text-white h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -420,8 +444,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
               </div>
             </div>
           </div>
-          {/* Boost Pack - 330px height */}
-          <div className="max-md:px-6">
+          {/* Desktop Boost Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("boost")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -516,8 +540,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
               </div>
             </div>
           </div>
-          {/* Growth Pack - 330px height */}
-          <div className="max-md:px-6">
+          {/* Desktop Growth Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("growth")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -613,8 +637,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             </div>
           </div>
 
-          {/* Mastery Pack - 330px height */}
-          <div className="max-md:px-6">
+          {/* Desktop Mastery Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("mastery")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -711,15 +735,301 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        <div className="flex w-[782px] max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-10 max-md:px-6">
-          <h3 className="text-black text-xl max-md:max-w-full">
+        {/* Mobile Horizontal Scroll Cards */}
+        <div className="md:hidden mt-5">
+          <div
+            ref={scrollContainerRef}
+            className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-4"
+            style={{
+            touchAction: 'pan-x',
+            WebkitOverflowScrolling: 'touch',
+            scrollPaddingLeft: '1rem',
+            scrollBehavior: 'smooth',
+            overscrollBehaviorX: 'contain'
+          }}>
+            {/* Mobile Starter Pack */}
+            <div className="flex-shrink-0 w-[260px] snap-start first:ml-0">
+              <div
+                onClick={() => handleCardClick("starter")}
+                className={`relative rounded-[20px] p-4 text-white h-[240px] overflow-hidden cursor-pointer transition-all ${
+                  selectedPackage === "starter"
+                    ? "bg-[#3B5CDE] border border-gray-100"
+                    : "bg-white border border-gray-100"
+                }`}
+              >
+                <div className="absolute top-0 right-0 w-0 h-0 border-l-[60px] border-l-transparent border-t-[60px] border-t-[#FFA600]">
+                  <div className="absolute -top-[50px] -right-[20px] rotate-45 text-white text-[8px] font-bold leading-tight flex flex-col items-center justify-center w-[80px]">
+                    <div>MOST</div>
+                    <div>POPULAR</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 mb-3">
+                  <Diamond className="w-[8px] h-[8px]" style={{ color: "#FFA600" }} fill="#FFA600" />
+                  <h3 className={`text-lg font-bold ${selectedPackage === "starter" ? "text-white" : "text-gray-900"}`}>
+                    Starter Pack
+                  </h3>
+                </div>
+
+                <div className="mb-3">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-xl line-through ${selectedPackage === "starter" ? "text-white/70" : "text-gray-400"}`}>
+                      $109
+                    </span>
+                    <span className={`text-3xl font-bold ${selectedPackage === "starter" ? "text-white" : "text-gray-900"}`}>
+                      $79
+                    </span>
+                  </div>
+                  <div>
+                    <span className={`text-sm ${selectedPackage === "starter" ? "text-white/80" : "text-gray-500"}`}>
+                      {paymentText}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`w-full font-normal px-3 rounded-full mb-4 h-8 flex items-center justify-center text-sm ${
+                  selectedPackage === "starter"
+                    ? "bg-white/20 text-white opacity-60"
+                    : "bg-white text-[#3B5CDE] border border-[#3B5CDE]"
+                }`}>
+                  {selectedPackage === "starter" ? "Current plan" : "Select plan"}
+                </div>
+
+                <div className={`border-t pt-3 ${selectedPackage === "starter" ? "border-white/20" : "border-gray-200"}`}>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "starter" ? "text-white/80" : "text-gray-500"}>
+                        Ads duration
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "starter" ? "text-white" : "text-gray-900"}`}>
+                        1 Week
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "starter" ? "text-white/80" : "text-gray-500"}>
+                        Estimated views
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "starter" ? "text-white" : "text-gray-900"}`}>
+                        {(2000 * packageToDuration.starter).toLocaleString()}
+                      </span>
+                    </div>
+                    {selectedPackage === "starter" && (
+                      <div className="flex justify-between text-xs">
+                        <span className="text-white/80">Estimated leads</span>
+                        <span className="font-medium text-white">{Math.ceil(79 / 9)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Boost Pack */}
+            <div className="flex-shrink-0 w-[260px] snap-center">
+              <div
+                onClick={() => handleCardClick("boost")}
+                className={`relative rounded-[20px] p-4 h-[240px] overflow-hidden cursor-pointer transition-all ${
+                  selectedPackage === "boost"
+                    ? "bg-[#3B5CDE] text-white border border-gray-100"
+                    : "bg-white border border-gray-100"
+                }`}
+              >
+                <div className="flex items-center gap-1 mb-4">
+                  <Diamond className="w-[8px] h-[8px]" style={{ color: "#FFA600" }} fill="#FFA600" />
+                  <h3 className={`text-lg font-bold ${selectedPackage === "boost" ? "text-white" : "text-gray-900"}`}>
+                    Boost Pack
+                  </h3>
+                </div>
+
+                <div className="mb-4">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-bold ${selectedPackage === "boost" ? "text-white" : "text-gray-900"}`}>
+                      $158
+                    </span>
+                    <span className={`text-sm ${selectedPackage === "boost" ? "text-white/80" : "text-gray-500"}`}>
+                      {paymentText}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`w-full font-normal px-3 rounded-full mb-4 h-8 flex items-center justify-center text-sm ${
+                  selectedPackage === "boost"
+                    ? "bg-white/20 text-white opacity-60"
+                    : "bg-white text-[#3B5CDE] border border-[#3B5CDE]"
+                }`}>
+                  {selectedPackage === "boost" ? "Current plan" : "Select plan"}
+                </div>
+
+                <div className={`border-t pt-3 ${selectedPackage === "boost" ? "border-white/20" : "border-gray-200"}`}>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "boost" ? "text-white/80" : "text-gray-500"}>
+                        Ads duration
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "boost" ? "text-white" : "text-gray-900"}`}>
+                        2 Weeks
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "boost" ? "text-white/80" : "text-gray-500"}>
+                        Estimated views
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "boost" ? "text-white" : "text-gray-900"}`}>
+                        {(2000 * packageToDuration.boost).toLocaleString()}
+                      </span>
+                    </div>
+                    {selectedPackage === "boost" && (
+                      <div className="flex justify-between text-xs">
+                        <span className="text-white/80">Estimated leads</span>
+                        <span className="font-medium text-white">{Math.ceil(158 / 9)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Growth Pack */}
+            <div className="flex-shrink-0 w-[260px] snap-center">
+              <div
+                onClick={() => handleCardClick("growth")}
+                className={`relative rounded-[20px] p-4 h-[240px] overflow-hidden cursor-pointer transition-all ${
+                  selectedPackage === "growth"
+                    ? "bg-[#3B5CDE] text-white border border-gray-100"
+                    : "bg-white border border-gray-100"
+                }`}
+              >
+                <div className="flex items-center gap-1 mb-4">
+                  <Diamond className="w-[8px] h-[8px]" style={{ color: "#FFA600" }} fill="#FFA600" />
+                  <h3 className={`text-lg font-bold ${selectedPackage === "growth" ? "text-white" : "text-gray-900"}`}>
+                    Growth Pack
+                  </h3>
+                </div>
+
+                <div className="mb-4">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-bold ${selectedPackage === "growth" ? "text-white" : "text-gray-900"}`}>
+                      $237
+                    </span>
+                    <span className={`text-sm ${selectedPackage === "growth" ? "text-white/80" : "text-gray-500"}`}>
+                      {paymentText}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`w-full font-normal px-3 rounded-full mb-4 h-8 flex items-center justify-center text-sm ${
+                  selectedPackage === "growth"
+                    ? "bg-white/20 text-white opacity-60"
+                    : "bg-white text-[#3B5CDE] border border-[#3B5CDE]"
+                }`}>
+                  {selectedPackage === "growth" ? "Current plan" : "Select plan"}
+                </div>
+
+                <div className={`border-t pt-3 ${selectedPackage === "growth" ? "border-white/20" : "border-gray-200"}`}>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "growth" ? "text-white/80" : "text-gray-500"}>
+                        Ads duration
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "growth" ? "text-white" : "text-gray-900"}`}>
+                        3 Weeks
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "growth" ? "text-white/80" : "text-gray-500"}>
+                        Estimated views
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "growth" ? "text-white" : "text-gray-900"}`}>
+                        {(2000 * packageToDuration.growth).toLocaleString()}
+                      </span>
+                    </div>
+                    {selectedPackage === "growth" && (
+                      <div className="flex justify-between text-xs">
+                        <span className="text-white/80">Estimated leads</span>
+                        <span className="font-medium text-white">{Math.ceil(237 / 9)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Mastery Pack */}
+            <div className="flex-shrink-0 w-[260px] snap-center">
+              <div
+                onClick={() => handleCardClick("mastery")}
+                className={`relative rounded-[20px] p-4 h-[240px] overflow-hidden cursor-pointer transition-all ${
+                  selectedPackage === "mastery"
+                    ? "bg-[#3B5CDE] text-white border border-gray-100"
+                    : "bg-white border border-gray-100"
+                }`}
+              >
+                <div className="flex items-center gap-1 mb-4">
+                  <Diamond className="w-[8px] h-[8px]" style={{ color: "#FFA600" }} fill="#FFA600" />
+                  <h3 className={`text-lg font-bold ${selectedPackage === "mastery" ? "text-white" : "text-gray-900"}`}>
+                    Mastery Pack
+                  </h3>
+                </div>
+
+                <div className="mb-4">
+                  <div className="flex items-baseline gap-2">
+                    <span className={`text-3xl font-bold ${selectedPackage === "mastery" ? "text-white" : "text-gray-900"}`}>
+                      $316
+                    </span>
+                    <span className={`text-sm ${selectedPackage === "mastery" ? "text-white/80" : "text-gray-500"}`}>
+                      {paymentText}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={`w-full font-normal px-3 rounded-full mb-4 h-8 flex items-center justify-center text-sm ${
+                  selectedPackage === "mastery"
+                    ? "bg-white/20 text-white opacity-60"
+                    : "bg-white text-[#3B5CDE] border border-[#3B5CDE]"
+                }`}>
+                  {selectedPackage === "mastery" ? "Current plan" : "Select plan"}
+                </div>
+
+                <div className={`border-t pt-3 ${selectedPackage === "mastery" ? "border-white/20" : "border-gray-200"}`}>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "mastery" ? "text-white/80" : "text-gray-500"}>
+                        Ads duration
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "mastery" ? "text-white" : "text-gray-900"}`}>
+                        4 Weeks
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className={selectedPackage === "mastery" ? "text-white/80" : "text-gray-500"}>
+                        Estimated views
+                      </span>
+                      <span className={`font-medium ${selectedPackage === "mastery" ? "text-white" : "text-gray-900"}`}>
+                        {(2000 * packageToDuration.mastery).toLocaleString()}
+                      </span>
+                    </div>
+                    {selectedPackage === "mastery" && (
+                      <div className="flex justify-between text-xs">
+                        <span className="text-white/80">Estimated leads</span>
+                        <span className="font-medium text-white">{Math.ceil(316 / 9)}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex w-[782px] max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-10 max-md:px-4">
+          <h3 className="text-black text-xl max-md:max-w-full max-md:text-lg max-md:leading-tight">
             Ready to Checkout? Proceed to payment and your promoted listing will
             go live
           </h3>
           <button
             onClick={handleCheckout}
             id="btn-blast-now"
-            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all mt-[30px] px-5 py-4 rounded-[75px] max-md:px-5"
+            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all mt-[30px] px-5 py-4 rounded-[75px] max-md:px-5 max-md:w-full max-md:max-w-[280px] max-md:h-12"
             style={{
               background: "linear-gradient(to bottom, #5073FF, #3B5CDE)",
               fontWeight: 500,

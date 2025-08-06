@@ -169,7 +169,7 @@ const Index = ({ page }: { page?: "listing" }) => {
   const FacebookAdComponent = () => {
     if (viewMode === "mobile") {
       return (
-        <div className="w-[189px] h-[375px] relative overflow-hidden">
+        <div className="w-[189px] h-[375px] relative overflow-hidden max-md:w-[160px] max-md:h-[320px]">
           {/* Phone Frame */}
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/d5eea0ffa4cbe44d79c2b7176315fe8b471c1240?width=378"
@@ -181,11 +181,11 @@ const Index = ({ page }: { page?: "listing" }) => {
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/a700b84e2005edf75eecfbd0eb071ec062bb85f9?width=343"
             alt=""
-            className="absolute left-[9px] top-[9px] w-[171px] h-[356px] rounded-[20.671px] object-cover"
+            className="absolute left-[9px] top-[9px] w-[171px] h-[356px] rounded-[20.671px] object-cover max-md:left-[8px] max-md:top-[8px] max-md:w-[144px] max-md:h-[304px]"
           />
 
           {/* White Content Background */}
-          <div className="absolute left-[9px] top-[44px] w-[171px] h-[301px] bg-white shadow-[0px_2.938px_8.814px_rgba(32,36,55,0.05)]">
+          <div className="absolute left-[9px] top-[44px] w-[171px] h-[301px] bg-white shadow-[0px_2.938px_8.814px_rgba(32,36,55,0.05)] max-md:left-[8px] max-md:top-[38px] max-md:w-[144px] max-md:h-[254px]">
             {/* Facebook Header */}
             <div className="absolute left-[8px] top-[10px] w-[155px] h-[22px]">
               {/* Profile Avatar */}
@@ -991,17 +991,17 @@ const Index = ({ page }: { page?: "listing" }) => {
       <PurchaseNotification listingCity={listingCity} />
       <Hero page={page} />
 
-      <main className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0">
-        <div className="w-full max-w-[1140px] max-md:max-w-full">
-          <div className="gap-5 flex max-md:flex-col items-stretch">
+      <main className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:py-[20px] max-md:mx-4 max-md:rounded-xl">
+        <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
+          <div className="gap-5 flex max-md:flex-col items-stretch max-md:gap-8">
             <PropertySetup
               listingId={listingId}
               onAddressSelect={handleAddressSelect}
               onCityUpdate={handleCityUpdate}
             />
 
-            <section className="w-6/12 ml-5 max-md:w-full max-md:ml-0 flex">
-              <div className="flex flex-col items-center bg-[#F6F7FB] mx-auto px-[30px] py-4 rounded-xl max-md:max-w-full max-md:mt-10 max-md:px-5 max-md:mx-6 flex-1 overflow-hidden relative">
+            <section className="w-6/12 ml-5 max-md:w-full max-md:ml-0 flex max-md:hidden">
+              <div className="flex flex-col items-center bg-[#F6F7FB] mx-auto px-[30px] py-4 rounded-xl max-md:max-w-full max-md:mt-0 max-md:px-4 max-md:mx-0 flex-1 overflow-hidden relative max-md:bg-gray-50">
                 {/* Zoom Icon - Only show on mobile view */}
                 {viewMode === "mobile" && (
                   <button
@@ -1013,7 +1013,7 @@ const Index = ({ page }: { page?: "listing" }) => {
                   </button>
                 )}
                 {/* Device Toggle Icons */}
-                <div className="flex items-center gap-2 mb-4 mt-2 z-20">
+                <div className="flex items-center gap-2 mb-4 mt-2 z-20 max-md:mb-6">
                   <button
                     onClick={() => setViewMode("desktop")}
                     className={`p-2 rounded-lg transition-colors ${
@@ -1042,7 +1042,7 @@ const Index = ({ page }: { page?: "listing" }) => {
                 {/* Navigation arrows */}
                 <button
                   onClick={handlePrevious}
-                  className="absolute left-2 top-2 md:top-1/2 md:transform md:-translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-lg transition-all duration-200"
+                  className="absolute left-2 top-2 md:top-1/2 md:transform md:-translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-lg transition-all duration-200 max-md:left-1 max-md:top-16"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = "#3B5CDE";
                     const icon = e.currentTarget.querySelector("svg");
@@ -1065,7 +1065,7 @@ const Index = ({ page }: { page?: "listing" }) => {
 
                 <button
                   onClick={handleNext}
-                  className="absolute right-2 top-2 md:top-1/2 md:transform md:-translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-lg transition-all duration-200"
+                  className="absolute right-2 top-2 md:top-1/2 md:transform md:-translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg hover:shadow-lg transition-all duration-200 max-md:right-1 max-md:top-16"
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = "#3B5CDE";
                     const icon = e.currentTarget.querySelector("svg");
@@ -1108,12 +1108,12 @@ const Index = ({ page }: { page?: "listing" }) => {
                           ? currentSet.mobileImage
                           : currentSet.image
                       }
-                      className="w-[calc(100vw-65px)] max-w-[390px] h-[366px] object-contain transition-opacity duration-300"
+                      className="w-[calc(100vw-65px)] max-w-[390px] h-[366px] object-contain transition-opacity duration-300 max-md:w-full max-md:max-w-[350px] max-md:h-[300px]"
                       alt={`${currentSet.text} Ad Preview`}
                     />
                   )}
 
-                  <div className="flex items-center gap-2 text-sm text-[rgba(81,86,102,1)] font-normal uppercase leading-none mt-4">
+                  <div className="flex items-center gap-2 text-sm text-[rgba(81,86,102,1)] font-normal uppercase leading-none mt-4 max-md:text-xs max-md:gap-1">
                     <img
                       src={currentSet.platformIcon}
                       className="aspect-[1] object-contain w-4 shrink-0"

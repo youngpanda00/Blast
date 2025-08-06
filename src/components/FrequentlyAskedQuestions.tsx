@@ -21,22 +21,22 @@ const faqData = [
 
 export const FrequentlyAskedQuestions: React.FC = () => {
   return (
-    <section className="bg-[#F8F9FF] flex w-full flex-col items-center justify-center py-20 px-25 max-md:px-5">
-      <div className="flex w-full max-w-[1240px] flex-col items-center">
-        <h2 className="text-[34px] leading-none text-center text-gray-900 font-medium mb-16">
+    <section className="bg-[#F8F9FF] flex w-full flex-col items-center justify-center py-20 px-25 max-md:px-4 max-md:py-12">
+      <div className="flex w-full max-w-[1240px] flex-col items-center max-md:max-w-full">
+        <h2 className="text-[34px] leading-none text-center text-gray-900 font-medium mb-16 max-md:text-[24px] max-md:mb-8">
           Frequently Asked Questions
         </h2>
 
-        <div className="w-full max-w-[1000px] grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="w-full max-w-[1000px] grid grid-cols-1 md:grid-cols-2 gap-6 max-md:gap-4">
           {faqData.map((faq, index) => (
             <div
               key={index}
-              className="bg-white rounded-lg p-6 shadow-sm border border-gray-100"
+              className="bg-white rounded-lg p-6 shadow-sm border border-gray-100 max-md:p-4"
             >
-              <h3 className="text-lg font-medium text-gray-900 mb-4 leading-tight">
+              <h3 className="text-lg font-medium text-gray-900 mb-4 leading-tight max-md:text-base max-md:mb-3">
                 {faq.question}
               </h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed max-md:text-xs">
                 {faq.answer}
               </p>
             </div>

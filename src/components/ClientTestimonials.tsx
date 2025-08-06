@@ -88,7 +88,7 @@ export const ClientTestimonials: React.FC = () => {
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = useIsMobile();
-  const cardWidth = isMobile ? 260 : 410; // Mobile: 240px card + 20px gap, Desktop: 390px card + 20px gap
+  const cardWidth = isMobile ? 280 : 410; // Mobile: 260px card + 20px gap, Desktop: 390px card + 20px gap
   const totalCards = testimonials.length;
   const containerRef = useRef<HTMLDivElement>(null);
   const autoplayTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -172,27 +172,27 @@ export const ClientTestimonials: React.FC = () => {
   }, [isPaused]);
 
   return (
-    <section className="bg-white flex w-full flex-col items-center justify-center py-20 px-25 max-md:px-5">
-      <div className="flex w-full max-w-[1240px] flex-col items-center">
-        <h2 className="text-[34px] leading-none text-center text-gray-900 font-medium mb-5">
+    <section className="bg-white flex w-full flex-col items-center justify-center py-20 px-25 max-md:px-4 max-md:py-12">
+      <div className="flex w-full max-w-[1240px] flex-col items-center max-md:max-w-full">
+        <h2 className="text-[34px] leading-none text-center text-gray-900 font-medium mb-5 max-md:text-[24px] max-md:mb-4">
           What Our Clients Say
         </h2>
 
-        <p className="text-gray-600 text-center font-normal leading-[23px] max-w-full">
+        <p className="text-gray-600 text-center font-normal leading-[23px] max-w-full max-md:text-sm max-md:leading-[20px]">
           With our constant innovations, LoftyBlast listen to what our users
           say.
         </p>
 
         {/* User testimonials section with navigation */}
         <div
-          className="relative w-full mt-10 xl:flex xl:items-center xl:gap-8"
+          className="relative w-full mt-10 xl:flex xl:items-center xl:gap-8 max-md:mt-8"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Navigation buttons */}
           <button
             onClick={handlePrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:relative xl:left-auto xl:top-auto xl:transform-none xl:opacity-100"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:relative xl:left-auto xl:top-auto xl:transform-none xl:opacity-100 max-md:left-2 max-md:p-1"
             aria-label="Previous testimonial"
           >
             <ChevronLeft className="w-6 h-6 text-gray-600" />
