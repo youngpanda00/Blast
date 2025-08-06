@@ -30,6 +30,9 @@ export const Hero: React.FC<{ page?: "listing" }> = ({ page }) => {
             {/* Right Column - Description and Features */}
             <div className="flex-1 max-md:text-center max-md:max-w-[350px] max-md:mx-auto">
               <div className="text-[18px] font-normal text-[#D8DEF8] max-md:max-w-full max-md:mx-auto max-md:text-[16px]">
+                <p className="mb-6 text-[20px] font-medium max-md:hidden">
+                  Blast By Lofty: AI-Powered Lead Generation On Autopilot!
+                </p>
                 <div className="text-[15px] mb-[10px] flex items-center max-md:justify-start max-md:text-[14px] max-md:mb-3">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
