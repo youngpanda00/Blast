@@ -272,7 +272,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                       />
                       <div className="flex items-center gap-1.5">
                         <Bath className="w-4 h-4" />
-                        <span className="font-medium">
+                        <span className="font-medium max-md:text-xs">
                           {isLoading
                             ? "- baths"
                             : error
