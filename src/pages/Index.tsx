@@ -169,7 +169,7 @@ const Index = ({ page }: { page?: "listing" }) => {
   const FacebookAdComponent = () => {
     if (viewMode === "mobile") {
       return (
-        <div className="w-[189px] h-[375px] relative overflow-hidden">
+        <div className="w-[189px] h-[375px] relative overflow-hidden max-md:w-[160px] max-md:h-[320px]">
           {/* Phone Frame */}
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/d5eea0ffa4cbe44d79c2b7176315fe8b471c1240?width=378"
@@ -181,11 +181,11 @@ const Index = ({ page }: { page?: "listing" }) => {
           <img
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/a700b84e2005edf75eecfbd0eb071ec062bb85f9?width=343"
             alt=""
-            className="absolute left-[9px] top-[9px] w-[171px] h-[356px] rounded-[20.671px] object-cover"
+            className="absolute left-[9px] top-[9px] w-[171px] h-[356px] rounded-[20.671px] object-cover max-md:left-[8px] max-md:top-[8px] max-md:w-[144px] max-md:h-[304px]"
           />
 
           {/* White Content Background */}
-          <div className="absolute left-[9px] top-[44px] w-[171px] h-[301px] bg-white shadow-[0px_2.938px_8.814px_rgba(32,36,55,0.05)]">
+          <div className="absolute left-[9px] top-[44px] w-[171px] h-[301px] bg-white shadow-[0px_2.938px_8.814px_rgba(32,36,55,0.05)] max-md:left-[8px] max-md:top-[38px] max-md:w-[144px] max-md:h-[254px]">
             {/* Facebook Header */}
             <div className="absolute left-[8px] top-[10px] w-[155px] h-[22px]">
               {/* Profile Avatar */}
