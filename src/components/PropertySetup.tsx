@@ -258,7 +258,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                     <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
                       <div className="flex items-center gap-1.5">
                         <Bed className="w-4 h-4" />
-                        <span className="font-medium">
+                        <span className="font-medium max-md:text-xs">
                           {isLoading
                             ? "- beds"
                             : error
