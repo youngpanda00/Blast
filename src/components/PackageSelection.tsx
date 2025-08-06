@@ -308,10 +308,25 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        {/* Package cards layout - All same height (330px) */}
-        <div className="grid grid-cols-4 gap-4 w-full max-w-[1140px] mt-5 max-md:grid-cols-1 max-md:gap-6 items-center max-md:px-4">
-          {/* Starter Pack - 330px height */}
-          <div className="max-md:px-0">
+        {/* Package cards layout - Desktop: Grid, Mobile: Horizontal scroll */}
+        <div className="w-full max-w-[1140px] mt-5">
+          {/* Desktop layout */}
+          <div className="hidden md:grid grid-cols-4 gap-4 items-center">
+            {/* Desktop cards will go here */}
+          </div>
+
+          {/* Mobile horizontal scroll */}
+          <div className="md:hidden px-4">
+            <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+              {/* Mobile cards will go here */}
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Package Cards */}
+        <div className="hidden md:grid grid-cols-4 gap-4 w-full max-w-[1140px] items-center">
+          {/* Desktop Starter Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("starter")}
               className={`relative rounded-[24px] p-6 text-white h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -420,8 +435,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
               </div>
             </div>
           </div>
-          {/* Boost Pack - 330px height */}
-          <div className="max-md:px-0">
+          {/* Desktop Boost Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("boost")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -516,8 +531,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
               </div>
             </div>
           </div>
-          {/* Growth Pack - 330px height */}
-          <div className="max-md:px-0">
+          {/* Desktop Growth Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("growth")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -613,8 +628,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             </div>
           </div>
 
-          {/* Mastery Pack - 330px height */}
-          <div className="max-md:px-0">
+          {/* Desktop Mastery Pack */}
+          <div>
             <div
               onClick={() => handleCardClick("mastery")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
