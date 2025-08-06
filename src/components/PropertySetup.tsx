@@ -194,6 +194,54 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
         </div>
 
         <div className="space-y-4">
+          {/* Mobile-first address search section */}
+          <div className="max-md:order-first max-md:mb-6">
+            <div className="p-4 rounded-xl border-0 max-md:p-4 shadow-lg"
+                 style={{
+                   background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                   boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)"
+                 }}>
+              <Label
+                className="text-base font-medium mb-3 block text-white"
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  lineHeight: "24px",
+                }}
+              >
+                <strong className="max-md:text-base flex items-center gap-2">
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  Promote your new listing online!
+                </strong>
+                <br />
+                <span className="text-sm opacity-90 max-md:text-sm mt-1 block">
+                  Turn views into inquiries with AI-powered advertising
+                </span>
+              </Label>
+
+              <form onSubmit={handleAddressSubmit} className="relative">
+                <div className="relative">
+                  <Input
+                    isAddressSearch={true}
+                    value={addressInput}
+                    onChange={(e) => setAddressInput(e.target.value)}
+                    onAddressSelect={handleAddressSelect}
+                    placeholder="Enter the property address"
+                    className="h-12 text-base border-0 focus:ring-2 focus:ring-white/30 transition-all bg-white/95 backdrop-blur-sm max-md:h-11 max-md:text-sm placeholder:text-gray-500 font-medium"
+                    style={{
+                      borderRadius: "10px",
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
+                    }}
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+
           <div>
             <Label
               className="text-base font-normal text-gray-900 block mb-[10px]"
@@ -339,37 +387,6 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
             </Card>
           </div>
 
-          <div className="p-4 rounded-lg border max-md:p-3" style={{ backgroundColor: "#3b5cdf", borderColor: "#3b5cdf" }}>
-            <Label
-              className="text-base font-normal mb-3 block"
-              style={{
-                fontSize: "16px",
-                fontWeight: "400",
-                lineHeight: "24px",
-                color: "#ffffff",
-              }}
-            >
-              <strong className="max-md:text-sm">Promote your new listing online and turn views into inquiries!</strong>
-              <br />
-              <span className="text-sm opacity-90 max-md:text-xs">
-                Easily enter an address and boost this listing.
-              </span>
-            </Label>
-
-            <form onSubmit={handleAddressSubmit} className="relative">
-              <div className="relative">
-                <Input
-                  isAddressSearch={true}
-                  value={addressInput}
-                  onChange={(e) => setAddressInput(e.target.value)}
-                  onAddressSelect={handleAddressSelect}
-                  placeholder="Enter the property address"
-                  className="h-12 text-base border focus:border-blue-500 transition-colors max-md:h-10 max-md:text-sm"
-                  style={{ borderWidth: "1px" }}
-                />
-              </div>
-            </form>
-          </div>
 
           <div className="space-y-4">
             <div className="mt-4">
