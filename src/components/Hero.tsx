@@ -5,8 +5,8 @@ export const Hero: React.FC<{ page?: "listing" }> = ({ page }) => {
   return (
     <>
       { page === 'listing' && <FixedNavigation /> }
-      <section className={page !== 'listing' ? "flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px] bg-[rgba(0,28,188,1)]" :
-"flex w-full flex-col items-stretch px-[22px] pt-[90px] pb-[50px] max-md:max-w-full max-md:px-5 max-md:pb-[30px] max-md:pt-[80px] bg-[rgba(0,28,188,1)]" }>
+      <section className={page !== 'listing' ? "flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-4 max-md:pb-[40px] max-md:pt-[20px] bg-[rgba(0,28,188,1)]" :
+"flex w-full flex-col items-stretch px-[22px] pt-[90px] pb-[50px] max-md:max-w-full max-md:px-4 max-md:pb-[40px] max-md:pt-[80px] bg-[rgba(0,28,188,1)]" }>
         <div className="w-full h-full flex flex-col">
           {/* Logo positioned at top left */}
           {page !== 'listing' && <div className="mb-[27px]">
@@ -17,10 +17,10 @@ export const Hero: React.FC<{ page?: "listing" }> = ({ page }) => {
             />
           </div>}
           {/* Text content with horizontal layout */}
-          <div className="flex w-full max-w-[1210px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
+          <div className="flex w-full max-w-[1210px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col max-md:gap-6">
             {/* Left Column - Main Headline */}
-            <div className="flex-1 max-md:text-center max-md:mb-8">
-              <h1 className="text-[50px] font-medium text-[#FFB700] tracking-[-1.5px] max-md:text-[40px] leading-tight">
+            <div className="flex-1 max-md:text-center max-md:mb-6">
+              <h1 className="text-[50px] font-medium text-[#FFB700] tracking-[-1.5px] max-md:text-[28px] max-sm:text-[24px] leading-tight max-md:leading-[1.2]">
                 AI-Powered Blast:<br />
                 1 - Click Listing To Leads,<br />
                 Zero Work, Instant Results!
@@ -28,24 +28,24 @@ export const Hero: React.FC<{ page?: "listing" }> = ({ page }) => {
             </div>
 
             {/* Right Column - Description and Features */}
-            <div className="flex-1 max-md:text-center">
-              <div className="text-[18px] font-normal text-[#D8DEF8] max-md:max-w-fit max-md:mx-auto">
-                <p className="mb-6 text-[20px] font-medium">
+            <div className="flex-1 max-md:text-center max-md:max-w-[350px] max-md:mx-auto">
+              <div className="text-[18px] font-normal text-[#D8DEF8] max-md:max-w-full max-md:mx-auto max-md:text-[16px]">
+                <p className="mb-6 text-[20px] font-medium max-md:text-[18px] max-md:mb-4">
                   Blast By Lofty: AI-Powered Lead Generation On Autopilot!
                 </p>
-                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-start">
+                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-center max-md:text-[14px] max-md:mb-3">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
                   1-Click Launch – No setup, no hassle.
                 </div>
-                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-start">
+                <div className="text-[15px] mb-[10px] flex items-center max-md:justify-center max-md:text-[14px] max-md:mb-3">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
                   Floods Your Pipeline – AI optimizes advertising to attract buyers 24/7.
                 </div>
-                <div className="text-[15px] flex items-center max-md:justify-start">
+                <div className="text-[15px] flex items-center max-md:justify-center max-md:text-[14px]">
                   <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center mr-[10px] flex-shrink-0">
                     <div className="w-2 h-1 border-l-2 border-b-2 border-white transform rotate-[-45deg] translate-y-[-1px]"></div>
                   </div>
