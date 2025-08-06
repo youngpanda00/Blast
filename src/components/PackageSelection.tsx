@@ -225,14 +225,14 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       <section className="w-full flex flex-col items-center">
         <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px]" />
 
-        <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6">
-          <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full">
+        <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-4 max-md:flex-col max-md:gap-4">
+          <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full max-md:text-lg max-md:text-center">
             Select Your Package: Boost Views, Get Leads
           </h2>
 
-          <div className="flex items-center gap-3">
-            <div className="bg-[rgba(246,247,251,1)] border flex min-h-10 flex-col items-stretch text-sm leading-6 justify-center p-[5px] rounded-[20px] border-[rgba(235,236,241,1)] border-solid">
-              <div className="flex min-h-[30px] w-full max-w-[310px] gap-[5px]">
+          <div className="flex items-center gap-3 max-md:justify-center max-md:flex-wrap">
+            <div className="bg-[rgba(246,247,251,1)] border flex min-h-10 flex-col items-stretch text-sm leading-6 justify-center p-[5px] rounded-[20px] border-[rgba(235,236,241,1)] border-solid max-md:w-full max-md:max-w-[280px]">
+              <div className="flex min-h-[30px] w-full max-w-[310px] gap-[5px] max-md:max-w-full">
                 <button
                   onClick={() => {
                     setSelectedPlan("one-time");
@@ -247,7 +247,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                       click_action: "charge"
                     });
                   }}
-                  className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] px-2.5 rounded-[15px] transition-all ${
+                  className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] px-2.5 rounded-[15px] transition-all max-md:flex-1 max-md:w-auto ${
                     selectedPlan === "one-time"
                       ? "shadow-[0px_2px_5px_0px_rgba(0,0,0,0.05)] text-[#3B5CDE] bg-white"
                       : "text-[#797E8B] font-[510]"
@@ -269,7 +269,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                      click_action: "charge"
                    });
                   }}
-                  className={`flex min-h-[30px] items-center whitespace-nowrap justify-center w-[152px] px-2.5 rounded-[15px] transition-all ${
+                  className={`flex min-h-[30px] items-center whitespace-nowrap justify-center w-[152px] px-2.5 rounded-[15px] transition-all max-md:flex-1 max-md:w-auto ${
                     selectedPlan === "monthly"
                       ? "shadow-[0px_2px_5px_0px_rgba(0,0,0,0.05)] text-[#3B5CDE] bg-white font-bold"
                       : "text-[#797E8B] font-[510]"
@@ -309,9 +309,9 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         </div>
 
         {/* Package cards layout - All same height (330px) */}
-        <div className="grid grid-cols-4 gap-4 w-full max-w-[1140px] mt-5 max-md:grid-cols-1 items-center">
+        <div className="grid grid-cols-4 gap-4 w-full max-w-[1140px] mt-5 max-md:grid-cols-1 max-md:gap-6 items-center max-md:px-4">
           {/* Starter Pack - 330px height */}
-          <div className="max-md:px-6">
+          <div className="max-md:px-0">
             <div
               onClick={() => handleCardClick("starter")}
               className={`relative rounded-[24px] p-6 text-white h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -421,7 +421,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             </div>
           </div>
           {/* Boost Pack - 330px height */}
-          <div className="max-md:px-6">
+          <div className="max-md:px-0">
             <div
               onClick={() => handleCardClick("boost")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -517,7 +517,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             </div>
           </div>
           {/* Growth Pack - 330px height */}
-          <div className="max-md:px-6">
+          <div className="max-md:px-0">
             <div
               onClick={() => handleCardClick("growth")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -614,7 +614,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
 
           {/* Mastery Pack - 330px height */}
-          <div className="max-md:px-6">
+          <div className="max-md:px-0">
             <div
               onClick={() => handleCardClick("mastery")}
               className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
@@ -711,15 +711,15 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        <div className="flex w-[782px] max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-10 max-md:px-6">
-          <h3 className="text-black text-xl max-md:max-w-full">
+        <div className="flex w-[782px] max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-10 max-md:px-4">
+          <h3 className="text-black text-xl max-md:max-w-full max-md:text-lg max-md:leading-tight">
             Ready to Checkout? Proceed to payment and your promoted listing will
             go live
           </h3>
           <button
             onClick={handleCheckout}
             id="btn-blast-now"
-            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all mt-[30px] px-5 py-4 rounded-[75px] max-md:px-5"
+            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all mt-[30px] px-5 py-4 rounded-[75px] max-md:px-5 max-md:w-full max-md:max-w-[280px] max-md:h-12"
             style={{
               background: "linear-gradient(to bottom, #5073FF, #3B5CDE)",
               fontWeight: 500,
