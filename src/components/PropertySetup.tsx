@@ -185,10 +185,10 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   }, [listingInfo, hasUserSelectedAddress]);
 
   return (
-    <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-6" data-section="property-setup">
+    <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-0" data-section="property-setup">
       <div className="self-stretch my-auto max-md:max-w-full max-md:mt-10">
-        <div className="mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-2 md:max-[1240px]:mt-8">
+        <div className="mb-6 max-md:mb-4">
+          <h2 className="text-xl font-bold text-gray-900 mb-2 md:max-[1240px]:mt-8 max-md:text-lg max-md:mb-3">
             Let's Set Up Your Property & Budget
           </h2>
         </div>
@@ -211,8 +211,8 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
               style={{ border: "1px solid #EBECF1" }}
             >
               <CardContent className="p-4">
-                <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
-                  <div className="relative overflow-hidden rounded-xl h-[150px] md:h-24 w-full md:w-32 mb-4 md:mb-0 flex-shrink-0">
+                <div className="flex flex-col md:flex-row items-center gap-4 mb-6 max-md:gap-3 max-md:mb-4">
+                  <div className="relative overflow-hidden rounded-xl h-[120px] md:h-24 w-full md:w-32 mb-4 md:mb-0 flex-shrink-0 max-md:h-[100px]">
                     <img
                       src={
                         autoFilledData?.previewPicture ||
@@ -232,7 +232,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                   <div className="flex-1">
                     <div className="flex items-start gap-2 mb-2">
                       <div>
-                        <h3 className="text-xl font-bold text-gray-900 leading-tight">
+                        <h3 className="text-xl font-bold text-gray-900 leading-tight max-md:text-lg">
                           {isLoading
                             ? "Loading..."
                             : error
@@ -242,7 +242,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                                 addressFromUrl ||
                                 ""}
                         </h3>
-                        <p className="text-gray-600 font-medium">
+                        <p className="text-gray-600 font-medium max-md:text-sm">
                           {isLoading
                             ? ""
                             : error
@@ -255,7 +255,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
+                    <div className="flex items-center gap-2 mt-4 text-sm text-gray-500 max-md:flex-wrap max-md:gap-1 max-md:text-xs">
                       <div className="flex items-center gap-1.5">
                         <Bed className="w-4 h-4" />
                         <span className="font-medium max-md:text-xs">
@@ -300,12 +300,12 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
 
                 {listingLabels.length > 0 && (
                   <>
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <h4 className="text-sm font-medium text-gray-600 mb-3">
+                    <div className="mt-4 pt-4 border-t border-gray-200 max-md:mt-3 max-md:pt-3">
+                      <h4 className="text-sm font-medium text-gray-600 mb-3 max-md:text-xs max-md:mb-2">
                         Listing highlight
                       </h4>
 
-                      <div className="flex flex-wrap gap-4">
+                      <div className="flex flex-wrap gap-4 max-md:gap-2">
                         {listingLabels.map((label, index) => (
                           <div
                             key={index}
@@ -326,7 +326,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                                 />
                               </svg>
                             </div>
-                            <span className="text-sm font-medium text-gray-700">
+                            <span className="text-sm font-medium text-gray-700 max-md:text-xs">
                               {label}
                             </span>
                           </div>
@@ -339,7 +339,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
             </Card>
           </div>
 
-          <div className="p-4 rounded-lg border" style={{ backgroundColor: "#3b5cdf", borderColor: "#3b5cdf" }}>
+          <div className="p-4 rounded-lg border max-md:p-3" style={{ backgroundColor: "#3b5cdf", borderColor: "#3b5cdf" }}>
             <Label
               className="text-base font-normal mb-3 block"
               style={{
@@ -349,9 +349,9 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                 color: "#ffffff",
               }}
             >
-              <strong>Promote your new listing online and turn views into inquiries!</strong>
+              <strong className="max-md:text-sm">Promote your new listing online and turn views into inquiries!</strong>
               <br />
-              <span className="text-sm opacity-90">
+              <span className="text-sm opacity-90 max-md:text-xs">
                 Easily enter an address and boost this listing.
               </span>
             </Label>
@@ -364,7 +364,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                   onChange={(e) => setAddressInput(e.target.value)}
                   onAddressSelect={handleAddressSelect}
                   placeholder="Enter the property address"
-                  className="h-12 text-base border focus:border-blue-500 transition-colors"
+                  className="h-12 text-base border focus:border-blue-500 transition-colors max-md:h-10 max-md:text-sm"
                   style={{ borderWidth: "1px" }}
                 />
               </div>
