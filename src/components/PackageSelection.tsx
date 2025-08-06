@@ -208,6 +208,14 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const paymentText = selectedPlan === "one-time" ? "Pay one-time" : "Monthly";
 
+  // Initialize mobile scroll position to show starter pack fully
+  useEffect(() => {
+    if (isMobile && scrollContainerRef.current) {
+      // Reset scroll to beginning to ensure starter pack is fully visible
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+  }, [isMobile]);
+
   return (
     <>
       <LoadingOverlay isVisible={isLoading} />
