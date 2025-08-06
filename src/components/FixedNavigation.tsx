@@ -51,7 +51,7 @@ export const FixedNavigation: React.FC = () => {
         </div>
 
         {/* Navigation Menu - next to logo on left */}
-        <div className="flex items-center max-md:hidden h-full max-lg:hidden">
+        <div className="nav-container items-center h-full hidden md:flex">
           <a
             href="/home?anchor=Products"
             onClick={handleNavClick}
@@ -119,7 +119,7 @@ export const FixedNavigation: React.FC = () => {
         {/* Mobile menu button */}
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className={`lg:hidden p-2 ml-auto max-md:p-1 ${
+          className={`md:hidden p-2 ml-auto ${
             isAtTop ? 'text-white' : 'text-[#515666]'
           }`}
         >
@@ -135,7 +135,7 @@ export const FixedNavigation: React.FC = () => {
 
       {/* Mobile menu dropdown */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg">
+        <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg">
           <div className="px-4 py-2 space-y-1">
             <a
               href="/home?anchor=Products"
@@ -175,6 +175,14 @@ export const FixedNavigation: React.FC = () => {
         .nav-transparent {
           background-color: transparent !important;
           border-bottom: none !important;
+        }
+        .nav-container {
+          display: flex;
+        }
+        @media (max-width: 767px) {
+          .nav-container {
+            display: none !important;
+          }
         }
       `}</style>
     </nav>
