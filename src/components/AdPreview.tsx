@@ -58,6 +58,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [isEditingInline, setIsEditingInline] = useState<'headline' | 'adCopy' | null>(null);
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
   const isMobile = useIsMobile();
+  const adPreviewRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(()=>{
     setImage(initialImage)
@@ -66,6 +67,16 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const handleEdit = () => {
     if (isMobile) {
       setIsExpanded(!isExpanded);
+      // Focus jump to ad preview when expanded
+      if (!isExpanded) {
+        setTimeout(() => {
+          adPreviewRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+          adPreviewRef.current?.focus();
+        }, 100);
+      }
     } else {
       setTempHeadline(headline);
       setTempAdCopy(adCopy);
@@ -114,6 +125,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
   const handleInlineEdit = (type: 'headline' | 'adCopy') => {
     setIsEditingInline(type);
+    setHighlightedArea(type);
     if (type === 'headline') {
       setTempHeadline(headline);
     } else {
@@ -130,10 +142,12 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
       onAdUpdate?.({ image, headline, adCopy: tempAdCopy });
     }
     setIsEditingInline(null);
+    setHighlightedArea(null);
   };
 
   const cancelInlineEdit = () => {
     setIsEditingInline(null);
+    setHighlightedArea(null);
     setTempHeadline(headline);
     setTempAdCopy(adCopy);
   };
@@ -179,7 +193,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   }
 
   return (
-    <section className="w-full flex flex-col items-center bg-background">
+    <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background focus:outline-none">
       <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-border mt-[29px]" />
 
       <div className="w-full max-w-[1140px] mt-12 max-md:px-4 px-4">
@@ -261,17 +275,27 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
                 {/* Ad content - with mobile inline editing */}
                 <div className={`p-4 transition-all duration-300 relative ${
-                  highlightedArea === 'adCopy'
+                  highlightedArea === 'adCopy' || isEditingInline === 'adCopy'
                     ? 'bg-blue-50 border-2 border-blue-300 shadow-md'
                     : ''
                 }`}>
                   {isMobile && isEditingInline === 'adCopy' ? (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-xs font-semibold text-blue-600">Edit Ad Copy</span>
+                    <div className="space-y-3 bg-blue-50 p-3 rounded-lg border border-blue-200">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-semibold text-blue-700">✏️ Edit Ad Copy</span>
+                          <div className="flex gap-1">
+                            <Button onClick={saveInlineEdit} size="sm" className="text-xs h-7 px-3 bg-blue-500 hover:bg-blue-600">
+                              ✓ Save
+                            </Button>
+                            <Button onClick={cancelInlineEdit} variant="outline" size="sm" className="text-xs h-7 px-3 border-blue-300">
+                              ✕ Cancel
+                            </Button>
+                          </div>
+                        </div>
                         <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
-                          <SelectTrigger className="h-6 text-xs border-blue-300 bg-blue-50">
-                            <SelectValue placeholder="Template" />
+                          <SelectTrigger className="h-8 text-xs border-blue-300 bg-white">
+                            <SelectValue placeholder="Choose template" />
                           </SelectTrigger>
                           <SelectContent>
                             {adCopyTemplates.map((template) => (
@@ -286,22 +310,15 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       <Textarea
                         value={tempAdCopy}
                         onChange={(e) => setTempAdCopy(e.target.value)}
-                        className="text-sm min-h-[80px] border-blue-300 focus:border-blue-500"
+                        className="text-sm min-h-[80px] border-blue-300 focus:border-blue-500 bg-white"
                         placeholder="Enter your ad copy..."
+                        autoFocus
                       />
-                      <div className="flex gap-2">
-                        <Button onClick={saveInlineEdit} size="sm" className="text-xs h-7 bg-blue-500 hover:bg-blue-600">
-                          Save
-                        </Button>
-                        <Button onClick={cancelInlineEdit} variant="outline" size="sm" className="text-xs h-7">
-                          Cancel
-                        </Button>
-                      </div>
                     </div>
                   ) : (
                     <div className="relative group">
-                      <p className="text-sm text-card-foreground leading-relaxed">
-                        {highlightedArea === 'adCopy' && (
+                      <p className="text-sm text-card-foreground leading-relaxed pr-8">
+                        {(highlightedArea === 'adCopy' || isEditingInline === 'adCopy') && (
                           <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
                         )}
                         {adCopy}
@@ -309,7 +326,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       {isMobile && (
                         <button
                           onClick={() => handleInlineEdit('adCopy')}
-                          className="absolute top-0 right-0 p-1 bg-blue-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-1 right-1 p-1.5 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition-all"
                         >
                           <Edit3 className="w-3 h-3" />
                         </button>
@@ -321,7 +338,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 {/* Ad image - with mobile upload */}
                 <div className={`transition-all duration-300 relative group ${
                   highlightedArea === 'image'
-                    ? 'ring-4 ring-blue-300 shadow-lg'
+                    ? 'ring-4 ring-green-300 shadow-lg'
                     : ''
                 }`}>
                   <img
@@ -330,13 +347,17 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     className={`w-full h-52 object-cover ${isMobile ? '' : 'rounded-t-lg'}`}
                   />
                   {isMobile && (
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <label className="cursor-pointer bg-black/60 text-white p-2 rounded-full hover:bg-black/80 transition-colors">
+                    <div className="absolute top-2 right-2">
+                      <label className="cursor-pointer bg-green-500 text-white p-2 rounded-full shadow-md hover:bg-green-600 transition-all flex items-center justify-center">
                         <Edit3 className="w-4 h-4" />
                         <input
                           type="file"
                           accept="image/*"
-                          onChange={handleImageUpload}
+                          onChange={(e) => {
+                            handleImageUpload(e);
+                            setHighlightedArea('image');
+                            setTimeout(() => setHighlightedArea(null), 2000);
+                          }}
                           className="hidden"
                         />
                       </label>
@@ -346,36 +367,43 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
                 {/* Headline section - below image with mobile inline editing */}
                 <div className={`p-4 border-t border-border transition-all duration-300 ${
-                  highlightedArea === 'headline'
+                  highlightedArea === 'headline' || isEditingInline === 'headline'
                     ? 'bg-yellow-50 border-yellow-300 shadow-md'
                     : 'bg-gray-50'
                 }`}>
                   {isMobile && isEditingInline === 'headline' ? (
-                    <div className="space-y-3">
-                      <span className="text-xs font-semibold text-yellow-600">Edit Headline</span>
+                    <div className="space-y-3 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-semibold text-yellow-700">📝 Edit Headline</span>
+                        <div className="flex gap-1">
+                          <Button onClick={saveInlineEdit} size="sm" className="text-xs h-7 px-3 bg-yellow-500 hover:bg-yellow-600">
+                            ✓ Save
+                          </Button>
+                          <Button onClick={cancelInlineEdit} variant="outline" size="sm" className="text-xs h-7 px-3 border-yellow-300">
+                            ✕ Cancel
+                          </Button>
+                        </div>
+                      </div>
                       <Input
                         value={tempHeadline}
                         onChange={(e) => setTempHeadline(e.target.value)}
-                        className="text-sm border-yellow-300 focus:border-yellow-500"
+                        className="text-sm border-yellow-300 focus:border-yellow-500 bg-white"
                         placeholder="Enter headline..."
+                        autoFocus
+                        maxLength={60}
                       />
-                      <div className="flex gap-2">
-                        <Button onClick={saveInlineEdit} size="sm" className="text-xs h-7 bg-yellow-500 hover:bg-yellow-600">
-                          Save
-                        </Button>
-                        <Button onClick={cancelInlineEdit} variant="outline" size="sm" className="text-xs h-7">
-                          Cancel
-                        </Button>
-                      </div>
+                      <p className="text-xs text-yellow-600">
+                        {tempHeadline.length}/60 characters
+                      </p>
                     </div>
                   ) : (
                     <div className="relative group">
-                      <h4 className={`font-semibold text-sm mb-2 transition-all duration-300 ${
-                        highlightedArea === 'headline'
+                      <h4 className={`font-semibold text-sm mb-2 pr-8 transition-all duration-300 ${
+                        highlightedArea === 'headline' || isEditingInline === 'headline'
                           ? 'text-yellow-800 text-base font-bold'
                           : 'text-gray-800'
                       }`}>
-                        {highlightedArea === 'headline' && (
+                        {(highlightedArea === 'headline' || isEditingInline === 'headline') && (
                           <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
                         )}
                         {headline}
@@ -383,7 +411,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       {isMobile && (
                         <button
                           onClick={() => handleInlineEdit('headline')}
-                          className="absolute top-0 right-0 p-1 bg-yellow-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-1 right-1 p-1.5 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-600 transition-all"
                         >
                           <Edit3 className="w-3 h-3" />
                         </button>
