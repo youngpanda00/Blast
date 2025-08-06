@@ -4,8 +4,16 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { Pencil, Heart, MessageCircle, Share, MoreHorizontal } from "lucide-react";
+import { Pencil, Heart, MessageCircle, Share, MoreHorizontal, ChevronDown, ChevronUp, Edit3 } from "lucide-react";
 import { trackMixPanel } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 interface AdPreviewProps {
   initialImage?: string;
@@ -46,21 +54,29 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
   const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isEditingInline, setIsEditingInline] = useState<'headline' | 'adCopy' | null>(null);
+  const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(()=>{
     setImage(initialImage)
   }, [initialImage])
 
   const handleEdit = () => {
-    setTempHeadline(headline);
-    setTempAdCopy(adCopy);
-    setSelectedTemplate("custom");
-    setIsEditing(true);
+    if (isMobile) {
+      setIsExpanded(!isExpanded);
+    } else {
+      setTempHeadline(headline);
+      setTempAdCopy(adCopy);
+      setSelectedTemplate("custom");
+      setIsEditing(true);
+    }
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
       feature_name: "ListingBlast",
-      click_item: "Edit Ad",
-      click_action: "edit"
+      click_item: isMobile ? "Preview Your Ad" : "Edit Ad",
+      click_action: isMobile ? "expand" : "edit"
     });
   };
 
@@ -96,27 +112,114 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     }
   };
 
+  const handleInlineEdit = (type: 'headline' | 'adCopy') => {
+    setIsEditingInline(type);
+    if (type === 'headline') {
+      setTempHeadline(headline);
+    } else {
+      setTempAdCopy(adCopy);
+    }
+  };
+
+  const saveInlineEdit = () => {
+    if (isEditingInline === 'headline') {
+      setHeadline(tempHeadline);
+      onAdUpdate?.({ image, headline: tempHeadline, adCopy });
+    } else if (isEditingInline === 'adCopy') {
+      setAdCopy(tempAdCopy);
+      onAdUpdate?.({ image, headline, adCopy: tempAdCopy });
+    }
+    setIsEditingInline(null);
+  };
+
+  const cancelInlineEdit = () => {
+    setIsEditingInline(null);
+    setTempHeadline(headline);
+    setTempAdCopy(adCopy);
+  };
+
+  const handleTemplateChange = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    if (templateId !== "custom") {
+      const template = adCopyTemplates.find(t => t.id === templateId);
+      if (template) {
+        setTempAdCopy(template.copy);
+        setAdCopy(template.copy);
+        onAdUpdate?.({ image, headline, adCopy: template.copy });
+      }
+    }
+    setShowTemplateDropdown(false);
+  };
+
+  // Mobile expandable button
+  if (isMobile && !isExpanded) {
+    return (
+      <section className="w-full flex flex-col items-center bg-background">
+        <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-border mt-[29px]" />
+
+        <div className="w-full max-w-[1140px] mt-8 px-4">
+          <Button
+            onClick={handleEdit}
+            className="w-full flex items-center justify-between p-4 h-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl shadow-lg"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </div>
+              <span className="text-lg font-semibold">Preview Your Ad</span>
+            </div>
+            <ChevronDown className="w-5 h-5" />
+          </Button>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="w-full flex flex-col items-center bg-background">
       <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-border mt-[29px]" />
 
-      <div className="w-full max-w-[1140px] mt-12 max-md:px-6 px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-foreground">
-            Preview Your Ad
-          </h2>
-          <Button
-            onClick={isEditing ? undefined : handleEdit}
-            variant="outline"
-            className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-            disabled={isEditing}
-          >
-            <Pencil className="w-4 h-4" />
-            Edit Ad
-          </Button>
-        </div>
+      <div className="w-full max-w-[1140px] mt-12 max-md:px-4 px-4">
+        {/* Mobile header with collapse button */}
+        {isMobile && (
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-foreground">
+              Preview Your Ad
+            </h2>
+            <Button
+              onClick={() => setIsExpanded(false)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <ChevronUp className="w-4 h-4" />
+              Collapse
+            </Button>
+          </div>
+        )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 relative">
+        {/* Desktop header */}
+        {!isMobile && (
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-foreground">
+              Preview Your Ad
+            </h2>
+            <Button
+              onClick={isEditing ? undefined : handleEdit}
+              variant="outline"
+              className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              disabled={isEditing}
+            >
+              <Pencil className="w-4 h-4" />
+              Edit Ad
+            </Button>
+          </div>
+        )}
+
+        <div className={`grid grid-cols-1 ${!isMobile ? 'lg:grid-cols-2' : ''} gap-10 relative`}>
           {/* Connection Line - only visible on desktop */}
           {highlightedArea && (
             <div className="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
@@ -127,16 +230,16 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
           {/* Facebook-style Ad Preview */}
           <div className="space-y-6 relative">
-            <h3 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+            <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-foreground mb-6 flex items-center gap-2`}>
               <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
               Facebook Ad Preview
-              {highlightedArea && (
+              {!isMobile && highlightedArea && (
                 <span className="text-sm font-normal text-muted-foreground animate-pulse">
                   ← {highlightedArea === 'headline' ? 'Headline' : highlightedArea === 'adCopy' ? 'Ad Copy' : 'Image'} highlighted
                 </span>
               )}
             </h3>
-            <Card className="max-w-md mx-auto lg:mx-0 shadow-xl border-border bg-card relative">
+            <Card className={`${isMobile ? 'w-full' : 'max-w-md mx-auto lg:mx-0'} shadow-xl border-border bg-card relative`}>
               <CardContent className="p-0">
                 {/* Facebook header */}
                 <div className="flex items-center justify-between p-4 border-b border-border">
@@ -156,22 +259,67 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                   <MoreHorizontal className="w-4 h-4 text-muted-foreground" />
                 </div>
 
-                {/* Ad content */}
-                <div className={`p-4 transition-all duration-300 ${
+                {/* Ad content - with mobile inline editing */}
+                <div className={`p-4 transition-all duration-300 relative ${
                   highlightedArea === 'adCopy'
                     ? 'bg-blue-50 border-2 border-blue-300 shadow-md'
                     : ''
                 }`}>
-                  <p className="text-sm text-card-foreground leading-relaxed relative">
-                    {highlightedArea === 'adCopy' && (
-                      <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
-                    )}
-                    {adCopy}
-                  </p>
+                  {isMobile && isEditingInline === 'adCopy' ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xs font-semibold text-blue-600">Edit Ad Copy</span>
+                        <Select value={selectedTemplate} onValueChange={handleTemplateChange}>
+                          <SelectTrigger className="h-6 text-xs border-blue-300 bg-blue-50">
+                            <SelectValue placeholder="Template" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {adCopyTemplates.map((template) => (
+                              <SelectItem key={template.id} value={template.id} className="text-xs">
+                                {template.name}
+                              </SelectItem>
+                            ))}
+                            <SelectItem value="custom" className="text-xs">Custom</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <Textarea
+                        value={tempAdCopy}
+                        onChange={(e) => setTempAdCopy(e.target.value)}
+                        className="text-sm min-h-[80px] border-blue-300 focus:border-blue-500"
+                        placeholder="Enter your ad copy..."
+                      />
+                      <div className="flex gap-2">
+                        <Button onClick={saveInlineEdit} size="sm" className="text-xs h-7 bg-blue-500 hover:bg-blue-600">
+                          Save
+                        </Button>
+                        <Button onClick={cancelInlineEdit} variant="outline" size="sm" className="text-xs h-7">
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative group">
+                      <p className="text-sm text-card-foreground leading-relaxed">
+                        {highlightedArea === 'adCopy' && (
+                          <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
+                        )}
+                        {adCopy}
+                      </p>
+                      {isMobile && (
+                        <button
+                          onClick={() => handleInlineEdit('adCopy')}
+                          className="absolute top-0 right-0 p-1 bg-blue-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Edit3 className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
 
-                {/* Ad image */}
-                <div className={`transition-all duration-300 ${
+                {/* Ad image - with mobile upload */}
+                <div className={`transition-all duration-300 relative group ${
                   highlightedArea === 'image'
                     ? 'ring-4 ring-blue-300 shadow-lg'
                     : ''
@@ -179,42 +327,85 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                   <img
                     src={image}
                     alt="Property"
-                    className="w-full h-52 object-cover rounded-t-lg"
+                    className={`w-full h-52 object-cover ${isMobile ? '' : 'rounded-t-lg'}`}
                   />
+                  {isMobile && (
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <label className="cursor-pointer bg-black/60 text-white p-2 rounded-full hover:bg-black/80 transition-colors">
+                        <Edit3 className="w-4 h-4" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  )}
                 </div>
 
-                {/* Headline section - below image */}
+                {/* Headline section - below image with mobile inline editing */}
                 <div className={`p-4 border-t border-border transition-all duration-300 ${
                   highlightedArea === 'headline'
                     ? 'bg-yellow-50 border-yellow-300 shadow-md'
                     : 'bg-gray-50'
                 }`}>
-                  <h4 className={`font-semibold text-sm mb-2 transition-all duration-300 relative ${
-                    highlightedArea === 'headline'
-                      ? 'text-yellow-800 text-base font-bold'
-                      : 'text-gray-800'
-                  }`}>
-                    {highlightedArea === 'headline' && (
-                      <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
-                    )}
-                    {headline}
-                  </h4>
+                  {isMobile && isEditingInline === 'headline' ? (
+                    <div className="space-y-3">
+                      <span className="text-xs font-semibold text-yellow-600">Edit Headline</span>
+                      <Input
+                        value={tempHeadline}
+                        onChange={(e) => setTempHeadline(e.target.value)}
+                        className="text-sm border-yellow-300 focus:border-yellow-500"
+                        placeholder="Enter headline..."
+                      />
+                      <div className="flex gap-2">
+                        <Button onClick={saveInlineEdit} size="sm" className="text-xs h-7 bg-yellow-500 hover:bg-yellow-600">
+                          Save
+                        </Button>
+                        <Button onClick={cancelInlineEdit} variant="outline" size="sm" className="text-xs h-7">
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="relative group">
+                      <h4 className={`font-semibold text-sm mb-2 transition-all duration-300 ${
+                        highlightedArea === 'headline'
+                          ? 'text-yellow-800 text-base font-bold'
+                          : 'text-gray-800'
+                      }`}>
+                        {highlightedArea === 'headline' && (
+                          <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
+                        )}
+                        {headline}
+                      </h4>
+                      {isMobile && (
+                        <button
+                          onClick={() => handleInlineEdit('headline')}
+                          className="absolute top-0 right-0 p-1 bg-yellow-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Edit3 className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
+                  )}
                   <p className="text-gray-600 text-xs">loftyblast.com</p>
                 </div>
 
-                {/* Facebook engagement */}
+                {/* Facebook engagement - adjusted spacing for mobile */}
                 <div className="p-4 border-t border-border bg-accent/20">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-6">
-                      <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded transition-colors">
+                    <div className={`flex items-center ${isMobile ? 'gap-4' : 'gap-6'}`}>
+                      <button className={`flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent ${isMobile ? 'px-2 py-1' : 'px-3 py-2'} rounded transition-colors`}>
                         <Heart className="w-4 h-4" />
                         Like
                       </button>
-                      <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded transition-colors">
+                      <button className={`flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent ${isMobile ? 'px-2 py-1' : 'px-3 py-2'} rounded transition-colors`}>
                         <MessageCircle className="w-4 h-4" />
                         Comment
                       </button>
-                      <button className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent px-3 py-2 rounded transition-colors">
+                      <button className={`flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent ${isMobile ? 'px-2 py-1' : 'px-3 py-2'} rounded transition-colors`}>
                         <Share className="w-4 h-4" />
                         Share
                       </button>
@@ -225,11 +416,12 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
             </Card>
           </div>
 
-          {/* Editing Panel */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold text-foreground mb-6">
-              Edit Your Ad Content
-            </h3>
+          {/* Editing Panel - Hidden on mobile */}
+          {!isMobile && (
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-foreground mb-6">
+                Edit Your Ad Content
+              </h3>
 
             {isEditing ? (
               <div className="space-y-6">
@@ -443,22 +635,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                   <div className="absolute bottom-2 left-2 w-16 h-16 bg-purple-100 rounded-full opacity-50 -z-10"></div>
                 </div>
 
-                {/* Call to Action */}
-                <div className="text-center p-6 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-gray-200">
-                  <div className="inline-flex items-center gap-2 text-gray-600 mb-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    <span className="font-medium">Ready to Customize?</span>
-                  </div>
-                  <p className="text-sm text-gray-600 leading-relaxed max-w-md mx-auto">
-                    Click <span className="font-semibold text-blue-600">"Edit Ad"</span> above to customize your headline, copy, and image.
-                    See your changes reflected in real-time on the left preview.
-                  </p>
-                </div>
               </div>
             )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </section>
