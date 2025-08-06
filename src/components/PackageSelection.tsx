@@ -728,7 +728,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
         {/* Mobile Horizontal Scroll Cards */}
         <div className="md:hidden px-4 mt-5">
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
             {/* Mobile Starter Pack */}
             <div className="flex-shrink-0 w-[260px] snap-center">
               <div
