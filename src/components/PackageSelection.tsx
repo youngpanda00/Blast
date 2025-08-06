@@ -32,6 +32,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const isMobile = useIsMobile();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const searchParams = new URLSearchParams(window.location.search);
 
   // Get listingId from URL
