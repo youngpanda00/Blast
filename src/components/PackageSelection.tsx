@@ -727,10 +727,14 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         </div>
 
         {/* Mobile Horizontal Scroll Cards */}
-        <div className="md:hidden px-4 mt-5">
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide">
+        <div className="md:hidden mt-5">
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide px-4" style={{
+            touchAction: 'pan-x',
+            WebkitOverflowScrolling: 'touch',
+            scrollPaddingLeft: '1rem'
+          }}>
             {/* Mobile Starter Pack */}
-            <div className="flex-shrink-0 w-[260px] snap-center">
+            <div className="flex-shrink-0 w-[260px] snap-start first:ml-0">
               <div
                 onClick={() => handleCardClick("starter")}
                 className={`relative rounded-[20px] p-4 text-white h-[240px] overflow-hidden cursor-pointer transition-all ${
