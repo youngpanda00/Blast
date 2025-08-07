@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 
 const testimonials = [
-  {
+  { 
     name: "Alexander Reid",
     date: "Jan 15, 2025 at 08:17 AM",
     content:
