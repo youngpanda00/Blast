@@ -106,7 +106,10 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
               </div>
             </div>
             <button
-              onClick={onCtaClick}
+              onClick={() => {
+                window.trackBlastNow?.("ListingBlastSP_checkout_bottom_popup");
+                onCtaClick();
+              }}
               className={`bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-full font-medium shadow-lg active:scale-95 transition-all duration-500 flex items-center gap-2 ${
                 showHighlight
                   ? 'scale-110 shadow-2xl shadow-blue-500/50'
@@ -155,7 +158,10 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
             </div>
             
             <button
-              onClick={onCtaClick}
+              onClick={() => {
+                window.trackBlastNow?.("ListingBlastSP_checkout_bottom_popup");
+                onCtaClick();
+              }}
               className={`w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-medium shadow-lg hover:shadow-xl active:scale-95 transition-all duration-500 flex items-center justify-center gap-2 ${
                 showHighlight
                   ? 'scale-105 shadow-2xl shadow-blue-500/50'

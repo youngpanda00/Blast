@@ -131,11 +131,6 @@ All colors MUST be HSL.
 
 /* Mobile-specific improvements */
 @media (max-width: 768px) {
-  /* Prevent horizontal scroll */
-  html, body {
-    overflow-x: hidden;
-  }
-
   /* Improve touch targets */
   button, a {
     min-height: 44px;

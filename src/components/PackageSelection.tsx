@@ -224,7 +224,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       return;
     }
 
-    window.trackBlastNow();
+    window.trackBlastNow?.();
 
     const duration = packageToDuration[selectedPackage];
     const paymentMode =
