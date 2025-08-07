@@ -1023,19 +1023,71 @@ const Index = ({ page }: { page?: "listing" }) => {
         page={page}
         onGetStarted={() => {
           const propertySetupSection = document.querySelector('[data-section="property-setup"]');
+
           if (propertySetupSection) {
+            // Smooth scroll to PropertySetup section
             propertySetupSection.scrollIntoView({
               behavior: 'smooth',
               block: 'center'
             });
 
-            // Focus on the address input after scrolling
+            // Add highlighting animation after scrolling
             setTimeout(() => {
-              const addressInput = document.querySelector('#address-search-input') as HTMLInputElement;
-              if (addressInput) {
+              // Find address input - use both ID and placeholder selectors
+              const addressInput = (document.querySelector('#address-search-input') ||
+                                   document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
+              // Find containing gradient container
+              const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
+
+              if (addressInput && addressContainer) {
+                // Focus on input
                 addressInput.focus();
+
+                // Apply highlight effect
+                const originalTransform = addressContainer.style.transform;
+                const originalBoxShadow = addressContainer.style.boxShadow;
+                const originalTransition = addressContainer.style.transition;
+
+                // Apply highlighting effects
+                addressContainer.style.transition = 'all 0.5s ease';
+                addressContainer.style.transform = 'scale(1.08)';
+                addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
+                addressContainer.style.zIndex = '50';
+
+                // Add input focus ring
+                addressInput.style.transition = 'all 0.5s ease';
+                addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
+
+                // Add gentle shake animation
+                addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
+
+                // Create shake animation keyframes if not exists
+                if (!document.querySelector('#gentle-shake-style')) {
+                  const style = document.createElement('style');
+                  style.id = 'gentle-shake-style';
+                  style.textContent = `
+                    @keyframes gentle-shake {
+                      0%, 100% { transform: scale(1.08) translateX(0); }
+                      25% { transform: scale(1.08) translateX(-2px); }
+                      75% { transform: scale(1.08) translateX(2px); }
+                    }
+                  `;
+                  document.head.appendChild(style);
+                }
+
+                // Restore original styles after 3.5 seconds
+                setTimeout(() => {
+                  addressContainer.style.transform = originalTransform || '';
+                  addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
+                  addressContainer.style.transition = originalTransition || '';
+                  addressContainer.style.zIndex = '';
+                  addressContainer.style.animation = '';
+
+                  addressInput.style.boxShadow = '';
+                  addressInput.style.transition = '';
+                }, 3500);
               }
-            }, 800);
+            }, 900); // Wait for scroll to complete
           }
         }}
       />
