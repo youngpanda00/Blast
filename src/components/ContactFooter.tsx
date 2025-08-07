@@ -2,7 +2,7 @@ import React from 'react';
 
 export const ContactFooter: React.FC = () => {
   return (
-    <footer className="bg-[#1135C5] flex w-full flex-col items-center text-[15px] text-white font-medium justify-center p-20 max-md:max-w-full max-md:px-4 max-md:py-12">
+    <footer className="bg-[#1135C5] flex w-full flex-col items-center text-[15px] text-white font-medium justify-center p-20 max-md:max-w-full max-md:px-4 max-md:py-12 max-md:pb-24">
       <div className="flex flex-wrap justify-center items-center gap-6 max-w-full p-20 max-md:p-8 max-md:gap-4">
         <img
           src="/lovable-uploads/ac09241f-cdd8-44fd-9a0e-a6c6ee1d7c08.png"

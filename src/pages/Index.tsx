@@ -16,7 +16,6 @@ import { ContactFooter } from "@/components/ContactFooter";
 import PurchaseNotification from "@/components/PurchaseNotification";
 import { CongratulationsModal } from "@/components/CongratulationsModal";
 import { InstagramPostComponent } from "@/components/InstagramPostComponent";
-import { AboveFoldCTA } from "@/components/AboveFoldCTA";
 
 const Index = ({ page }: { page?: "listing" }) => {
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -1018,12 +1017,10 @@ const Index = ({ page }: { page?: "listing" }) => {
   const currentSet = adSets[currentSetIndex];
 
   return (
-    <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC]">
+    <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20">
       <PurchaseNotification listingCity={listingCity} />
-      <Hero page={page} />
-
-      {/* Above-the-fold CTA */}
-      <AboveFoldCTA
+      <Hero
+        page={page}
         onGetStarted={() => {
           const propertySetupSection = document.querySelector('[data-section="property-setup"]');
           if (propertySetupSection) {
