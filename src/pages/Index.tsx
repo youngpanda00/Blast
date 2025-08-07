@@ -57,6 +57,7 @@ const Index = ({ page }: { page?: "listing" }) => {
   }, [isZoomModalOpen]);
   const searchParams = new URLSearchParams(window.location.search);
   const listingId = searchParams.get("assetKey");
+  const param = searchParams.get("param");
 
   // Initialize selectedAddressId with URL listingId on first load
   React.useEffect(() => {
@@ -126,6 +127,28 @@ const Index = ({ page }: { page?: "listing" }) => {
 
     startTask();
   }, []);
+
+
+  // Call promotion/record-jump-click API when page loads with param
+  useEffect(() => {
+    const recordJumpClick = async () => {
+      if (param) {
+        try {
+          const response = await fetch(`/api-blast/promotion/record-jump-click?param=${param}`, {
+            method: "GET",
+          });
+
+          if (response.ok) {
+            console.log("Jump click recorded successfully for param:", param);
+          }
+        } catch (error) {
+          console.debug("Jump click API not available:", error.message);
+        }
+      }
+    };
+
+    recordJumpClick();
+  }, [param]);
 
   const adSets = [
     {
