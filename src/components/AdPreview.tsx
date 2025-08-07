@@ -326,9 +326,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       {isMobile && (
                         <button
                           onClick={() => handleInlineEdit('adCopy')}
-                          className="absolute top-1 right-1 p-1.5 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition-all"
+                          className="absolute top-2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
+                          aria-label="Edit text"
                         >
-                          <Edit3 className="w-3 h-3" />
+                          <Pencil className="w-4 h-4" />
                         </button>
                       )}
                     </div>
@@ -347,9 +348,9 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     className={`w-full h-52 object-cover ${isMobile ? '' : 'rounded-t-lg'}`}
                   />
                   {isMobile && (
-                    <div className="absolute top-2 right-2">
-                      <label className="cursor-pointer bg-green-500 text-white p-2 rounded-full shadow-md hover:bg-green-600 transition-all flex items-center justify-center">
-                        <Edit3 className="w-4 h-4" />
+                    <div className="absolute bottom-2 right-2">
+                      <label className="cursor-pointer w-11 h-11 bg-black/30 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150">
+                        <Pencil className="w-4 h-4" />
                         <input
                           type="file"
                           accept="image/*"
@@ -359,6 +360,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                             setTimeout(() => setHighlightedArea(null), 2000);
                           }}
                           className="hidden"
+                          aria-label="Edit image"
                         />
                       </label>
                     </div>
@@ -411,9 +413,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       {isMobile && (
                         <button
                           onClick={() => handleInlineEdit('headline')}
-                          className="absolute top-1 right-1 p-1.5 bg-yellow-500 text-white rounded-full shadow-md hover:bg-yellow-600 transition-all"
+                          className="absolute top-1/2 -translate-y-1/2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
+                          aria-label="Edit title"
                         >
-                          <Edit3 className="w-3 h-3" />
+                          <Pencil className="w-4 h-4" />
                         </button>
                       )}
                     </div>
