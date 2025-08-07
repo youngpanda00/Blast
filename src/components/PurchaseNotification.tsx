@@ -215,7 +215,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
 
         {/* Content */}
         <div className="flex flex-col justify-center items-start gap-0.5 flex-1 min-w-0">
-          <div className="self-stretch text-sm font-normal leading-[18px] text-[#202437] font-['SF_Pro_Text',_'-apple-system',_'Roboto',_'Helvetica',_sans-serif]">
+          <div className="self-stretch text-sm font-normal leading-[18px] text-[#202437]">
             <span className="font-normal">{currentName} in </span>
             <span className="font-bold text-[#2F4AB2]">{currentCity}</span>
             <span className="font-normal">
@@ -224,7 +224,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
             </span>
             <span className="font-semibold text-[#FF8515]">{currentPrice}</span>
           </div>
-          <div className="text-xs font-normal leading-[14px] text-[#797E8B] font-['SF_Pro_Text',_'-apple-system',_'Roboto',_'Helvetica',_sans-serif]">
+          <div className="text-xs font-normal leading-[14px] text-[#797E8B]">
             Just now
           </div>
         </div>

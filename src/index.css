@@ -111,6 +111,7 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'SF Pro Text', '-apple-system', 'BlinkMacSystemFont', 'Roboto', 'Helvetica', 'Arial', sans-serif;
   }
 }
 
