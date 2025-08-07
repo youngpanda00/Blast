@@ -176,3 +176,9 @@ All colors MUST be HSL.
     scroll-snap-align: start;
   }
 }
+
+@media not all and (min-width: 768px) {
+    .max-md\:hidden {
+        display: none!important;
+    }
+}
