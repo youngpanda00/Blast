@@ -15,10 +15,10 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
     <>
       { page === 'listing' && <FixedNavigation /> }
 
-      {/* Main Hero Section with blue background */}
+      {/* Main Hero Section with gradient background */}
       <section className={page !== 'listing' ?
-        "flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-4 max-md:pb-[30px] max-md:pt-[25px] bg-[rgba(0,28,188,1)]" :
-        "flex w-full flex-col items-stretch px-[22px] pt-[90px] pb-[50px] max-md:max-w-full max-md:px-4 max-md:pb-[30px] max-md:pt-[85px] bg-[rgba(0,28,188,1)]"
+        "flex w-full flex-col items-stretch px-[22px] pt-[30px] pb-[50px] max-md:max-w-full max-md:px-4 max-md:pb-[40px] max-md:pt-[25px] bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800 max-md:bg-gradient-to-br max-md:from-blue-500 max-md:to-purple-600" :
+        "flex w-full flex-col items-stretch px-[22px] pt-[90px] pb-[50px] max-md:max-w-full max-md:px-4 max-md:pb-[40px] max-md:pt-[85px] bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800 max-md:bg-gradient-to-br max-md:from-blue-500 max-md:to-purple-600"
       }>
         <div className="w-full h-full flex flex-col">
           {/* Logo positioned at top left */}
@@ -34,7 +34,21 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
           <div className="flex w-full max-w-[1210px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
             {/* Left Column - Main Headline */}
             <div className="flex-1 max-md:text-center">
-              <h1 className="text-[50px] font-medium text-[#FFB700] tracking-[-1.5px] max-md:text-[28px] max-sm:text-[24px] leading-tight max-md:leading-[1.2]">
+              {/* Mobile: Restructured typography */}
+              <div className="hidden max-md:block">
+                <h1 className="text-[36px] font-bold text-white tracking-[-1px] leading-[1.1] mb-4">
+                  AI-Powered Blast
+                </h1>
+                <h2 className="text-[20px] font-medium text-white/90 leading-[1.3] mb-2">
+                  1-Click Listing To Leads
+                </h2>
+                <h3 className="text-[18px] font-normal text-white/80 leading-[1.4]">
+                  Zero Work, Instant Results!
+                </h3>
+              </div>
+
+              {/* Desktop: Original layout */}
+              <h1 className="max-md:hidden text-[50px] font-medium text-[#FFB700] tracking-[-1.5px] leading-tight">
                 AI-Powered Blast:<br />
                 1 - Click Listing To Leads,<br />
                 Zero Work, Instant Results!
@@ -68,6 +82,7 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
               </div>
             </div>
           </div>
+
         </div>
       </section>
 

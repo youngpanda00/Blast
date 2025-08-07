@@ -20,6 +20,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
   const isMobile = useIsMobile();
   const [shouldShow, setShouldShow] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [showHighlight, setShowHighlight] = useState(false);
 
   // Package pricing data
   const packagePricing = {
@@ -40,12 +41,20 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
       if (!shouldShow) {
         setIsAnimating(true);
         setShouldShow(true);
-        setTimeout(() => setIsAnimating(false), 300);
+
+        // Trigger highlight effect after show animation
+        setTimeout(() => {
+          setIsAnimating(false);
+          setShowHighlight(true);
+          // Remove highlight after 2 seconds
+          setTimeout(() => setShowHighlight(false), 2000);
+        }, 300);
       }
     } else if (scrollY < hideThreshold) {
       if (shouldShow) {
         setIsAnimating(true);
         setShouldShow(false);
+        setShowHighlight(false);
         setTimeout(() => setIsAnimating(false), 300);
       }
     }
@@ -98,7 +107,11 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
             </div>
             <button
               onClick={onCtaClick}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-full font-medium shadow-lg active:scale-95 transition-all duration-200 flex items-center gap-2"
+              className={`bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-full font-medium shadow-lg active:scale-95 transition-all duration-500 flex items-center gap-2 ${
+                showHighlight
+                  ? 'scale-110 shadow-2xl shadow-blue-500/50'
+                  : 'scale-100'
+              }`}
             >
               <Zap className="w-4 h-4" />
               Blast Now!
@@ -143,7 +156,11 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
             
             <button
               onClick={onCtaClick}
-              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-medium shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
+              className={`w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-medium shadow-lg hover:shadow-xl active:scale-95 transition-all duration-500 flex items-center justify-center gap-2 ${
+                showHighlight
+                  ? 'scale-105 shadow-2xl shadow-blue-500/50'
+                  : 'scale-100'
+              }`}
             >
               <Zap className="w-4 h-4" />
               Blast Now!

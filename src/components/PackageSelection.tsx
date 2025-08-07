@@ -126,7 +126,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
             addressContainer.style.zIndex = '50';
 
-            // 对输入框添加脉冲效果
+            // ��输入框添加脉冲效果
             addressInput.style.transition = 'all 0.5s ease';
             addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
 
@@ -421,10 +421,10 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     >
       <div
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
-        className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg ${
+        className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 ${
           selectedPackage === pkg.id
-            ? "bg-[#3B5CDE] text-white border border-gray-100"
-            : "bg-white border border-gray-100"
+            ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
+            : "bg-white"
         }`}
       >
         {/* Popular badge */}
@@ -693,9 +693,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           <button
             onClick={handleCheckout}
             id="btn-blast-now"
-            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all mt-[30px] px-5 py-4 rounded-[75px] max-md:px-5"
+            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all mt-[30px] px-5 py-4 rounded-[75px] max-md:px-5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
             style={{
-              background: "linear-gradient(to bottom, #5073FF, #3B5CDE)",
               fontWeight: 500,
             }}
           >
