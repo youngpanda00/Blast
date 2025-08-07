@@ -61,13 +61,17 @@ const Index = ({ page }: { page?: "listing" }) => {
 
   // Initialize selectedAddressId with URL listingId on first load
   React.useEffect(() => {
+    console.log("Initializing with URL params:", { listingId, selectedAddressId });
     if (listingId && !selectedAddressId) {
+      console.log("Setting initial selectedAddressId from URL:", listingId);
       setSelectedAddressId(listingId);
     }
   }, [listingId, selectedAddressId]);
 
   // Callback function to handle address selection from PropertySetup
   const handleAddressSelect = React.useCallback((addressData) => {
+    console.log("Address selected:", addressData);
+
     if (addressData?.data?.previewPicture) {
       // Handle multiple images separated by "|", take the first one
       const firstImage = addressData.data.previewPicture.split("|")[0].trim();
@@ -75,7 +79,10 @@ const Index = ({ page }: { page?: "listing" }) => {
     }
     // Store the selected address ID to replace listingId when blast now is clicked
     if (addressData?.data?.id) {
+      console.log("Setting selectedAddressId to:", addressData.data.id);
       setSelectedAddressId(addressData.data.id);
+    } else {
+      console.warn("No address ID found in addressData:", addressData);
     }
     // Store listing data for ad display
     if (addressData?.data) {

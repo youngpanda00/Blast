@@ -36,21 +36,27 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   
   // Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'center',
+    align: 'start',
     containScroll: 'trimSnaps',
     dragFree: false,
-    loop: true // 启用循环播放以支持自动播放
+    loop: false
   });
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
 
-  // 自动播放相关状态
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [autoPlayInterval, setAutoPlayInterval] = useState<NodeJS.Timeout | null>(null);
+  // Carousel dots for mobile
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const searchParams = new URLSearchParams(window.location.search);
 
   // Get listingId from URL
   const listingId = searchParams.get("assetKey");
+
+  // Debug logging (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    console.log("PackageSelection Debug:", {
+      selectedAddressId,
+      listingId,
+      urlParams: Object.fromEntries(searchParams.entries())
+    });
+  }
 
   // Map package names to duration values
   const packageToDuration = {
@@ -78,41 +84,139 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     // Use selectedAddressId if available, otherwise fall back to URL listingId
     const currentListingId = selectedAddressId || listingId;
     if (!currentListingId) {
-      // 如果没有选房源，滚动到PropertySetup模块并对form元素添加动画
+      if (process.env.NODE_ENV === 'development') {
+        console.warn("Checkout attempted without listing ID:", {
+          selectedAddressId,
+          listingId,
+          urlParams: Object.fromEntries(searchParams.entries())
+        });
+      }
+
+      // 如果没有选房源，滚动到PropertySetup模块并对输入框添加突出动画
       const propertySetupSection = document.querySelector('[data-section="property-setup"]');
-      const addressForm = document.querySelector('#address-form');
-      const addressInput = document.querySelector('#address-search-input');
 
       if (propertySetupSection) {
         // 平滑滚动到PropertySetup模块
         propertySetupSection.scrollIntoView({
           behavior: 'smooth',
-          block: 'start'
+          block: 'center'
         });
 
         // 延迟动画，等待滚动完成
         setTimeout(() => {
-          if (addressForm && addressInput) {
+          // 查找地址输入框 - 优先使用ID，备用placeholder定位
+          const addressInput = (document.querySelector('#address-search-input') ||
+                               document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
+          // 查找包含输入框的容器（���渐变背景的div）
+          const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
+
+          if (addressInput && addressContainer) {
             // 聚焦到输入框
             addressInput.focus();
-            
-            // 对form元素添加缩放动画和黑色边框
-            addressForm.style.transformOrigin = 'center';
-            addressForm.style.transform = 'scale(1.05)';
-            addressForm.style.transition = 'all 0.3s ease-in-out';
-            addressForm.style.border = '2px solid black';
-            addressForm.style.borderRadius = '8px';
 
-            // 3秒后恢复原状
+            // 对容器添加突出动画效果
+            const originalTransform = addressContainer.style.transform;
+            const originalBoxShadow = addressContainer.style.boxShadow;
+            const originalTransition = addressContainer.style.transition;
+
+            // 应用突出效果
+            addressContainer.style.transition = 'all 0.5s ease';
+            addressContainer.style.transform = 'scale(1.08)';
+            addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
+            addressContainer.style.zIndex = '50';
+
+            // 对输入框添加脉冲效果
+            addressInput.style.transition = 'all 0.5s ease';
+            addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
+
+            // 添加轻微的晃动动画
+            addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
+
+            // 创建晃动动画的CSS keyframes（如果不存在）
+            if (!document.querySelector('#gentle-shake-style')) {
+              const style = document.createElement('style');
+              style.id = 'gentle-shake-style';
+              style.textContent = `
+                @keyframes gentle-shake {
+                  0%, 100% { transform: scale(1.08) translateX(0); }
+                  25% { transform: scale(1.08) translateX(-2px); }
+                  75% { transform: scale(1.08) translateX(2px); }
+                }
+              `;
+              document.head.appendChild(style);
+            }
+
+            // 3.5秒后恢复原状
             setTimeout(() => {
-              addressForm.style.transform = 'scale(1)';
-              addressForm.style.border = '';
-              addressForm.style.borderRadius = '';
-            }, 3000);
+              addressContainer.style.transform = originalTransform || '';
+              addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
+              addressContainer.style.transition = originalTransition || '';
+              addressContainer.style.zIndex = '';
+              addressContainer.style.animation = '';
+
+              addressInput.style.boxShadow = '';
+              addressInput.style.transition = '';
+            }, 3500);
           }
-        }, 800); // 等待滚动动画完成
+        }, 900); // 稍微延长等待时间确保滚动完成
       }
-      
+
+      // Show toast notification for missing address
+      const showToastNotification = () => {
+        // Remove any existing notifications
+        const existingToast = document.querySelector('#address-required-toast');
+        if (existingToast) {
+          existingToast.remove();
+        }
+
+        // Create toast notification
+        const toast = document.createElement('div');
+        toast.id = 'address-required-toast';
+        toast.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #f87171;
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 9999;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            max-width: 300px;
+            animation: slideIn 0.3s ease-out;
+          ">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+            Please select a property address first
+          </div>
+          <style>
+            @keyframes slideIn {
+              from { transform: translateX(100%); opacity: 0; }
+              to { transform: translateX(0); opacity: 1; }
+            }
+          </style>
+        `;
+
+        document.body.appendChild(toast);
+
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+          if (toast && toast.parentNode) {
+            toast.style.animation = 'slideIn 0.3s ease-out reverse';
+            setTimeout(() => toast.remove(), 300);
+          }
+        }, 4000);
+      };
+
+      showToastNotification();
+
       console.error(
         "No listing ID available (neither from address selection nor URL)",
       );
@@ -273,101 +377,46 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   ];
 
   // Embla carousel functions
-  const scrollPrev = () => {
+  const scrollTo = (index: number) => {
     if (emblaApi) {
-      emblaApi.scrollPrev();
-      pauseAutoPlay(); // 用户操作时暂停自动播放
+      emblaApi.scrollTo(index);
     }
   };
 
-  const scrollNext = () => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-      pauseAutoPlay(); // 用户操作时暂停自动播放
-    }
-  };
-
-  // Update button states
-  const updateScrollButtons = () => {
+  // Update selected index
+  const updateSelectedIndex = () => {
     if (!emblaApi) return;
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
+    setSelectedIndex(emblaApi.selectedScrollSnap());
   };
 
-  // 自动播放控制函数
-  const startAutoPlay = () => {
-    if (!isMobile || !emblaApi) return;
-
-    const interval = setInterval(() => {
-      emblaApi.scrollNext();
-    }, 3000); // 3秒切换一次
-
-    setAutoPlayInterval(interval);
-    setIsAutoPlaying(true);
-  };
-
-  const pauseAutoPlay = () => {
-    if (autoPlayInterval) {
-      clearInterval(autoPlayInterval);
-      setAutoPlayInterval(null);
-    }
-    setIsAutoPlaying(false);
-
-    // 5秒后重新启动自动播放
-    setTimeout(() => {
-      if (isMobile) {
-        startAutoPlay();
-      }
-    }, 5000);
-  };
-
-  const stopAutoPlay = () => {
-    if (autoPlayInterval) {
-      clearInterval(autoPlayInterval);
-      setAutoPlayInterval(null);
-    }
-    setIsAutoPlaying(false);
-  };
 
   useEffect(() => {
     if (!emblaApi) return;
 
-    updateScrollButtons();
-    emblaApi.on('select', updateScrollButtons);
-    emblaApi.on('reInit', updateScrollButtons);
+    updateSelectedIndex();
+    emblaApi.on('select', updateSelectedIndex);
+    emblaApi.on('reInit', updateSelectedIndex);
 
-    // 监听用户交互事件
-    emblaApi.on('pointerDown', pauseAutoPlay);
-    emblaApi.on('dragStart', pauseAutoPlay);
-
-    // 在移动端启动自动播放
+    // Set starter pack as default visible on mobile
     if (isMobile) {
-      startAutoPlay();
+      const starterIndex = packages.findIndex(pkg => pkg.id === 'starter');
+      if (starterIndex !== -1) {
+        emblaApi.scrollTo(starterIndex, true);
+      }
     }
 
     return () => {
-      emblaApi.off('select', updateScrollButtons);
-      emblaApi.off('reInit', updateScrollButtons);
-      emblaApi.off('pointerDown', pauseAutoPlay);
-      emblaApi.off('dragStart', pauseAutoPlay);
-      stopAutoPlay();
+      emblaApi.off('select', updateSelectedIndex);
+      emblaApi.off('reInit', updateSelectedIndex);
     };
   }, [emblaApi, isMobile]);
 
-  // 清理定时器
-  useEffect(() => {
-    return () => {
-      if (autoPlayInterval) {
-        clearInterval(autoPlayInterval);
-      }
-    };
-  }, [autoPlayInterval]);
 
   // Render package card
   const renderPackageCard = (pkg: any, isMobile = false) => (
-    <div 
+    <div
       key={pkg.id}
-      className={isMobile ? "flex-[0_0_80%] min-w-0 px-2" : ""}
+      className={isMobile ? "flex-[0_0_85%] min-w-0 px-3" : ""}
     >
       <div
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
@@ -511,7 +560,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             Select Your Package: Boost Views, Get Leads
           </h2>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 max-md:flex-col max-md:items-start max-md:gap-3">
             <div className="bg-[rgba(246,247,251,1)] border flex min-h-10 flex-col items-stretch text-sm leading-6 justify-center p-[5px] rounded-[20px] border-[rgba(235,236,241,1)] border-solid">
               <div className="flex min-h-[30px] w-full max-w-[310px] gap-[5px]">
                 <button
@@ -571,7 +620,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                     <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 cursor-pointer transition-colors duration-200" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs p-3">
+                <TooltipContent className="max-w-xs p-3 max-md:mb-4" side={isMobile ? "bottom" : "top"}>
                   <div className="space-y-2 text-sm">
                     <div>
                       <span className="font-semibold">One-time Charge:</span>{" "}
@@ -597,43 +646,41 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
         {/* Mobile carousel */}
         <div className="md:hidden w-full mt-5">
-          <div
-            className="relative"
-            onMouseEnter={stopAutoPlay}
-            onMouseLeave={() => isMobile && startAutoPlay()}
-            onTouchStart={pauseAutoPlay}
-          >
+          <div className="relative">
             {/* Carousel container */}
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex">
                 {packages.map((pkg) => renderPackageCard(pkg, true))}
               </div>
             </div>
-            
-            {/* Navigation arrows */}
-            <button
-              onClick={scrollPrev}
-              disabled={!canScrollPrev}
-              className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg transition-all ${
-                canScrollPrev 
-                  ? 'hover:bg-gray-50 text-gray-700' 
-                  : 'text-gray-300 cursor-not-allowed'
-              }`}
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            
-            <button
-              onClick={scrollNext}
-              disabled={!canScrollNext}
-              className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-2 shadow-lg transition-all ${
-                canScrollNext 
-                  ? 'hover:bg-gray-50 text-gray-700' 
-                  : 'text-gray-300 cursor-not-allowed'
-              }`}
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+
+            {/* Polished dots indicator */}
+            <div className="flex justify-center mt-4 gap-1.5">
+              {packages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => scrollTo(index)}
+                  className="w-11 h-11 flex items-center justify-center group"
+                  aria-label={`Go to package ${index + 1}`}
+                >
+                  <div
+                    className={`transition-all duration-300 ease-out ${
+                      index === selectedIndex
+                        ? 'w-4 h-1 bg-[#0A3D91] rounded-full transform scale-100 opacity-100'
+                        : 'w-2 h-2 bg-gray-400 rounded-full transform scale-100 opacity-30 group-hover:opacity-50 group-hover:scale-110'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+
+            {/* Edge fade indicators */}
+            {selectedIndex > 0 && (
+              <div className="absolute left-0 top-0 bottom-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none" />
+            )}
+            {selectedIndex < packages.length - 1 && (
+              <div className="absolute right-0 top-0 bottom-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none" />
+            )}
           </div>
         </div>
 

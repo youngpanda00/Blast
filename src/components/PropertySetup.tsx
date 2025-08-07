@@ -196,9 +196,8 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
         <div className="space-y-4">
           {/* Mobile-first address search section */}
           <div className="max-md:order-first max-md:mb-6">
-            <div className="p-4 rounded-xl border-0 max-md:p-4 shadow-lg"
+            <div className="p-4 rounded-xl border-0 max-md:p-4 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 transition-all ease-in-out duration-500"
                  style={{
-                   background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                    boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)"
                  }}>
               <Label
@@ -210,7 +209,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                 }}
               >
                 <strong className="max-md:text-base flex items-center gap-2">
-                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                  <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
                     <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
@@ -226,6 +225,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
               <form onSubmit={handleAddressSubmit} className="relative">
                 <div className="relative">
                   <Input
+                    id="address-search-input"
                     isAddressSearch={true}
                     value={addressInput}
                     onChange={(e) => setAddressInput(e.target.value)}

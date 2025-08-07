@@ -38,6 +38,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     if (isAddressSearch) {
       return (
         <AddressSearchSelect
+          {...props}
           className={className}
           value={props.value as string}
           onValueChange={(value) => {
