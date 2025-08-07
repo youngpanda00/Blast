@@ -12,6 +12,7 @@ import {
 import { LoadingOverlay } from "./ui/loading-overlay";
 import { useIsMobile } from "../hooks/use-mobile";
 import { trackMixPanel } from "@/lib/utils";
+import { StickyCTA } from "./StickyCTA";
 
 interface PackageSelectionProps {
   previewPicture?: string | null
@@ -552,7 +553,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         }}
       />
 
-      <section className="w-full flex flex-col items-center">
+      <section className="w-full flex flex-col items-center" data-section="packages">
         <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px]" />
 
         <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6">
@@ -702,6 +703,14 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </button>
         </div>
       </section>
+
+      {/* Sticky CTA */}
+      <StickyCTA
+        onCtaClick={handleCheckout}
+        selectedPackage={selectedPackage}
+        selectedPlan={selectedPlan}
+        isVisible={!isLoading}
+      />
     </>
   );
 };

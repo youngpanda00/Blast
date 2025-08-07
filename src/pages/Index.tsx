@@ -16,6 +16,7 @@ import { ContactFooter } from "@/components/ContactFooter";
 import PurchaseNotification from "@/components/PurchaseNotification";
 import { CongratulationsModal } from "@/components/CongratulationsModal";
 import { InstagramPostComponent } from "@/components/InstagramPostComponent";
+import { AboveFoldCTA } from "@/components/AboveFoldCTA";
 
 const Index = ({ page }: { page?: "listing" }) => {
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -1020,6 +1021,27 @@ const Index = ({ page }: { page?: "listing" }) => {
     <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC]">
       <PurchaseNotification listingCity={listingCity} />
       <Hero page={page} />
+
+      {/* Above-the-fold CTA */}
+      <AboveFoldCTA
+        onGetStarted={() => {
+          const propertySetupSection = document.querySelector('[data-section="property-setup"]');
+          if (propertySetupSection) {
+            propertySetupSection.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
+
+            // Focus on the address input after scrolling
+            setTimeout(() => {
+              const addressInput = document.querySelector('#address-search-input') as HTMLInputElement;
+              if (addressInput) {
+                addressInput.focus();
+              }
+            }, 800);
+          }
+        }}
+      />
 
       <main className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:py-[20px] max-md:mx-4 max-md:rounded-xl">
         <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
