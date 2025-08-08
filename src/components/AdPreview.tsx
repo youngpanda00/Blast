@@ -224,7 +224,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
             <Button
               onClick={isEditing ? undefined : handleEdit}
               variant="outline"
-              className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200"
               disabled={isEditing}
             >
               <Pencil className="w-4 h-4" />
@@ -594,7 +594,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 <div className="flex gap-3 pt-6 border-t border-border">
-                  <Button onClick={handleSave} className="flex-1" style={{backgroundColor: '#3b5cde'}} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#2d4bcc'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3b5cde'}>
+                  <Button onClick={handleSave} className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200">
                     Save Changes
                   </Button>
                   <Button onClick={handleCancel} variant="outline" className="flex-1 border-border">

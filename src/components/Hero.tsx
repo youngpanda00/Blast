@@ -87,7 +87,7 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
                 {/* CTA button */}
                 <button
                   onClick={onGetStarted}
-                  className="bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center gap-2 mx-auto"
+                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center gap-2 mx-auto"
                 >
                   <Zap className="w-5 h-5" />
                   Start Promoting Now
