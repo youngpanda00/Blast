@@ -26,7 +26,7 @@ export const CongratulationsModal: React.FC<CongratulationsModalProps> = ({
         <div className="flex justify-end p-4 pb-0">
           <button
             onClick={() => onOpenChange(false)}
-            className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100"
           >
             <X className="h-4 w-4 mx-auto" />
             <span className="sr-only">Close</span>
