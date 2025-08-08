@@ -226,7 +226,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
     window.trackBlastNow?.();
 
-    window.alert(`selectedPackage: ${packageType}`);
     const duration = packageToDuration[packageType];
 
     const paymentMode =
