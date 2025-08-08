@@ -81,7 +81,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
   };
 
-  const handleCheckout = async () => {
+  const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery") => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId
     const currentListingId = selectedAddressId || listingId;
     if (!currentListingId) {
@@ -108,7 +108,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           // 查找地址输入框 - 优先使用ID，备用placeholder定位
           const addressInput = (document.querySelector('#address-search-input') ||
                                document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-          // 查找包含输入框的容器（���渐变背景的div）
+          // 查找包含输入框的容器（带渐变背景的div）
           const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
 
           if (addressInput && addressContainer) {
@@ -126,7 +126,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
             addressContainer.style.zIndex = '50';
 
-            // ��输入框添加脉冲效果
+            // 给输入框添加脉冲效果
             addressInput.style.transition = 'all 0.5s ease';
             addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
 
@@ -226,7 +226,9 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
     window.trackBlastNow?.();
 
-    const duration = packageToDuration[selectedPackage];
+    window.alert(`selectedPackage: ${packageType}`);
+    const duration = packageToDuration[packageType];
+    
     const paymentMode =
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
 
@@ -303,6 +305,10 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     }
   };
 
+  const handleCheckout = async () => {
+    await handleCheckoutWithPackage(selectedPackage);
+  };
+
   const handlePackageSelect = async (
     packageType: "starter" | "boost" | "growth" | "mastery",
   ) => {
@@ -327,7 +333,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     if (isMobile) {
       // On mobile, select package and trigger checkout
       await handlePackageSelect(packageType);
-      await handleCheckout();
+      // Use packageType directly instead of selectedPackage state
+      await handleCheckoutWithPackage(packageType);
     } else {
       // On desktop, just select the package
       await handlePackageSelect(packageType);
