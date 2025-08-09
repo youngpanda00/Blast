@@ -7,7 +7,14 @@ export function cn(...inputs: ClassValue[]) {
 
 const trackMixPanel = (...args)=>{
   if(typeof (window as any).trackMixPanel === "function") {
-    (window as any).trackMixPanel.apply(this, args)
+    (window as any).trackMixPanel(...args)
   }
 }
-export { trackMixPanel };
+
+const trackFBEvent = (...args) => {
+  if (typeof (window as any).trackFBEvent === 'function') {
+    (window as any).trackFBEvent(...args)
+  }
+}
+
+export { trackMixPanel, trackFBEvent };

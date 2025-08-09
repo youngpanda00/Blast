@@ -16,6 +16,7 @@ import { ContactFooter } from "@/components/ContactFooter";
 import PurchaseNotification from "@/components/PurchaseNotification";
 import { CongratulationsModal } from "@/components/CongratulationsModal";
 import { InstagramPostComponent } from "@/components/InstagramPostComponent";
+import { trackFBEvent } from "@/lib/utils";
 
 const Index = ({ page }: { page?: "listing" }) => {
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -37,6 +38,9 @@ const Index = ({ page }: { page?: "listing" }) => {
     useState(false);
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
+
+  // Track ViewContent event state
+  const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
 
   // Handle escape key and body scroll for zoom modal
   useEffect(() => {
@@ -156,6 +160,33 @@ const Index = ({ page }: { page?: "listing" }) => {
 
     recordJumpClick();
   }, [param]);
+
+   // 监听滚动事件，当main模块距离页面顶部小于100px时触发trackFBEvent
+  useEffect(() => {
+    const handleScroll = () => {
+      if (hasTrackedViewContent) return; // 如果已经执行过，直接返回
+
+      const mainElement = document.getElementById('main-content');
+      if (mainElement) {
+        const rect = mainElement.getBoundingClientRect();
+        const distanceFromTop = rect.top;
+
+        if (distanceFromTop < 100) {
+          trackFBEvent('ViewContent');
+          setHasTrackedViewContent(true);
+        }
+      }
+    };
+
+    
+    window.addEventListener('scroll', handleScroll);
+    // 初始检查，以防页面加载时就已经满足条件
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasTrackedViewContent]);
 
   const adSets = [
     {
@@ -1022,6 +1053,7 @@ const Index = ({ page }: { page?: "listing" }) => {
       <Hero
         page={page}
         onGetStarted={() => {
+          trackFBEvent('Start Promoting')
           const propertySetupSection = document.querySelector('[data-section="property-setup"]');
 
           if (propertySetupSection) {
@@ -1092,7 +1124,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         }}
       />
 
-      <main className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:py-[20px] max-md:mx-4 max-md:rounded-xl">
+      <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:py-[20px] max-md:mx-4 max-md:rounded-xl">
         <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
           <div className="gap-5 flex max-md:flex-col items-stretch max-md:gap-8">
             <PropertySetup

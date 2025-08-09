@@ -5,7 +5,7 @@ import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { Pencil, Heart, MessageCircle, Share, MoreHorizontal, ChevronDown, ChevronUp, Edit3 } from "lucide-react";
-import { trackMixPanel } from "@/lib/utils";
+import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Select,
@@ -89,6 +89,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
       click_item: isMobile ? "Preview Your Ad" : "Edit Ad",
       click_action: isMobile ? "expand" : "edit"
     });
+    trackFBEvent('Edit Ad')
   };
 
   const handleTemplateSelect = (templateId: string) => {

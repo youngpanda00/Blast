@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Check, ChevronDown, Search } from "lucide-react";
-import { cn, trackMixPanel } from "@/lib/utils";
+import { cn, trackMixPanel, trackFBEvent } from "@/lib/utils";
 import {
   Command,
   CommandEmpty,
@@ -149,6 +149,7 @@ const AddressSearchSelect = React.forwardRef<
             click_item: "Enter the property address",
             click_action: "property"
           });
+          trackFBEvent('Search Address');
         }}>
           <Button
             ref={ref}

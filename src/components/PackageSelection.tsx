@@ -11,8 +11,8 @@ import {
 } from "./ui/tooltip";
 import { LoadingOverlay } from "./ui/loading-overlay";
 import { useIsMobile } from "../hooks/use-mobile";
-import { trackMixPanel } from "@/lib/utils";
 import { StickyCTA } from "./StickyCTA";
+import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 
 interface PackageSelectionProps {
   previewPicture?: string | null
@@ -452,6 +452,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     }
 
     window.trackBlastNow?.();
+    trackFBEvent('Blast Now CTA')
 
     window.alert(`selectedPackage: ${selectedPackage}`);
     const duration = packageToDuration[selectedPackage];
@@ -553,6 +554,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       click_item: packageType,
       click_action: "package"
     });
+    trackFBEvent('Choose Package', { package: packageType })
     if (isMobile) {
       // On mobile, select package and trigger checkout
       await handlePackageSelect(packageType);
@@ -807,6 +809,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                       click_item: "one-time",
                       click_action: "charge"
                     });
+                    trackFBEvent('Change billing Type', { item: 'one-time' })
                   }}
                   className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] px-2.5 rounded-[15px] transition-all ${
                     selectedPlan === "one-time"
@@ -828,7 +831,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                      feature_name: "ListingBlast",
                      click_item: "monthly",
                      click_action: "charge"
-                   });
+                    });
+                    trackFBEvent('Change billing Type', { item: 'monthly' })
                   }}
                   className={`flex min-h-[30px] items-center whitespace-nowrap justify-center w-[152px] px-2.5 rounded-[15px] transition-all ${
                     selectedPlan === "monthly"
