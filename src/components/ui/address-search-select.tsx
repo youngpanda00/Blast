@@ -15,6 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type AddressSuggestion = string;
 
@@ -48,6 +49,7 @@ const AddressSearchSelect = React.forwardRef<
     const [suggestions, setSuggestions] = React.useState<string[]>([]);
     const [loading, setLoading] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState(value || "");
+    const isMobile = useIsMobile();
 
     // Debounced search function
     const searchTimeoutRef = React.useRef<NodeJS.Timeout>();
@@ -94,7 +96,7 @@ const AddressSearchSelect = React.forwardRef<
         // Debounce the search
         searchTimeoutRef.current = setTimeout(() => {
           fetchSuggestions(value);
-        }, 300);
+        }, 800);
       },
       [fetchSuggestions],
     );
@@ -139,6 +141,14 @@ const AddressSearchSelect = React.forwardRef<
         }
       };
     }, []);
+
+    // Get displayed suggestions based on mobile/desktop
+    const displayedSuggestions = React.useMemo(() => {
+      if (isMobile && suggestions.length > 5) {
+        return suggestions.slice(0, 5);
+      }
+      return suggestions;
+    }, [suggestions, isMobile]);
 
     return (
       <Popover open={open} onOpenChange={setOpen}>
@@ -188,12 +198,15 @@ const AddressSearchSelect = React.forwardRef<
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
-            <CommandList>
+            <CommandList className={cn(
+              "min-h-[170px] max-h-[300px] overflow-y-auto",
+              isMobile && "max-h-[250px]"
+            )}>
               {loading ? (
                 <div className="py-6 text-center text-sm text-muted-foreground">
                   Searching...
                 </div>
-              ) : suggestions.length === 0 ? (
+              ) : displayedSuggestions.length === 0 ? (
                 searchTerm ? (
                   <CommandEmpty>Not Found</CommandEmpty>
                 ) : (
@@ -203,7 +216,7 @@ const AddressSearchSelect = React.forwardRef<
                 )
               ) : (
                 <CommandGroup>
-                  {suggestions.map((address, index) => (
+                  {displayedSuggestions.map((address, index) => (
                     <CommandItem
                       key={index}
                       value={address}
