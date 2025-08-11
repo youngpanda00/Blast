@@ -150,6 +150,24 @@ const AddressSearchSelect = React.forwardRef<
       return suggestions;
     }, [suggestions, isMobile]);
 
+    // Helper function to highlight matching text
+    const highlightText = React.useCallback((text: string, searchTerm: string) => {
+      if (!searchTerm.trim()) return text;
+
+      const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      const parts = text.split(regex);
+
+      return parts.map((part, index) =>
+        regex.test(part) ? (
+          <span key={index} style={{ color: '#3B5CDE', fontWeight: 'bold' }}>
+            {part}
+          </span>
+        ) : (
+          part
+        )
+      );
+    }, []);
+
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild onClick={()=>{
@@ -231,7 +249,7 @@ const AddressSearchSelect = React.forwardRef<
                             : "opacity-0",
                         )}
                       />
-                      <span className="truncate">{address}</span>
+                      <span className="truncate">{highlightText(address, searchTerm)}</span>
                     </CommandItem>
                   ))}
                 </CommandGroup>
