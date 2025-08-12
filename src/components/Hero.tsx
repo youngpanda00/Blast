@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { FixedNavigation } from "./FixedNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Zap, TrendingUp } from "lucide-react";
+import { PropertySetup } from "./PropertySetup";
 
 interface HeroProps {
   page?: "listing";
   onGetStarted?: () => void;
+  listingId?: string | null;
+  onAddressSelect?: (addressData: any) => void;
+  onCityUpdate?: (city: string | null) => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
+export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAddressSelect, onCityUpdate }) => {
   const isMobile = useIsMobile();
 
   return (
@@ -37,22 +41,19 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
               {/* Mobile: Restructured typography */}
               <div className="hidden max-md:block">
                 <h1 className="text-[36px] font-bold text-white tracking-[-1px] leading-[1.1] mb-4">
-                  AI-Powered Blast
+                  1-Clicking Listing to Leads
                 </h1>
-                <h2 className="text-[20px] font-medium text-white/90 leading-[1.3] mb-2">
-                  1-Click Listing To Leads
-                </h2>
-                <h3 className="text-[18px] font-normal text-white/80 leading-[1.4]">
+                <h2 className="text-[18px] font-normal text-white/80 leading-[1.4]">
                   Zero Work, Instant Results!
-                </h3>
+                </h2>
               </div>
 
               {/* Desktop: Modern layout */}
               <h1 className="max-md:hidden text-[42px] font-bold text-white tracking-[-1px] leading-[1.1] text-center">
-                AI-Powered Blast
+                1-Clicking Listing to Leads
               </h1>
-              <h2 className="max-md:hidden text-[24px] font-medium text-white/90 leading-[1.3] text-center mt-4">
-                1-Click Listing To Leads, Zero Work, Instant Results!
+              <h2 className="max-md:hidden text-[20px] font-medium text-white/90 leading-[1.3] text-center mt-4">
+                Zero Work, Instant Results!
               </h2>
               <p className="max-md:hidden text-[18px] font-normal text-white/80 text-center mt-6 mb-8 max-w-2xl mx-auto">
                 AI-powered lead generation on autopilot. Launch targeted ads in minutes and watch qualified leads pour in 24/7.
@@ -84,19 +85,22 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
                   </div>
                 </div>
 
-                {/* CTA button */}
-                <button
-                  onClick={onGetStarted}
-                  className="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center gap-2 mx-auto"
-                >
-                  <Zap className="w-5 h-5" />
-                  Start Promoting Now
-                </button>
 
                 {/* Trust indicator */}
-                <p className="text-sm text-white/70">
-                  ✓ No long-term contracts  ✓ Cancel anytime  ✓ Results guaranteed
-                </p>
+                <div className="flex flex-wrap items-center justify-center gap-6 max-w-4xl mx-auto">
+                  <div className="flex items-center gap-3 text-white/80 hover:text-white transition-colors duration-200">
+                    <span className="text-lg">🚫</span>
+                    <span className="text-sm font-medium">No long-term contracts</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white/80 hover:text-white transition-colors duration-200">
+                    <span className="text-lg">⏰</span>
+                    <span className="text-sm font-medium">Cancel anytime</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-white/80 hover:text-white transition-colors duration-200">
+                    <span className="text-lg">🎯</span>
+                    <span className="text-sm font-medium">Results guaranteed</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -110,45 +114,65 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted }) => {
         <div className="max-w-6xl mx-auto px-4 py-8 max-md:py-6">
           <div className="text-center">
             {/* Stats bar */}
-            <div className="flex items-center justify-center gap-8 max-md:gap-2 mb-8 max-md:mb-6">
-              <div className="flex items-center gap-2 max-md:gap-1 text-sm max-md:text-xs">
-                <div className="w-8 h-8 max-md:w-5 max-md:h-5 bg-blue-100 rounded-full flex items-center justify-center">
-                  <TrendingUp className="w-4 h-4 max-md:w-2.5 max-md:h-2.5 text-blue-600" />
+            <div className="flex items-center justify-center gap-8 max-md:gap-12 mb-8 max-md:mb-6">
+              <div className="flex items-center gap-2 max-md:flex-col max-md:gap-0 text-sm max-md:text-xs">
+                <div className="w-8 h-8 max-md:hidden bg-blue-100 rounded-full flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-blue-600" />
                 </div>
-                <span className="font-medium text-gray-700 max-md:text-[10px] whitespace-nowrap">2K+ views</span>
+                <span className="font-medium text-gray-700 max-md:text-center max-md:leading-tight whitespace-nowrap">
+                  <span className="max-md:block max-md:text-3xl max-md:font-bold max-md:leading-10">2K+</span>
+                  <span className="max-md:block max-md:text-lg max-md:font-normal"> views</span>
+                </span>
               </div>
-              <div className="flex items-center gap-2 max-md:gap-1 text-sm max-md:text-xs">
-                <div className="w-8 h-8 max-md:w-5 max-md:h-5 bg-purple-100 rounded-full flex items-center justify-center">
-                  <Zap className="w-4 h-4 max-md:w-2.5 max-md:h-2.5 text-purple-600" />
+              <div className="flex items-center gap-2 max-md:flex-col max-md:gap-0 text-sm max-md:text-xs">
+                <div className="w-8 h-8 max-md:hidden bg-purple-100 rounded-full flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-purple-600" />
                 </div>
-                <span className="font-medium text-gray-700 max-md:text-[10px] whitespace-nowrap">Live 24hrs</span>
+                <span className="font-medium text-gray-700 max-md:text-center max-md:leading-tight whitespace-nowrap">
+                  <span className="max-md:block max-md:text-3xl max-md:font-bold max-md:leading-10">Live</span>
+                  <span className="max-md:block max-md:text-lg max-md:font-normal"> 24hrs</span>
+                </span>
               </div>
-              <div className="flex items-center gap-2 max-md:gap-1 text-sm max-md:text-xs">
-                <div className="w-8 h-8 max-md:w-5 max-md:h-5 bg-green-100 rounded-full flex items-center justify-center">
-                  <svg className="w-4 h-4 max-md:w-2.5 max-md:h-2.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center gap-2 max-md:flex-col max-md:gap-0 text-sm max-md:text-xs">
+                <div className="w-8 h-8 max-md:hidden bg-green-100 rounded-full flex items-center justify-center">
+                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                   </svg>
                 </div>
-                <span className="font-medium text-gray-700 max-md:text-[10px] whitespace-nowrap">9+ leads</span>
+                <span className="font-medium text-gray-700 max-md:text-center max-md:leading-tight whitespace-nowrap">
+                  <span className="max-md:block max-md:text-3xl max-md:font-bold max-md:leading-10">9+</span>
+                  <span className="max-md:block max-md:text-lg max-md:font-normal"> leads</span>
+                </span>
               </div>
             </div>
 
-            {/* CTA buttons */}
-            <div className="flex items-center justify-center gap-4 max-md:flex-col max-md:gap-3">
-              <button
-                onClick={onGetStarted}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 max-md:px-6 max-md:py-3 rounded-full font-semibold text-lg max-md:text-base shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center gap-2 max-md:w-full max-md:justify-center"
-              >
-                <Zap className="w-5 h-5 max-md:w-4 max-md:h-4" />
-                Start Promoting Now
-              </button>
+            {/* Property Setup Section */}
+            <div className="mt-8 max-md:mt-6 mb-8 max-md:mb-6">
+              <div className="max-w-lg mx-auto">
+                <PropertySetup
+                  listingId={listingId}
+                  onAddressSelect={onAddressSelect}
+                  onCityUpdate={onCityUpdate}
+                />
+              </div>
             </div>
 
             {/* Trust indicator */}
             <div className="mt-6 max-md:mt-4">
-              <p className="text-sm max-md:text-xs text-gray-500">
-                ✓ No long-term contracts  ✓ Cancel anytime  ✓ Results guaranteed
-              </p>
+              <div className="space-y-3 max-w-xs mx-auto">
+                <div className="flex items-center justify-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                  <span className="text-base">🚫</span>
+                  <span className="text-sm max-md:text-base font-medium">No long-term contracts</span>
+                </div>
+                <div className="flex items-center justify-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                  <span className="text-base">⏰</span>
+                  <span className="text-sm max-md:text-base font-medium">Cancel anytime</span>
+                </div>
+                <div className="flex items-center justify-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200">
+                  <span className="text-base">🎯</span>
+                  <span className="text-sm max-md:text-base font-medium">Results guaranteed</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -99,6 +99,25 @@ const Index = ({ page }: { page?: "listing" }) => {
     }
   }, []);
 
+  // Add global unhandled promise rejection handler for API fetch errors
+  useEffect(() => {
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // Check if it's a fetch error related to our API calls
+      if (event.reason &&
+          (event.reason.message?.includes('Failed to fetch') ||
+           event.reason.toString?.().includes('api-blast'))) {
+        console.debug('Handled unhandled promise rejection for API call:', event.reason);
+        event.preventDefault(); // Prevent the error from bubbling up
+      }
+    };
+
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+
+    return () => {
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+    };
+  }, []);
+
   // Callback function to handle city updates from PropertySetup
   const handleCityUpdate = React.useCallback((city: string | null) => {
     setListingCity(city);
@@ -129,14 +148,23 @@ const Index = ({ page }: { page?: "listing" }) => {
 
         if (startResponse.ok) {
           console.log("Task started successfully on page load");
+        } else {
+          console.debug("Task start API returned non-OK status:", startResponse.status);
         }
       } catch (error) {
         // Silently handle the error - this API may not be available in dev
-        console.debug("Task start API not available:", error.message);
+        console.debug("Task start API not available:", error instanceof Error ? error.message : String(error));
       }
     };
 
-    startTask();
+    // Wrap in try-catch to prevent any unhandled promise rejections
+    try {
+      startTask().catch((error) => {
+        console.debug("Unhandled error in startTask:", error instanceof Error ? error.message : String(error));
+      });
+    } catch (error) {
+      console.debug("Error calling startTask:", error instanceof Error ? error.message : String(error));
+    }
   }, []);
 
 
@@ -151,14 +179,23 @@ const Index = ({ page }: { page?: "listing" }) => {
 
           if (response.ok) {
             console.log("Jump click recorded successfully for param:", param);
+          } else {
+            console.debug("Jump click API returned non-OK status:", response.status);
           }
         } catch (error) {
-          console.debug("Jump click API not available:", error.message);
+          console.debug("Jump click API not available:", error instanceof Error ? error.message : String(error));
         }
       }
     };
 
-    recordJumpClick();
+    // Wrap in try-catch to prevent any unhandled promise rejections
+    try {
+      recordJumpClick().catch((error) => {
+        console.debug("Unhandled error in recordJumpClick:", error instanceof Error ? error.message : String(error));
+      });
+    } catch (error) {
+      console.debug("Error calling recordJumpClick:", error instanceof Error ? error.message : String(error));
+    }
   }, [param]);
 
    // 监听滚动事件，当main模块距离页面顶部小于100px时触发trackFBEvent
@@ -1052,6 +1089,9 @@ const Index = ({ page }: { page?: "listing" }) => {
       <PurchaseNotification listingCity={listingCity} />
       <Hero
         page={page}
+        listingId={listingId}
+        onAddressSelect={handleAddressSelect}
+        onCityUpdate={handleCityUpdate}
         onGetStarted={() => {
           trackFBEvent('Start Promoting')
           const propertySetupSection = document.querySelector('[data-section="property-setup"]');
@@ -1127,13 +1167,7 @@ const Index = ({ page }: { page?: "listing" }) => {
       <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:py-[20px] max-md:mx-4 max-md:rounded-xl">
         <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
           <div className="gap-5 flex max-md:flex-col items-stretch max-md:gap-8">
-            <PropertySetup
-              listingId={listingId}
-              onAddressSelect={handleAddressSelect}
-              onCityUpdate={handleCityUpdate}
-            />
-
-            <section className="w-6/12 ml-5 max-md:w-full max-md:ml-0 flex max-md:hidden">
+            <section className="w-full max-md:w-full max-md:ml-0 flex max-md:hidden">
               <div className="flex flex-col items-center bg-[#F6F7FB] mx-auto px-[30px] py-4 rounded-xl max-md:max-w-full max-md:mt-0 max-md:px-4 max-md:mx-0 flex-1 overflow-hidden relative max-md:bg-gray-50">
                 {/* Zoom Icon - Only show on mobile view */}
                 {viewMode === "mobile" && (

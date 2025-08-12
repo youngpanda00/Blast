@@ -4,7 +4,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
-import { Pencil, Heart, MessageCircle, Share, MoreHorizontal, ChevronDown, ChevronUp, Edit3 } from "lucide-react";
+import { Pencil, Heart, MessageCircle, Share, MoreHorizontal, Edit3 } from "lucide-react";
 import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -54,7 +54,6 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
   const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingInline, setIsEditingInline] = useState<'headline' | 'adCopy' | null>(null);
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
   const isMobile = useIsMobile();
@@ -65,29 +64,15 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   }, [initialImage])
 
   const handleEdit = () => {
-    if (isMobile) {
-      setIsExpanded(!isExpanded);
-      // Focus jump to ad preview when expanded
-      if (!isExpanded) {
-        setTimeout(() => {
-          adPreviewRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-          });
-          adPreviewRef.current?.focus();
-        }, 100);
-      }
-    } else {
-      setTempHeadline(headline);
-      setTempAdCopy(adCopy);
-      setSelectedTemplate("custom");
-      setIsEditing(true);
-    }
+    setTempHeadline(headline);
+    setTempAdCopy(adCopy);
+    setSelectedTemplate("custom");
+    setIsEditing(true);
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
       feature_name: "ListingBlast",
-      click_item: isMobile ? "Preview Your Ad" : "Edit Ad",
-      click_action: isMobile ? "expand" : "edit"
+      click_item: "Edit Ad",
+      click_action: "edit"
     });
     trackFBEvent('Edit Ad')
   };
@@ -166,62 +151,13 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     setShowTemplateDropdown(false);
   };
 
-  // Mobile expandable button
-  if (isMobile && !isExpanded) {
-    return (
-      <section className="w-full flex flex-col items-center bg-background">
-        <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-border mt-[29px]" />
-
-        <div className="w-full max-w-[1140px] mt-8 px-4">
-          <Button
-            onClick={handleEdit}
-            className="w-full flex items-center justify-between p-4 h-auto bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl shadow-lg"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </div>
-              <span className="text-lg font-semibold">Preview Your Ad</span>
-            </div>
-            <ChevronDown className="w-5 h-5" />
-          </Button>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background focus:outline-none">
-      <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-border mt-[29px]" />
-
       <div className="w-full max-w-[1140px] mt-12 max-md:px-4 px-4">
-        {/* Mobile header with collapse button */}
-        {isMobile && (
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-foreground">
-              Preview Your Ad
-            </h2>
-            <Button
-              onClick={() => setIsExpanded(false)}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <ChevronUp className="w-4 h-4" />
-              Collapse
-            </Button>
-          </div>
-        )}
-
-        {/* Desktop header */}
+        {/* Desktop header with edit button */}
         {!isMobile && (
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-foreground">
-              Preview Your Ad
-            </h2>
+          <div className="flex items-center justify-end mb-8">
             <Button
               onClick={isEditing ? undefined : handleEdit}
               variant="outline"
@@ -426,7 +362,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 {/* Facebook engagement - adjusted spacing for mobile */}
-                <div className="p-4 border-t border-border bg-accent/20">
+                <div className="p-4 max-md:py-2.5 max-md:pl-2.5 max-md:pr-0 border-t border-border bg-accent/20">
                   <div className="flex items-center justify-between">
                     <div className={`flex items-center ${isMobile ? 'gap-4' : 'gap-6'}`}>
                       <button className={`flex items-center gap-2 text-sm text-muted-foreground hover:text-primary hover:bg-accent ${isMobile ? 'px-2 py-1' : 'px-3 py-2'} rounded transition-colors`}>

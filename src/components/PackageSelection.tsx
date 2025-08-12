@@ -13,6 +13,7 @@ import { LoadingOverlay } from "./ui/loading-overlay";
 import { useIsMobile } from "../hooks/use-mobile";
 import { StickyCTA } from "./StickyCTA";
 import { trackFBEvent, trackMixPanel } from "@/lib/utils";
+import { saveStepWithRetry, showErrorNotification, getUserFriendlyErrorMessage } from "@/utils/checkoutApi";
 
 interface PackageSelectionProps {
   previewPicture?: string | null
@@ -130,7 +131,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             addressInput.style.transition = 'all 0.5s ease';
             addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
 
-            // 添加轻微的晃动动画
+            // 添加轻微的晃���动画
             addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
 
             // 创建晃动动画的CSS keyframes（如果不存在）
@@ -234,32 +235,24 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     setIsLoading(true);
 
     try {
-      // Save step data
-      const response = await fetch("/api-blast/task/save-step", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      // Save step data with improved error handling
+      const saveResult = await saveStepWithRetry({
+        stepName: "ORDER",
+        data: {
+          dataList: [
+            {
+              data: currentListingId,
+              packageType: "LISTING",
+            },
+          ],
+          duration: duration,
+          paymentMode: paymentMode,
         },
-        body: JSON.stringify({
-          stepName: "ORDER",
-          data: {
-            dataList: [
-              {
-                data: currentListingId,
-                packageType: "LISTING",
-              },
-            ],
-            duration: duration,
-            paymentMode: paymentMode,
-          },
-        }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to save step data");
+      if (!saveResult.success) {
+        throw new Error(saveResult.error || "Failed to save step data");
       }
-
-      console.log("Step data saved successfully");
 
       // Call the external checkoutPop function
       if (typeof (window as any).checkoutPop === "function") {
@@ -301,6 +294,10 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     } catch (error) {
       setIsLoading(false);
       console.error("Error during checkout:", error);
+
+      // Show user-friendly error message
+      const userMessage = getUserFriendlyErrorMessage(error as Error);
+      showErrorNotification(userMessage, "Checkout Error");
     }
   };
 
@@ -320,11 +317,11 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         });
       }
 
-      // 如果没有选房源，滚动到PropertySetup模块并对输入框添加突出动画
+      // 如果没有选房��，滚动到PropertySetup模���并对输入框添加突出动画
       const propertySetupSection = document.querySelector('[data-section="property-setup"]');
 
       if (propertySetupSection) {
-        // 平滑滚动到PropertySetup模块
+        // 平滑滚���到PropertySetup模块
         propertySetupSection.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
@@ -456,39 +453,31 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
     window.alert(`selectedPackage: ${selectedPackage}`);
     const duration = packageToDuration[selectedPackage];
-    
+
     const paymentMode =
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
 
     setIsLoading(true);
 
     try {
-      // Save step data
-      const response = await fetch("/api-blast/task/save-step", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      // Save step data with improved error handling
+      const saveResult = await saveStepWithRetry({
+        stepName: "ORDER",
+        data: {
+          dataList: [
+            {
+              data: currentListingId,
+              packageType: "LISTING",
+            },
+          ],
+          duration: duration,
+          paymentMode: paymentMode,
         },
-        body: JSON.stringify({
-          stepName: "ORDER",
-          data: {
-            dataList: [
-              {
-                data: currentListingId,
-                packageType: "LISTING",
-              },
-            ],
-            duration: duration,
-            paymentMode: paymentMode,
-          },
-        }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to save step data");
+      if (!saveResult.success) {
+        throw new Error(saveResult.error || "Failed to save step data");
       }
-
-      console.log("Step data saved successfully");
 
       // Call the external checkoutPop function
       if (typeof (window as any).checkoutPop === "function") {
@@ -530,6 +519,10 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     } catch (error) {
       setIsLoading(false);
       console.error("Error during checkout:", error);
+
+      // Show user-friendly error message
+      const userMessage = getUserFriendlyErrorMessage(error as Error);
+      showErrorNotification(userMessage, "Checkout Error");
     }
   };
 
@@ -646,14 +639,19 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
 
   // Render package card
-  const renderPackageCard = (pkg: any, isMobile = false) => (
+  const renderPackageCard = (pkg: any) => (
     <div
       key={pkg.id}
-      className={isMobile ? "flex-[0_0_85%] min-w-0 px-3" : ""}
+      className="w-full"
     >
       <div
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
-        className={`relative rounded-[24px] p-6 h-[330px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 ${
+        className={`relative rounded-[24px] p-4 md:p-6 h-[320px] md:h-[350px] ${
+          pkg.id === 'starter' ? 'max-md:h-[258px]' :
+          pkg.id === 'boost' ? 'max-md:h-[257px]' :
+          pkg.id === 'growth' ? 'max-md:h-[271px]' :
+          pkg.id === 'mastery' ? 'max-md:h-[272px]' : 'max-md:h-[258px]'
+        } overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col ${
           selectedPackage === pkg.id
             ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
             : "bg-white"
@@ -670,36 +668,36 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         )}
 
         {/* Header */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3 md:mb-4">
           <Diamond
             className="w-[10px] h-[10px]"
             style={{ color: "#FFA600" }}
             fill="#FFA600"
           />
           <h3
-            className={`text-xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+            className={`text-lg md:text-xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
           >
             {pkg.name}
           </h3>
         </div>
 
         {/* Price */}
-        <div className="mb-4">
-          <div className="flex items-baseline gap-2">
+        <div className="mb-3">
+          <div className="flex items-baseline gap-2 flex-wrap">
             {pkg.originalPrice && (
               <span
-                className={`text-2xl line-through ${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"}`}
+                className={`text-xl md:text-2xl line-through ${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"}`}
               >
                 {pkg.originalPrice}
               </span>
             )}
             <span
-              className={`text-4xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+              className={`text-3xl md:text-4xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
             >
               {pkg.price}
             </span>
           </div>
-          <div>
+          <div className="mt-1">
             <span
               className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
             >
@@ -708,23 +706,12 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        {/* Select button */}
-        <div
-          className={`w-full font-normal px-4 rounded-full mb-6 h-9 flex items-center justify-center ${
-            selectedPackage === pkg.id
-              ? "bg-white/20 text-white opacity-60"
-              : "bg-white text-[#3B5CDE] border border-[#3B5CDE]"
-          }`}
-        >
-          {selectedPackage === pkg.id ? "Current plan" : "Select plan"}
-        </div>
-
         {/* Package details */}
         <div
-          className={`border-t pt-4 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}
+          className={`border-t pt-3 md:pt-4 mt-3 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}
         >
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
+          <div className="space-y-2 md:space-y-3">
+            <div className="flex justify-between text-xs md:text-sm">
               <span
                 className={
                   selectedPackage === pkg.id
@@ -740,7 +727,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                 {pkg.duration}
               </span>
             </div>
-            <div className="flex justify-between text-sm">
+            <div className="flex justify-between text-xs md:text-sm">
               <span
                 className={
                   selectedPackage === pkg.id
@@ -756,14 +743,22 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                 {pkg.estimatedViews}
               </span>
             </div>
-            {selectedPackage === pkg.id && (
-              <div className="flex justify-between text-sm">
-                <span className="text-white/80">Estimated leads</span>
-                <span className="font-medium text-white">
-                  {pkg.estimatedLeads}
-                </span>
-              </div>
-            )}
+            <div className="flex justify-between text-xs md:text-sm">
+              <span
+                className={
+                  selectedPackage === pkg.id
+                    ? "text-white/80"
+                    : "text-gray-500"
+                }
+              >
+                Estimated leads
+              </span>
+              <span
+                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+              >
+                {pkg.estimatedLeads}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -873,61 +868,18 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        {/* Package cards layout - Desktop: Grid, Mobile: Carousel */}
-        {/* Desktop layout */}
-        <div className="hidden md:grid grid-cols-4 gap-4 w-full max-w-[1140px] mt-5 items-center">
-          {packages.map((pkg) => renderPackageCard(pkg))}
-        </div>
-
-        {/* Mobile carousel */}
-        <div className="md:hidden w-full mt-5">
-          <div className="relative">
-            {/* Carousel container */}
-            <div className="overflow-hidden" ref={emblaRef}>
-              <div className="flex">
-                {packages.map((pkg) => renderPackageCard(pkg, true))}
-              </div>
-            </div>
-
-            {/* Polished dots indicator */}
-            <div className="flex justify-center mt-4 gap-1.5">
-              {packages.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => scrollTo(index)}
-                  className="w-11 h-11 flex items-center justify-center group"
-                  aria-label={`Go to package ${index + 1}`}
-                >
-                  <div
-                    className={`transition-all duration-300 ease-out ${
-                      index === selectedIndex
-                        ? 'w-4 h-1 bg-[#0A3D91] rounded-full transform scale-100 opacity-100'
-                        : 'w-2 h-2 bg-gray-400 rounded-full transform scale-100 opacity-30 group-hover:opacity-50 group-hover:scale-110'
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
-
-            {/* Edge fade indicators */}
-            {selectedIndex > 0 && (
-              <div className="absolute left-0 top-0 bottom-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none" />
-            )}
-            {selectedIndex < packages.length - 1 && (
-              <div className="absolute right-0 top-0 bottom-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none" />
-            )}
+        {/* Package cards layout - 2x2 Grid for all devices */}
+        <div className="w-full max-w-[1140px] mt-5 px-4 md:px-0">
+          <div className="grid grid-cols-2 gap-3 md:gap-6 max-w-[800px] mx-auto">
+            {packages.map((pkg) => renderPackageCard(pkg))}
           </div>
         </div>
 
         <div className="flex w-[782px] max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-10 max-md:px-6">
-          <h3 className="text-black text-xl max-md:max-w-full">
-            Ready to Checkout? Proceed to payment and your promoted listing will
-            go live
-          </h3>
           <button
             onClick={handleCheckout}
             id="btn-blast-now"
-            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all mt-[30px] px-5 py-4 rounded-[75px] max-md:px-5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all px-5 py-4 rounded-[75px] max-md:px-5 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
             style={{
               fontWeight: 500,
             }}
