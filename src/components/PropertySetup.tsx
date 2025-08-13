@@ -188,7 +188,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
     <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-0" data-section="property-setup">
       <div className="self-stretch my-auto max-md:max-w-full max-md:mt-10">
         <div className="mb-6 max-md:mb-4">
-          <h2 className="text-xl font-bold text-gray-900 mb-2 md:max-[1240px]:mt-8 max-md:text-lg max-md:mb-3">
+          <h2 className="text-xl font-bold text-gray-900 mb-2 md:max-[1240px]:mt-8 max-md:text-lg max-md:mb-3 max-md:hidden">
             Let's Set Up Your Property & Budget
           </h2>
         </div>
@@ -196,7 +196,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
         <div className="space-y-4">
           {/* Mobile-first address search section */}
           <div className="max-md:order-first max-md:mb-6">
-            <div className="p-4 rounded-xl border-0 max-md:p-4 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 transition-all ease-in-out duration-500"
+            <div className="p-4 rounded-xl border-0 max-md:p-4 max-md:pb-4 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 transition-all ease-in-out duration-500"
                  style={{
                    boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)"
                  }}>
@@ -208,18 +208,10 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                   lineHeight: "24px",
                 }}
               >
-                <strong className="max-md:text-base flex items-center gap-2">
-                  <div className="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  Promote your new listing online!
+                <strong className="max-md:text-base">
+                  <span className="max-md:hidden">Find Listing</span>
+                  <span className="hidden max-md:block">Step 1 - Find your listing</span>
                 </strong>
-                <br />
-                <span className="text-sm opacity-90 max-md:text-sm mt-1 block">
-                  Turn views into inquiries with AI-powered advertising
-                </span>
               </Label>
 
               <form onSubmit={handleAddressSubmit} className="relative">
@@ -239,10 +231,95 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                   />
                 </div>
               </form>
+
+              {/* Property Preview Section */}
+              <div className="mt-4">
+                {(autoFilledData || parsedAddress) ? (
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    {/* Property Image */}
+                    {autoFilledData?.previewPicture && (
+                      <div className="mb-4">
+                        <img
+                          src={autoFilledData.previewPicture.split("|")[0].trim()}
+                          alt="Property preview"
+                          className="w-full h-48 object-cover rounded-lg"
+                        />
+                      </div>
+                    )}
+
+                    {/* Address */}
+                    {parsedAddress && (
+                      <div className="text-center mb-4">
+                        <h4 className="text-lg font-medium text-gray-800">
+                          {parsedAddress.streetAddress}
+                        </h4>
+                        <p className="text-gray-600">
+                          {parsedAddress.cityStateZip}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Property Details */}
+                    {(autoFilledData?.beds || autoFilledData?.baths || autoFilledData?.sqft) && (
+                      <div className="flex items-center justify-center gap-6 text-gray-700">
+                        {autoFilledData.beds && (
+                          <div className="flex items-center gap-2">
+                            <Bed className="w-4 h-4" />
+                            <span className="text-sm font-medium">{autoFilledData.beds} beds</span>
+                          </div>
+                        )}
+                        {autoFilledData.baths && (
+                          <div className="flex items-center gap-2">
+                            <Bath className="w-4 h-4" />
+                            <span className="text-sm font-medium">{autoFilledData.baths} baths</span>
+                          </div>
+                        )}
+                        {autoFilledData.sqft && (
+                          <div className="flex items-center gap-2">
+                            <Square className="w-4 h-4" />
+                            <span className="text-sm font-medium">{autoFilledData.sqft.toLocaleString()} sqft</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hidden md:block">
+                    {/* Placeholder content when no property is selected - Desktop only */}
+                    <div className="mb-4">
+                      <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <Search className="w-12 h-12 text-gray-400" />
+                      </div>
+                    </div>
+
+                    <div className="text-center mb-4">
+                      <h4 className="text-lg font-medium text-gray-600 mb-2">
+                        Search for Your Property
+                      </h4>
+                      <p className="text-gray-500 text-sm">
+                        Enter your property address above to see a preview of your listing
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-6 text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <Bed className="w-4 h-4" />
+                        <span className="text-sm">Bedrooms</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Bath className="w-4 h-4" />
+                        <span className="text-sm">Bathrooms</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Square className="w-4 h-4" />
+                        <span className="text-sm">Square Feet</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-
-
 
           <div className="space-y-4">
             <div className="mt-4">

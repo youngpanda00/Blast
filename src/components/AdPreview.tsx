@@ -14,6 +14,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
 
 interface AdPreviewProps {
   initialImage?: string;
@@ -56,6 +63,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
   const [isEditingInline, setIsEditingInline] = useState<'headline' | 'adCopy' | null>(null);
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
+  const [isMobileEditModalOpen, setIsMobileEditModalOpen] = useState(false);
   const isMobile = useIsMobile();
   const adPreviewRef = React.useRef<HTMLDivElement>(null);
 
@@ -153,8 +161,8 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
 
   return (
-    <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background focus:outline-none">
-      <div className="w-full max-w-[1140px] mt-12 max-md:px-4 px-4">
+    <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white max-md:mt-[10px] focus:outline-none">
+      <div className="w-full max-w-[1140px] mt-12 max-md:my-[30px] max-md:px-4 px-4">
         {/* Desktop header with edit button */}
         {!isMobile && (
           <div className="flex items-center justify-end mb-8">
@@ -170,7 +178,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
           </div>
         )}
 
-        <div className={`grid grid-cols-1 ${!isMobile ? 'lg:grid-cols-2' : ''} gap-10 relative`}>
+        <div className={`grid grid-cols-1 ${!isMobile ? 'lg:grid-cols-2' : ''} gap-10 max-md:gap-[40px] relative`}>
           {/* Connection Line - only visible on desktop */}
           {highlightedArea && (
             <div className="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
@@ -180,24 +188,27 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
           )}
 
           {/* Facebook-style Ad Preview */}
-          <div className="space-y-6 relative">
-            <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-foreground mb-6 flex items-center gap-2`}>
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              Facebook Ad Preview
-              {!isMobile && highlightedArea && (
-                <span className="text-sm font-normal text-muted-foreground animate-pulse">
-                  ← {highlightedArea === 'headline' ? 'Headline' : highlightedArea === 'adCopy' ? 'Ad Copy' : 'Image'} highlighted
-                </span>
-              )}
-            </h3>
-            <Card className={`${isMobile ? 'w-full' : 'max-w-md mx-auto lg:mx-0'} shadow-xl border-border bg-card relative`}>
+          <div className="space-y-6 relative max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
+            <div className="mb-6 max-md:mb-[10px]">
+              <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-foreground flex items-center gap-2 max-md:justify-center max-md:items-center`}>
+                <span className="w-2 h-2 bg-blue-500 rounded-full max-md:hidden"></span>
+                <span className="max-md:hidden">Facebook Ad Preview</span>
+                <span className="hidden max-md:block max-md:text-black">Step 2- Your Facebook Ad Preview</span>
+                {!isMobile && highlightedArea && (
+                  <span className="text-sm font-normal text-muted-foreground animate-pulse">
+                    ← {highlightedArea === 'headline' ? 'Headline' : highlightedArea === 'adCopy' ? 'Ad Copy' : 'Image'} highlighted
+                  </span>
+                )}
+              </h3>
+            </div>
+            <Card className={`${isMobile ? 'w-full' : 'max-w-md mx-auto lg:mx-0'} shadow-xl border-border bg-card relative max-md:w-[90%] max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:mt-[1px]`}>
               <CardContent className="p-0">
                 {/* Facebook header */}
-                <div className="flex items-center justify-between p-4 border-b border-border">
+                <div className="flex items-center justify-between p-4 max-md:py-[10px] border-b border-border">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full overflow-hidden bg-background border-2 border-border flex items-center justify-center">
                       <img
-                        src="https://cdn.lofty.com/image/fs/servicetool/2025710/8/original_60f236a4963f4083.png"
+                        src="https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2F07c4fa894c3a4e7490607f4934b2056f"
                         alt="Lofty Logo"
                         className="w-full h-full object-contain"
                       />
@@ -211,7 +222,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 {/* Ad content - with mobile inline editing */}
-                <div className={`p-4 transition-all duration-300 relative ${
+                <div className={`p-4 max-md:py-[14px] transition-all duration-300 relative ${
                   highlightedArea === 'adCopy' || isEditingInline === 'adCopy'
                     ? 'bg-blue-50 border-2 border-blue-300 shadow-md'
                     : ''
@@ -254,13 +265,13 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     </div>
                   ) : (
                     <div className="relative group">
-                      <p className="text-sm text-card-foreground leading-relaxed pr-8">
+                      <p className="text-sm text-card-foreground leading-relaxed pr-8 max-md:text-xs max-md:leading-[17px]">
                         {(highlightedArea === 'adCopy' || isEditingInline === 'adCopy') && (
                           <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
                         )}
                         {adCopy}
                       </p>
-                      {isMobile && (
+                      {false && isMobile && (
                         <button
                           onClick={() => handleInlineEdit('adCopy')}
                           className="absolute top-2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
@@ -282,9 +293,9 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                   <img
                     src={image}
                     alt="Property"
-                    className={`w-full h-52 object-cover ${isMobile ? '' : 'rounded-t-lg'}`}
+                    className={`w-full h-52 max-md:h-[150px] object-cover px-4 ${isMobile ? '' : 'rounded-t-lg'}`}
                   />
-                  {isMobile && (
+                  {false && isMobile && (
                     <div className="absolute bottom-2 right-2">
                       <label className="cursor-pointer w-11 h-11 bg-black/30 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150">
                         <Pencil className="w-4 h-4" />
@@ -305,12 +316,8 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 {/* Headline section - below image with mobile inline editing */}
-                <div className={`p-4 border-t border-border transition-all duration-300 ${
-                  highlightedArea === 'headline' || isEditingInline === 'headline'
-                    ? 'bg-yellow-50 border-yellow-300 shadow-md'
-                    : 'bg-gray-50'
-                }`}>
-                  {isMobile && isEditingInline === 'headline' ? (
+                {isMobile && isEditingInline === 'headline' ? (
+                  <div className="p-4 border-t border-border bg-yellow-50 border-yellow-300 shadow-md">
                     <div className="space-y-3 bg-yellow-50 p-3 rounded-lg border border-yellow-200">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-sm font-semibold text-yellow-700">📝 Edit Headline</span>
@@ -335,31 +342,28 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         {tempHeadline.length}/60 characters
                       </p>
                     </div>
-                  ) : (
-                    <div className="relative group">
-                      <h4 className={`font-semibold text-sm mb-2 pr-8 transition-all duration-300 ${
-                        highlightedArea === 'headline' || isEditingInline === 'headline'
-                          ? 'text-yellow-800 text-base font-bold'
-                          : 'text-gray-800'
-                      }`}>
-                        {(highlightedArea === 'headline' || isEditingInline === 'headline') && (
-                          <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
-                        )}
-                        {headline}
-                      </h4>
-                      {isMobile && (
-                        <button
-                          onClick={() => handleInlineEdit('headline')}
-                          className="absolute top-1/2 -translate-y-1/2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
-                          aria-label="Edit title"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                      )}
-                    </div>
-                  )}
-                  <p className="text-gray-600 text-xs">loftyblast.com</p>
-                </div>
+                  </div>
+                ) : (
+                  <h4 className={`font-semibold text-sm mb-2 pr-8 transition-all duration-300 max-md:mb-[10px] max-md:pt-[10px] max-md:pl-4 md:pt-4 md:pb-2 md:pl-4 ${
+                    highlightedArea === 'headline' || isEditingInline === 'headline'
+                      ? 'text-yellow-800 text-base font-bold'
+                      : 'text-gray-800'
+                  }`}>
+                    {(highlightedArea === 'headline' || isEditingInline === 'headline') && (
+                      <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
+                    )}
+                    {headline}
+                    {false && isMobile && (
+                      <button
+                        onClick={() => handleInlineEdit('headline')}
+                        className="absolute top-1/2 -translate-y-1/2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
+                        aria-label="Edit title"
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </button>
+                    )}
+                  </h4>
+                )}
 
                 {/* Facebook engagement - adjusted spacing for mobile */}
                 <div className="p-4 max-md:py-2.5 max-md:pl-2.5 max-md:pr-0 border-t border-border bg-accent/20">
@@ -382,6 +386,144 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
               </CardContent>
             </Card>
+            {isMobile && (
+              <div className="flex justify-center mt-3 max-md:w-full">
+                <Dialog open={isMobileEditModalOpen} onOpenChange={setIsMobileEditModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-blue-500 text-blue-500 hover:bg-blue-50 max-md:w-[90%] max-md:rounded-[26px] max-md:overflow-hidden max-md:border-[#3b5cde] max-md:text-[#3b5cde] max-md:h-[40px]"
+                      onClick={() => {
+                        setTempHeadline(headline);
+                        setTempAdCopy(adCopy);
+                        setSelectedTemplate("custom");
+                      }}
+                    >
+                      Edit Your Ad
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="w-[95vw] max-w-md mx-auto">
+                    <DialogHeader>
+                      <DialogTitle>Edit Your Facebook Ad</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-6 py-4">
+                      {/* Ad Copy Section */}
+                      <div>
+                        <Label htmlFor="edit-adcopy" className="text-sm font-medium">
+                          Ad Copy
+                        </Label>
+                        <Textarea
+                          id="edit-adcopy"
+                          value={tempAdCopy}
+                          onChange={(e) => setTempAdCopy(e.target.value)}
+                          className="mt-2 min-h-[100px]"
+                          placeholder="Enter your ad copy..."
+                        />
+                      </div>
+
+                      {/* Template Selection */}
+                      <div>
+                        <Label className="text-sm font-medium">Quick Templates</Label>
+                        <Select
+                          value={selectedTemplate}
+                          onValueChange={(value) => {
+                            setSelectedTemplate(value);
+                            if (value !== "custom") {
+                              const template = adCopyTemplates.find(t => t.id === value);
+                              if (template) {
+                                setTempAdCopy(template.copy);
+                              }
+                            }
+                          }}
+                        >
+                          <SelectTrigger className="mt-2">
+                            <SelectValue placeholder="Choose a template" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="custom">Custom</SelectItem>
+                            {adCopyTemplates.map((template) => (
+                              <SelectItem key={template.id} value={template.id}>
+                                {template.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      {/* Headline Section */}
+                      <div>
+                        <Label htmlFor="edit-headline" className="text-sm font-medium">
+                          Headline ({tempHeadline.length}/60)
+                        </Label>
+                        <Input
+                          id="edit-headline"
+                          value={tempHeadline}
+                          onChange={(e) => setTempHeadline(e.target.value)}
+                          className="mt-2"
+                          placeholder="Enter headline..."
+                          maxLength={60}
+                        />
+                      </div>
+
+                      {/* Image Upload Section */}
+                      <div>
+                        <Label className="text-sm font-medium">Property Image</Label>
+                        <div className="mt-2 flex items-center gap-3">
+                          <div className="w-16 h-16 rounded-lg overflow-hidden border">
+                            <img src={image} alt="Current" className="w-full h-full object-cover" />
+                          </div>
+                          <label className="cursor-pointer">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleImageUpload}
+                              className="hidden"
+                            />
+                            <Button variant="outline" size="sm" asChild>
+                              <span>Change Image</span>
+                            </Button>
+                          </label>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 pt-4">
+                        <Button
+                          onClick={() => {
+                            setHeadline(tempHeadline);
+                            setAdCopy(tempAdCopy);
+                            onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy });
+                            setIsMobileEditModalOpen(false);
+                            trackMixPanel("click", {
+                              page_name: "ListingBlastSP",
+                              feature_name: "ListingBlast",
+                              click_item: "Save Ad Edit",
+                              click_action: "save"
+                            });
+                            trackFBEvent('Save Ad Edit');
+                          }}
+                          className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                        >
+                          Save Changes
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            setTempHeadline(headline);
+                            setTempAdCopy(adCopy);
+                            setIsMobileEditModalOpen(false);
+                          }}
+                          className="flex-1"
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            )}
           </div>
 
           {/* Editing Panel - Hidden on mobile */}

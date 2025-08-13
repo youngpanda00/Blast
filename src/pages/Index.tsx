@@ -7,6 +7,7 @@ import {
   ZoomIn,
   X,
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Hero } from "@/components/Hero";
 import { PropertySetup } from "@/components/PropertySetup";
 import { PackageSelection } from "@/components/PackageSelection";
@@ -19,6 +20,7 @@ import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 import { trackFBEvent } from "@/lib/utils";
 
 const Index = ({ page }: { page?: "listing" }) => {
+  const isMobile = useIsMobile();
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
   const [selectedPreviewPicture, setSelectedPreviewPicture] = useState<
@@ -1167,7 +1169,15 @@ const Index = ({ page }: { page?: "listing" }) => {
       <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:py-[20px] max-md:mx-4 max-md:rounded-xl">
         <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
           <div className="gap-5 flex max-md:flex-col items-stretch max-md:gap-8">
-            <section className="w-full max-md:w-full max-md:ml-0 flex max-md:hidden">
+            {!isMobile && (
+              <PropertySetup
+                listingId={listingId}
+                onAddressSelect={handleAddressSelect}
+                onCityUpdate={handleCityUpdate}
+              />
+            )}
+
+            <section className="w-6/12 ml-5 max-md:w-full max-md:ml-0 flex max-md:hidden">
               <div className="flex flex-col items-center bg-[#F6F7FB] mx-auto px-[30px] py-4 rounded-xl max-md:max-w-full max-md:mt-0 max-md:px-4 max-md:mx-0 flex-1 overflow-hidden relative max-md:bg-gray-50">
                 {/* Zoom Icon - Only show on mobile view */}
                 {viewMode === "mobile" && (

@@ -10,6 +10,10 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+
+  .animate-pulse-scale {
+    animation: pulse-scale 2s ease-in-out infinite;
+  }
 }
 
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
@@ -122,6 +126,16 @@ All colors MUST be HSL.
   }
   100% {
     transform: translateX(-50%);
+  }
+}
+
+/* Pulse scale animation for buttons */
+@keyframes pulse-scale {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
   }
 }
 
