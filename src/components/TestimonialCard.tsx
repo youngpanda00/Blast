@@ -23,7 +23,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
 }) => {
   return (
     <div
-      className="flex flex-col pt-[20px] pb-[20px] px-[15px] rounded-xl w-full h-[210px] shadow-sm border border-gray-100"
+      className="flex flex-col pt-[20px] pb-[20px] px-[15px] rounded-xl w-full h-[210px] shadow-sm border border-gray-100 max-md:bg-white"
       style={{ backgroundColor: "#F6F7FB" }}
     >
       <div className="flex w-full items-stretch gap-5 justify-between">

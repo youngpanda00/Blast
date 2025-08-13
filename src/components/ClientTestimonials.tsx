@@ -172,15 +172,15 @@ export const ClientTestimonials: React.FC = () => {
   }, [isPaused]);
 
   return (
-    <section className="bg-white flex w-full flex-col items-center justify-center py-20 px-25 max-md:px-4 max-md:py-12">
+    <section className="bg-white max-md:bg-[#121233] flex w-full flex-col items-center justify-center py-20 px-25 max-md:px-4 max-md:py-12">
       <div className="flex w-full max-w-[1240px] flex-col items-center max-md:max-w-full">
-        <h2 className="text-[34px] leading-none text-center text-gray-900 font-medium mb-5 max-md:text-[24px] max-md:mb-4">
+        <h2 className="text-[34px] leading-none text-center text-gray-900 max-md:text-white font-medium mb-5 max-md:text-[24px] max-md:mb-4">
           What Our Clients Say
         </h2>
 
-        <p className="text-gray-600 text-center font-normal leading-[23px] max-w-full max-md:text-sm max-md:leading-[20px]">
-          With our constant innovations, LoftyBlast listen to what our users
-          say.
+        <p className="text-gray-600 max-md:text-[#bcbec0] text-center font-normal leading-[23px] max-w-full max-md:text-sm max-md:leading-[20px]">
+          With our constant innovations, <br className="max-md:block hidden" />
+          LoftyBlast listen to what our users say.
         </p>
 
         {/* User testimonials section with navigation */}
@@ -192,7 +192,7 @@ export const ClientTestimonials: React.FC = () => {
           {/* Navigation buttons */}
           <button
             onClick={handlePrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:relative xl:left-auto xl:top-auto xl:transform-none xl:opacity-100 max-md:left-2 max-md:p-1"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:relative xl:left-auto xl:top-auto xl:transform-none xl:opacity-100 max-md:hidden"
             aria-label="Previous testimonial"
           >
             <ChevronLeft className="w-6 h-6 text-gray-600" />
@@ -202,7 +202,7 @@ export const ClientTestimonials: React.FC = () => {
           <div className="overflow-hidden xl:flex-1 relative">
             <button
               onClick={handleNext}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:hidden"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:hidden max-md:hidden"
               aria-label="Next testimonial"
             >
               <ChevronRight className="w-6 h-6 text-gray-600" />
