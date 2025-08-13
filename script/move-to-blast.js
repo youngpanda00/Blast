@@ -106,15 +106,15 @@ function main() {
   console.log("Starting file copy process...");
 
   try {
-    if (!fs.existsSync(`../${CRM}/crm-blast/src/ai`)) {
-      fs.mkdirSync(`../${CRM}/crm-blast/src/ai`, { recursive: true });
+    if (!fs.existsSync(`../${CRM}/crm-blast/src/ai/listingblast`)) {
+      fs.mkdirSync(`../${CRM}/crm-blast/src/ai/listingblast`, { recursive: true });
     }
 
-    copyDir("./dist/assets", `../${CRM}/crm-blast/src/ai/assets`);
+    copyDir("./dist/assets", `../${CRM}/crm-blast/src/ai/listingblast/assets`);
 
     copyDir(
       "./dist/lovable-uploads",
-      `../${CRM}/crm-blast/src/ai/lovable-uploads`,
+      `../${CRM}/crm-blast/src/ai/listingblast/lovable-uploads`,
     );
 
     processIndexHtml(
