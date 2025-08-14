@@ -1086,7 +1086,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       <section className="w-full flex flex-col items-center max-md:bg-white" data-section="packages">
         <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px] max-md:hidden" />
 
-        <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6 max-md:justify-center max-md:items-center">
+        <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-2 max-md:max-w-full max-md:px-6 max-md:justify-center max-md:items-center">
           <div className="flex flex-col">
             <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
               <span className="max-md:hidden">Select Your Package: Boost Views, Get Leads</span>
