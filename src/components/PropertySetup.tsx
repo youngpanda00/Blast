@@ -287,8 +287,15 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                   <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hidden md:block">
                     {/* Placeholder content when no property is selected - Desktop only */}
                     <div className="mb-4">
-                      <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <Search className="w-12 h-12 text-gray-400" />
+                      <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden relative">
+                        <img
+                          src="https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                          alt="Property placeholder"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+                          <Search className="w-12 h-12 text-white" />
+                        </div>
                       </div>
                     </div>
 

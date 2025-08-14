@@ -62,9 +62,6 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
               <h2 className="max-md:hidden text-[20px] font-medium text-white/90 leading-[1.3] text-center mt-4">
                 Get Serious Buyer Leads and Build Seller Trust Instantly with Targeted Hyper-Local Listing Ads
               </h2>
-              <p className="max-md:hidden text-[18px] font-normal text-white/80 text-center mt-6 mb-8 max-w-2xl mx-auto">
-                AI-powered lead generation on autopilot. Launch targeted ads in minutes and watch qualified leads pour in 24/7.
-              </p>
 
               {/* Desktop: Stats and CTA integrated */}
               <div className="max-md:hidden space-y-6">
@@ -74,13 +71,19 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
                     <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                       <TrendingUp className="w-4 h-4 text-white" />
                     </div>
-                    <span className="font-medium text-white">2K+ avg views</span>
+                    <span className="font-medium text-white">
+                      <span className="block text-[16px] font-bold leading-8">5X Exposure</span>
+                      <span className="block text-sm font-normal">For Listing</span>
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                       <Zap className="w-4 h-4 text-white" />
                     </div>
-                    <span className="font-medium text-white">Live in 24hrs</span>
+                    <span className="font-medium text-white">
+                      <span className="block text-[16px] font-bold leading-8">Save 70%</span>
+                      <span className="block text-sm font-normal">On Ad Costs</span>
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
@@ -88,7 +91,10 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                       </svg>
                     </div>
-                    <span className="font-medium text-white">9+ leads/week</span>
+                    <span className="font-medium text-white">
+                      <span className="block text-[16px] font-bold leading-8">24 Hours</span>
+                      <span className="block text-sm font-normal">Go Live</span>
+                    </span>
                   </div>
                 </div>
 
