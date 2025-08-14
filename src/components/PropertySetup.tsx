@@ -19,10 +19,10 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
 }) => {
   const [addressInput, setAddressInput] = useState("");
   const [autoFilledData, setAutoFilledData] = useState<{
-    baths?: number;
-    beds?: number;
+    baths?: number | string;
+    beds?: number | string;
     previewPicture?: string;
-    sqft?: number;
+    sqft?: number | string;
   } | null>(null);
 
   // Track if user has manually selected an address to prevent overriding
@@ -86,10 +86,10 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
     if (addressData?.data) {
       const data = addressData.data;
       setAutoFilledData({
-        baths: data.baths,
-        beds: data.bedrooms,
+        baths: data.baths.toLocaleString(),
+        beds: data.bedrooms.toLocaleString(),
         previewPicture: data.previewPicture,
-        sqft: data.sqft,
+        sqft: data.sqft.toLocaleString(),
       });
 
       // Mark that user has manually selected an address
@@ -144,10 +144,10 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
 
       // Always update auto-filled data from listing info when user hasn't selected a different address
       setAutoFilledData({
-        baths: data.bathrooms,
-        beds: data.bedrooms,
+        baths: data.bathrooms.toLocaleString(),
+        beds: data.bedrooms.toLocaleString(),
         previewPicture: data.listingPictures.split("|")[0].trim(),
-        sqft: data.sqft,
+        sqft: data.sqft.toLocaleString(),
       });
 
       // Parse address from listing info
@@ -265,19 +265,19 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                         {autoFilledData.beds && (
                           <div className="flex items-center gap-2">
                             <Bed className="w-4 h-4" />
-                            <span className="text-sm font-medium">{autoFilledData.beds} beds</span>
+                            <span className="text-sm font-medium">{Number(autoFilledData.beds) <= 0 ? 0 : autoFilledData.beds} beds</span>
                           </div>
                         )}
                         {autoFilledData.baths && (
                           <div className="flex items-center gap-2">
                             <Bath className="w-4 h-4" />
-                            <span className="text-sm font-medium">{autoFilledData.baths} baths</span>
+                            <span className="text-sm font-medium">{Number(autoFilledData.baths) <=0 ? 0 :  autoFilledData.baths} baths</span>
                           </div>
                         )}
                         {autoFilledData.sqft && (
                           <div className="flex items-center gap-2">
                             <Square className="w-4 h-4" />
-                            <span className="text-sm font-medium">{autoFilledData.sqft.toLocaleString()} sqft</span>
+                            <span className="text-sm font-medium">{Number(autoFilledData.sqft) <=0 ? 0 : autoFilledData.sqft} sqft</span>
                           </div>
                         )}
                       </div>
