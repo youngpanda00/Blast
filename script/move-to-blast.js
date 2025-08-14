@@ -114,6 +114,9 @@ function main() {
       fs.mkdirSync(`../${CRM}/crm-blast/src/ai/${version}`, { recursive: true });
     }
 
+    // todo: 处理dist文件夹下面所有的js,css,html文件, 把里面的"/lovable-uploads"替换为`/${version}/lovable-uploads`
+    
+
     copyDir("./dist/assets", `../${CRM}/crm-blast/src/ai/${version}/assets`);
 
     copyDir(

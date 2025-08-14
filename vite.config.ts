@@ -9,6 +9,7 @@ const SITEDEVURL = "https://site6.lofty.com";
 const TARGETURL = "https://test.loftyblast.com";
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  base: "/",
   server: {
     host: "::",
     port: 8077,
@@ -62,6 +63,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    assetsDir: "assets/listingblast",
     rollupOptions: {
       input: {
         // main: path.resolve(__dirname, 'index.html'),
@@ -69,6 +71,9 @@ export default defineConfig(({ mode }) => ({
       },
       external: ["jquery", "fabric", "vue", "vuex", "crm", "common", "broker"],
       output: {
+        entryFileNames: "assets/listingblast/[name]-[hash].js",
+        chunkFileNames: "assets/listingblast/[name]-[hash].js",
+        assetFileNames: "assets/listingblast/[name]-[hash][extname]",
         globals: {
           jquery: "jQuery",
           fabric: "fabric",
