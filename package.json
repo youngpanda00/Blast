@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "move": "node ./script/move-to-blast.js",
+    "moveB": "node ./script/move-to-blast.js listingblast-pro",
     "bm": "vite build && node ./script/move-to-blast.js",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

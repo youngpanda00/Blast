@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 
 const CRM = 'crm';
+const version = process.argv[2] || "listingblast";
 
 // 递归删除目录内容的函数
 function clearDir(dirPath) {
@@ -104,17 +105,20 @@ function processIndexHtml(src, dest) {
 // 主执行函数
 function main() {
   console.log("Starting file copy process...");
+  if (version) {
+    console.log(`Received argument: ${version}`);
+  }
 
   try {
-    if (!fs.existsSync(`../${CRM}/crm-blast/src/ai/listingblast`)) {
-      fs.mkdirSync(`../${CRM}/crm-blast/src/ai/listingblast`, { recursive: true });
+    if (!fs.existsSync(`../${CRM}/crm-blast/src/ai/${version}`)) {
+      fs.mkdirSync(`../${CRM}/crm-blast/src/ai/${version}`, { recursive: true });
     }
 
-    copyDir("./dist/assets", `../${CRM}/crm-blast/src/ai/listingblast/assets`);
+    copyDir("./dist/assets", `../${CRM}/crm-blast/src/ai/${version}/assets`);
 
     copyDir(
       "./dist/lovable-uploads",
-      `../${CRM}/crm-blast/src/ai/listingblast/lovable-uploads`,
+      `../${CRM}/crm-blast/src/ai/${version}/lovable-uploads`,
     );
 
     processIndexHtml(
@@ -123,7 +127,7 @@ function main() {
     );
     processIndexHtml(
       "./dist/listingblast.html",
-      `../${CRM}/crm-blast/public/listingblast.html`,
+      `../${CRM}/crm-blast/public/${version}.html`,
     );
 
     copyIndexHtml(
