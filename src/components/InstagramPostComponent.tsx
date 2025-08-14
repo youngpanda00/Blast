@@ -3,11 +3,13 @@ import React from "react";
 interface InstagramPostComponentProps {
   imageUrl?: string;
   viewMode?: "mobile" | "desktop";
+  isSelectedProperty?: boolean;
 }
 
 export const InstagramPostComponent: React.FC<InstagramPostComponentProps> = ({
   imageUrl = "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Fb9fd5dd255894cd7a452621e889c019a?format=webp&width=800",
   viewMode = "mobile",
+  isSelectedProperty = false,
 }) => {
   if (viewMode === "mobile") {
     return (
@@ -57,8 +59,13 @@ export const InstagramPostComponent: React.FC<InstagramPostComponentProps> = ({
             <img
               src={imageUrl}
               alt="Waterfront houses with reflection"
-              className="w-full h-[178px] object-cover"
+              className={`w-full h-[178px] object-cover ${
+                !isSelectedProperty && viewMode === "mobile" ? 'filter blur-[1px]' : ''
+              }`}
             />
+            {!isSelectedProperty && viewMode === "mobile" && (
+              <div className="absolute inset-0 bg-black bg-opacity-15"></div>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -170,14 +177,21 @@ export const InstagramPostComponent: React.FC<InstagramPostComponentProps> = ({
       </div>
 
       {/* Property Image */}
-      <img
-        src={
-          imageUrl ||
-          "https://api.builder.io/api/v1/image/assets/TEMP/12888e333127ddc48a1a734b27d96750d3f35e51?width=780"
-        }
-        alt="Lakefront homes with reflection"
-        className="absolute left-0 top-[49px] w-[390px] h-[230px] object-cover"
-      />
+      <div className="absolute left-0 top-[49px] w-[390px] h-[230px] overflow-hidden">
+        <img
+          src={
+            imageUrl ||
+            "https://api.builder.io/api/v1/image/assets/TEMP/12888e333127ddc48a1a734b27d96750d3f35e51?width=780"
+          }
+          alt="Lakefront homes with reflection"
+          className={`w-full h-full object-cover ${
+            !isSelectedProperty ? 'filter blur-[2px]' : ''
+          }`}
+        />
+        {!isSelectedProperty && (
+          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+        )}
+      </div>
 
       {/* Action Buttons */}
       <div className="absolute left-[15px] top-[291px] w-[360px] h-[16px] flex items-center justify-between">

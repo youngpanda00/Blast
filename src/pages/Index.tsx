@@ -372,14 +372,21 @@ const Index = ({ page }: { page?: "listing" }) => {
             {/* Property Card */}
             <div className="absolute left-[8px] top-[98px] w-[155px] h-[166px]">
               <div className="w-full h-full bg-[#F8F9FB] border-[0.396px] border-[#E3E3E6] rounded-[6px] overflow-hidden">
-                <img
-                  src={
-                    selectedPreviewPicture ||
-                    "https://cdn.builder.io/api/v1/image/assets/TEMP/97b02aa4e5f4ffc99b61c6047b9cca274743cb62?width=310"
-                  }
-                  alt=""
-                  className="w-full h-[130px] object-cover rounded-t-[5.903px]"
-                />
+                <div className="relative w-full h-[130px] rounded-t-[5.903px] overflow-hidden">
+              <img
+                src={
+                  selectedPreviewPicture ||
+                  "https://cdn.builder.io/api/v1/image/assets/TEMP/97b02aa4e5f4ffc99b61c6047b9cca274743cb62?width=310"
+                }
+                alt=""
+                className={`w-full h-full object-cover ${
+                  !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                }`}
+              />
+              {!selectedPreviewPicture && (
+                <div className="absolute inset-0 bg-black bg-opacity-20 rounded-t-[5.903px]"></div>
+              )}
+            </div>
                 <div className="absolute left-[5px] top-[136px] w-[145px] h-[24px]">
                   <div className="w-[102px] h-[24px] flex flex-col gap-[1.107px]">
                     <div className="text-[6px] font-bold text-black leading-[7.379px]">
@@ -535,15 +542,20 @@ const Index = ({ page }: { page?: "listing" }) => {
 
         {/* Property Image */}
         <div className="px-4 pb-4 flex-1">
-          <div className="w-full h-40 bg-[#F6F7FB] border border-[#EBECF1] rounded overflow-hidden">
+          <div className="w-full h-40 bg-[#F6F7FB] border border-[#EBECF1] rounded overflow-hidden relative">
             <img
               src={
                 selectedPreviewPicture ||
                 "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
               }
               alt="Modern white house with pool"
-              className="w-full h-full object-cover"
+              className={`w-full h-full object-cover ${
+                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+              }`}
             />
+            {!selectedPreviewPicture && (
+              <div className="absolute inset-0 bg-black bg-opacity-20 rounded"></div>
+            )}
           </div>
 
           {/* Content below image */}
@@ -754,14 +766,21 @@ const Index = ({ page }: { page?: "listing" }) => {
           />
 
           {/* Main property image */}
-          <img
-            src={
-              selectedPreviewPicture ||
-              "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
-            }
-            alt="Lakefront homes with reflection"
-            className="absolute top-0 left-0 w-full h-[230px] object-cover rounded-t-lg"
-          />
+          <div className="absolute top-0 left-0 w-full h-[230px] rounded-t-lg overflow-hidden">
+            <img
+              src={
+                selectedPreviewPicture ||
+                "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+              }
+              alt="Lakefront homes with reflection"
+              className={`w-full h-full object-cover ${
+                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+              }`}
+            />
+            {!selectedPreviewPicture && (
+              <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+            )}
+          </div>
 
           {/* Top gradient overlay */}
           <div className="absolute top-0 left-0 w-full h-[90px] bg-gradient-to-b from-black/70 to-white/70 rounded-t-lg">
@@ -993,14 +1012,21 @@ const Index = ({ page }: { page?: "listing" }) => {
         {/* Dark background container */}
         <div className="absolute inset-2 rounded-xl overflow-hidden bg-[#4B4D5B]">
           {/* Property image */}
-          <img
-            src={
-              selectedPreviewPicture ||
-              "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
-            }
-            alt="Lakefront homes with reflection"
-            className="absolute left-0 top-[60px] w-full h-[180px] object-cover"
-          />
+          <div className="absolute left-0 top-[60px] w-full h-[180px] overflow-hidden">
+            <img
+              src={
+                selectedPreviewPicture ||
+                "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+              }
+              alt="Lakefront homes with reflection"
+              className={`w-full h-full object-cover ${
+                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+              }`}
+            />
+            {!selectedPreviewPicture && (
+              <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+            )}
+          </div>
 
           {/* Header section */}
           <div className="absolute top-[18px] left-[9px] right-[9px] h-[42px]">
@@ -1277,6 +1303,7 @@ const Index = ({ page }: { page?: "listing" }) => {
                         "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
                       }
                       viewMode={viewMode}
+                      isSelectedProperty={!!selectedPreviewPicture}
                     />
                   ) : (
                     <img
@@ -1351,6 +1378,7 @@ const Index = ({ page }: { page?: "listing" }) => {
                   <InstagramPostComponent
                     imageUrl={selectedPreviewPicture}
                     viewMode={viewMode}
+                    isSelectedProperty={!!selectedPreviewPicture}
                   />
                 </div>
               ) : (

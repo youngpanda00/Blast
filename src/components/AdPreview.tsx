@@ -290,11 +290,25 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     ? 'ring-4 ring-green-300 shadow-lg'
                     : ''
                 }`}>
-                  <img
-                    src={image}
-                    alt="Property"
-                    className={`w-full h-52 max-md:h-[150px] object-cover px-4 ${isMobile ? '' : 'rounded-t-lg'}`}
-                  />
+                  <div className="relative px-4 overflow-hidden">
+                    <img
+                      src={image}
+                      alt="Property"
+                      className={`w-full h-52 max-md:h-[150px] object-cover ${
+                        isMobile ? '' : 'rounded-t-lg'
+                      } ${
+                        !isMobile && image.includes("pexels.com") ? 'filter blur-[2px]' : ''
+                      }`}
+                    />
+                    {/* Blur overlay for PC fallback image */}
+                    {!isMobile && image.includes("pexels.com") && (
+                      <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
+                        <div className="text-white text-center">
+                          <div className="text-sm font-medium">Sample Property Image</div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                   {/* Blurred overlay for mobile fallback image */}
                   {isMobile && image.includes("pexels.com") && (
                     <div className="absolute inset-0 mx-4 bg-black/20 backdrop-blur-sm flex items-center justify-center">
@@ -738,11 +752,23 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         <div className="w-4 h-4 bg-green-400 rounded-full flex-shrink-0"></div>
                         <div className="flex-1">
                           <div className="text-sm font-semibold text-gray-600 mb-2">Current Image</div>
-                          <img
-                            src={image}
-                            alt="Current ad image"
-                            className="w-full h-24 object-cover rounded-md border border-gray-200 group-hover:scale-[1.02] transition-transform duration-300"
-                          />
+                          <div className="relative overflow-hidden rounded-md">
+                            <img
+                              src={image}
+                              alt="Current ad image"
+                              className={`w-full h-24 object-cover border border-gray-200 group-hover:scale-[1.02] transition-transform duration-300 ${
+                                image.includes("pexels.com") ? 'filter blur-[2px]' : ''
+                              }`}
+                            />
+                            {/* Blur overlay for fallback image */}
+                            {image.includes("pexels.com") && (
+                              <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
+                                <div className="text-white text-center">
+                                  <div className="text-xs font-medium">Sample Image</div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
