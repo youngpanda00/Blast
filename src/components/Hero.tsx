@@ -66,7 +66,7 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
               {/* Desktop: Stats and CTA integrated */}
               <div className="max-md:hidden space-y-6">
                 {/* Stats bar */}
-                <div className="flex items-center justify-center gap-8">
+                <div className="flex items-center justify-center gap-[108px] mt-[10px]">
                   <div className="flex items-center gap-2 text-sm">
                     <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                       <TrendingUp className="w-4 h-4 text-white" />
