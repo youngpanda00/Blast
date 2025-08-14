@@ -118,10 +118,10 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
 
       {/* Mobile CTA Section */}
       <section className="md:hidden w-full bg-white border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 py-8 max-md:py-6">
+        <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="text-center">
             {/* Stats bar */}
-            <div className="flex items-center justify-center gap-8 max-md:gap-4 mb-8 max-sm:mb-6 max-md:px-2">
+            <div className="flex items-center justify-center gap-8 max-md:gap-4 mb-4 max-md:px-2">
               <div className="flex items-center gap-2 max-md:flex-col max-md:gap-0 text-sm max-md:text-xs max-md:flex-1">
                 <div className="w-8 h-8 max-md:hidden bg-blue-100 rounded-full flex items-center justify-center">
                   <TrendingUp className="w-4 h-4 text-blue-600" />
@@ -154,7 +154,7 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
             </div>
 
             {/* Property Setup Section */}
-            <div className="mt-8 max-md:mt-6 mb-8 max-md:mb-6">
+            <div className="mb-8 max-md:mb-6">
               <div className="max-w-lg mx-auto">
                 <PropertySetup
                   listingId={listingId}

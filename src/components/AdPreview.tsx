@@ -161,7 +161,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
 
   return (
-    <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white max-md:mt-[10px] focus:outline-none">
+    <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white focus:outline-none">
       <div className="w-full max-w-[1140px] mt-12 max-md:my-[30px] max-md:px-4 px-4">
         {/* Desktop header with edit button */}
         {!isMobile && (
