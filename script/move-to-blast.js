@@ -119,10 +119,10 @@ function main() {
 
     copyDir("./dist/assets", `../${CRM}/crm-blast/src/ai/${version}/assets`);
 
-    copyDir(
-      "./dist/lovable-uploads",
-      `../${CRM}/crm-blast/src/ai/${version}/lovable-uploads`,
-    );
+    // copyDir(
+    //   "./dist/lovable-uploads",
+    //   `../${CRM}/crm-blast/src/ai/${version}/lovable-uploads`,
+    // );
 
     // processIndexHtml(
     //   "./dist/index.html",
