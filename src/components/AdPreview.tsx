@@ -295,6 +295,14 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     alt="Property"
                     className={`w-full h-52 max-md:h-[150px] object-cover px-4 ${isMobile ? '' : 'rounded-t-lg'}`}
                   />
+                  {/* Blurred overlay for mobile fallback image */}
+                  {isMobile && image.includes("pexels.com") && (
+                    <div className="absolute inset-0 mx-4 bg-black/20 backdrop-blur-sm flex items-center justify-center">
+                      <div className="text-white text-center">
+                        <div className="text-sm font-medium">Sample Property Image</div>
+                      </div>
+                    </div>
+                  )}
                   {false && isMobile && (
                     <div className="absolute bottom-2 right-2">
                       <label className="cursor-pointer w-11 h-11 bg-black/30 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150">
