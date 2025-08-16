@@ -4,14 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "move": "node ./script/move-to-blast.js",
+    "dev": "VITE_APP=listingblast-pro vite",
+    "build": "VITE_APP=listingblast-pro vite build",
+    "move": "node ./script/move-to-blast.js listingblast",
     "moveB": "node ./script/move-to-blast.js listingblast-pro",
-    "bm": "vite build && node ./script/move-to-blast.js",
-    "build:dev": "vite build --mode development",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "build:dev": "VITE_APP=listingblast-pro vite build --mode development"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
