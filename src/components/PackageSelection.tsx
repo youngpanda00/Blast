@@ -22,6 +22,12 @@ interface PackageSelectionProps {
   onOpenCongratulationsModal: (email: string) => void;
 }
 
+interface AdData {
+    imageUrl?: string | null,
+    headline?: string | null,
+    mainText? : string | null
+}
+
 export const PackageSelection: React.FC<PackageSelectionProps> = ({
   previewPicture,
   selectedAddressId,
@@ -45,6 +51,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   } | null>(null);
   const [shouldHighlightMobileConfig, setShouldHighlightMobileConfig] = useState(false);
   const isMobile = useIsMobile();
+
+  const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
   
   // Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -110,7 +118,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
   };
 
-  const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery") => {
+  const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
     const currentListingId = getEffectiveListingId();
     if (!currentListingId) {
@@ -281,10 +289,12 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         throw new Error(saveResult.error || "Failed to save step data");
       }
 
+      console.log('checkoutPop ===>>>', adPreviewData)
+
       // Call the external checkoutPop function
       if (typeof (window as any).checkoutPop === "function") {
         (window as any)
-          .checkoutPop()
+          .checkoutPop(adPreviewData)
           .then(async (res) => {
             setIsLoading(false);
             console.log("res", res);
@@ -329,7 +339,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   };
 
   const handleCheckout = async () => {
-    await handleCheckoutWithPackage(selectedPackage);
+    await handleCheckoutWithPackage(selectedPackage, adPreviewData);
   };
 
   const handleCheckoutWithMobileConfig = async () => {
@@ -772,7 +782,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       // On mobile, select package and trigger checkout
       await handlePackageSelect(packageType);
       // Use packageType directly instead of selectedPackage state
-      await handleCheckoutWithPackage(packageType);
+      await handleCheckoutWithPackage(packageType, adPreviewData);
     } else {
       // On desktop, just select the package
       await handlePackageSelect(packageType);
@@ -1079,6 +1089,11 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         initialAdCopy="Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!"
         onAdUpdate={(data) => {
           console.log("Ad updated:", data);
+          setAdPreviewData({
+            imageUrl: data.image,
+            headline: data.headline,
+            mainText: data.adCopy
+          })
           // Here you can handle the ad update, save to state, API, etc.
         }}
       />

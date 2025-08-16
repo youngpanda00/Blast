@@ -103,9 +103,19 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   };
 
   const handleCancel = () => {
-    setTempHeadline(headline);
-    setTempAdCopy(adCopy);
+    setImage('https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg')
+    setHeadline('Beautiful Home in Prime Location');
+    setAdCopy('Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!');
+    setTempHeadline('Beautiful Home in Prime Location');
+    setTempAdCopy('Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!');
     setIsEditing(false);
+    onAdUpdate?.(
+      {
+        image: 'https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg',
+        headline: 'Beautiful Home in Prime Location',
+        adCopy: 'Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!'
+      }
+    )
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -265,12 +275,12 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     </div>
                   ) : (
                     <div className="relative group">
-                      <p className="text-sm text-card-foreground leading-relaxed pr-8 max-md:text-xs max-md:leading-[17px]">
+                      <div className="text-sm text-card-foreground leading-relaxed pr-8 max-md:text-xs max-md:leading-[17px]">
                         {(highlightedArea === 'adCopy' || isEditingInline === 'adCopy') && (
                           <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
                         )}
                         {adCopy}
-                      </p>
+                      </div>
                       {false && isMobile && (
                         <button
                           onClick={() => handleInlineEdit('adCopy')}
@@ -688,7 +698,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         }`}
                       />
                       <p className="text-xs text-muted-foreground">
-                        <p>Recommended Aspect Ratio: 1:1 or 4:5</p>
+                        <span>Recommended Aspect Ratio: 1:1 or 4:5</span>
                       </p>
                     </div>
                   </div>
