@@ -201,7 +201,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 )}
               </h3>
             </div>
-            <Card className={`${isMobile ? 'w-full' : 'max-w-md mx-auto lg:mx-0'} shadow-xl border-border bg-card relative max-md:w-[90%] max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:mt-[1px]`}>
+            <Card className={`${isMobile ? 'w-full' : 'max-w-md mx-auto lg:mx-0'} shadow-xl border-border bg-card relative max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:mt-[1px]`}>
               <CardContent className="p-0">
                 {/* Facebook header */}
                 <div className="flex items-center justify-between p-4 max-md:py-[10px] border-b border-border">
