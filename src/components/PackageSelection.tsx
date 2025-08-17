@@ -25,7 +25,8 @@ interface PackageSelectionProps {
 interface AdData {
     imageUrl?: string | null,
     headline?: string | null,
-    mainText? : string | null
+    mainText? : string | null,
+    file?: object
 }
 
 export const PackageSelection: React.FC<PackageSelectionProps> = ({
@@ -1092,7 +1093,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           setAdPreviewData({
             imageUrl: data.image,
             headline: data.headline,
-            mainText: data.adCopy
+            mainText: data.adCopy,
+            file: data.selectedFile
           })
           // Here you can handle the ad update, save to state, API, etc.
         }}

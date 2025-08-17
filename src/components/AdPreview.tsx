@@ -26,7 +26,7 @@ interface AdPreviewProps {
   initialImage?: string;
   initialHeadline?: string;
   initialAdCopy?: string;
-  onAdUpdate?: (data: { image: string; headline: string; adCopy: string }) => void;
+  onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object }) => void;
 }
 
 const adCopyTemplates = [
@@ -57,6 +57,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [headline, setHeadline] = useState(initialHeadline);
   const [adCopy, setAdCopy] = useState(initialAdCopy);
   const [image, setImage] = useState(initialImage);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [tempHeadline, setTempHeadline] = useState(headline);
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
@@ -99,7 +100,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     setHeadline(tempHeadline);
     setAdCopy(tempAdCopy);
     setIsEditing(false);
-    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy });
+    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
   };
 
   const handleCancel = () => {
@@ -113,17 +114,19 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
       {
         image: 'https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg',
         headline: 'Beautiful Home in Prime Location',
-        adCopy: 'Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!'
+        adCopy: 'Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!',
+        selectedFile: null
       }
     )
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    setSelectedFile(file);
     if (file) {
       const url = URL.createObjectURL(file);
       setImage(url);
-      onAdUpdate?.({ image: url, headline, adCopy });
+      onAdUpdate?.({ image: url, headline, adCopy, selectedFile });
     }
   };
 
@@ -140,10 +143,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const saveInlineEdit = () => {
     if (isEditingInline === 'headline') {
       setHeadline(tempHeadline);
-      onAdUpdate?.({ image, headline: tempHeadline, adCopy });
+      onAdUpdate?.({ image, headline: tempHeadline, adCopy, selectedFile });
     } else if (isEditingInline === 'adCopy') {
       setAdCopy(tempAdCopy);
-      onAdUpdate?.({ image, headline, adCopy: tempAdCopy });
+      onAdUpdate?.({ image, headline, adCopy: tempAdCopy, selectedFile });
     }
     setIsEditingInline(null);
     setHighlightedArea(null);
@@ -163,7 +166,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
       if (template) {
         setTempAdCopy(template.copy);
         setAdCopy(template.copy);
-        onAdUpdate?.({ image, headline, adCopy: template.copy });
+        onAdUpdate?.({ image, headline, adCopy: template.copy, selectedFile });
       }
     }
     setShowTemplateDropdown(false);
@@ -525,7 +528,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                           onClick={() => {
                             setHeadline(tempHeadline);
                             setAdCopy(tempAdCopy);
-                            onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy });
+                            onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
                             setIsMobileEditModalOpen(false);
                             trackMixPanel("click", {
                               page_name: "ListingBlastSP",
