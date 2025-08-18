@@ -39,7 +39,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   );
   const [selectedPackage, setSelectedPackage] = useState<
     "starter" | "boost" | "growth" | "mastery"
-  >("starter");
+  >("boost");
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [mobileConfiguration, setMobileConfiguration] = useState<{
@@ -800,7 +800,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       originalPrice: "$109",
       price: "$79",
       duration: "1 Week",
-      isPopular: true,
+      isPopular: false,
       estimatedViews: (2000 * packageToDuration.starter).toLocaleString(),
       estimatedLeads: Math.ceil(79 / 9)
     },
@@ -809,7 +809,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       name: "Boost Pack",
       price: "$158",
       duration: "2 Weeks",
-      isPopular: false,
+      isPopular: true,
       estimatedViews: (2000 * packageToDuration.boost).toLocaleString(),
       estimatedLeads: Math.ceil(158 / 9)
     },
@@ -969,13 +969,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           {/* Price section for mobile */}
           <div className={`border-t pt-3 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}>
             <div className="flex items-baseline gap-2 flex-wrap">
-              {pkg.originalPrice && (
-                <span
-                  className={`text-xl line-through ${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"}`}
-                >
-                  {pkg.originalPrice}
-                </span>
-              )}
               <span
                 className={`text-xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
               >
@@ -997,13 +990,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           {/* Price section for desktop */}
           <div className="mb-3">
             <div className="flex items-baseline gap-2 flex-wrap">
-              {pkg.originalPrice && (
-                <span
-                  className={`text-xl md:text-2xl line-through ${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"}`}
-                >
-                  {pkg.originalPrice}
-                </span>
-              )}
               <span
                 className={`text-3xl md:text-4xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
               >
