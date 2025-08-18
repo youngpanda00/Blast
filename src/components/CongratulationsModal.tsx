@@ -51,7 +51,7 @@ export const CongratulationsModal: React.FC<CongratulationsModalProps> = ({
 
           {/* Subtitle */}
           <p className="text-center text-gray-600 mb-8 text-base leading-relaxed">
-            Every time you get a new lead, we will send a notification email to
+            Every time you get a new lead, we will send a notification email to&nbsp;
             {email || "N/A"}
           </p>
 
