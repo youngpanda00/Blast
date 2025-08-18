@@ -110,6 +110,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     setTempHeadline('Beautiful Home in Prime Location');
     setTempAdCopy('Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!');
     setIsEditing(false);
+    setIsMobileEditModalOpen(false);
     onAdUpdate?.(
       {
         image: 'https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg',
@@ -544,11 +545,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         </Button>
                         <Button
                           variant="outline"
-                          onClick={() => {
-                            setTempHeadline(headline);
-                            setTempAdCopy(adCopy);
-                            setIsMobileEditModalOpen(false);
-                          }}
+                          onClick={handleCancel}
                           className="flex-1"
                         >
                           Cancel
