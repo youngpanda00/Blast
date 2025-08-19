@@ -30,7 +30,6 @@ export const FixedNavigation: React.FC = () => {
   }, [isMobileMenuOpen]);
 
   const handleNavClick = (e: React.MouseEvent, mixPanelItem:string) => {
-    console.log('mixPanelItem ===>>>', mixPanelItem)
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
       feature_name: "ListingBlast",
