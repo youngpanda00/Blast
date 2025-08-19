@@ -142,13 +142,13 @@ const AddressSearchSelect = React.forwardRef<
       };
     }, []);
 
-    // Get displayed suggestions based on mobile/desktop
+    // Get displayed suggestions
     const displayedSuggestions = React.useMemo(() => {
-      if (isMobile && suggestions.length > 5) {
+      if (suggestions.length > 5) {
         return suggestions.slice(0, 5);
       }
       return suggestions;
-    }, [suggestions, isMobile]);
+    }, [suggestions]);
 
     // Helper function to highlight matching text
     const highlightText = React.useCallback((text: string, searchTerm: string) => {
