@@ -234,16 +234,17 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                   />
                 </div>
               </form> */}
-
-              <GooglePlacesAutocomplete
-                ref={addressInputRef}
-                placeholder="Enter address"
-                value={formData.listingAddress}
-                onChange={(value) => handleInputChange("listingAddress", value)}
-                onPlaceSelect={(place, address) => {
-                  console.log('Place selected:', place, address);
-                }}
-              />
+              <div className="bg-white/90 px-3.5 py-2.5 backdrop-blur-sm rounded-xl border border-white/20">
+                <GooglePlacesAutocomplete
+                  ref={addressInputRef}
+                  placeholder="Enter address"
+                  value={addressInput}
+                  onChange={(value) => setAddressInput(value)}
+                  onPlaceSelect={(place, address) => {
+                    console.log('Place selected:', place, address);
+                  }}
+                />
+              </div>
 
               {/* Property Preview Section */}
               <div className="mt-4">
