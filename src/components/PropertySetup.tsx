@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
+import { GooglePlacesAutocomplete } from "./ui/google-places-autocomplete";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Bed, Bath, Square, CheckCircle, Search } from "lucide-react";
@@ -67,6 +68,8 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
       console.error("Error fetching listing labels:", error);
     }
   };
+
+  const addressInputRef = useRef<HTMLInputElement>(null);
 
   // Get address information from URL parameters
   const addressFromUrl = searchParams.get("address");
@@ -214,7 +217,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                 </strong>
               </Label>
 
-              <form onSubmit={handleAddressSubmit} className="relative">
+              {/* <form onSubmit={handleAddressSubmit} className="relative">
                 <div className="relative">
                   <Input
                     id="address-search-input"
@@ -230,7 +233,17 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                     }}
                   />
                 </div>
-              </form>
+              </form> */}
+
+              <GooglePlacesAutocomplete
+                ref={addressInputRef}
+                placeholder="Enter address"
+                value={formData.listingAddress}
+                onChange={(value) => handleInputChange("listingAddress", value)}
+                onPlaceSelect={(place, address) => {
+                  console.log('Place selected:', place, address);
+                }}
+              />
 
               {/* Property Preview Section */}
               <div className="mt-4">
