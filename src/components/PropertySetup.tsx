@@ -188,9 +188,6 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
     <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-0" data-section="property-setup">
       <div className="self-stretch my-auto max-md:max-w-full">
         <div className="mb-6 max-md:mb-4">
-          <h2 className="text-xl font-bold text-gray-900 mb-2 md:max-[1240px]:mt-8 max-md:text-lg max-md:mb-3 max-md:hidden">
-            Let's Set Up Your Property & Budget
-          </h2>
         </div>
 
         <div className="space-y-4">
@@ -201,16 +198,15 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                    boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)"
                  }}>
               <Label
-                className="text-base font-medium mb-3 block text-white"
+                className="text-xl font-bold mb-3 block text-white max-md:text-base max-md:font-medium"
                 style={{
-                  fontSize: "16px",
-                  fontWeight: "500",
-                  lineHeight: "24px",
+                  fontSize: "20px",
+                  fontWeight: "700",
+                  lineHeight: "28px",
                 }}
               >
                 <strong className="max-md:text-base">
-                  <span className="max-md:hidden">Find Listing</span>
-                  <span className="hidden max-md:block">Step 1 - Find your listing</span>
+                  Step 1 - Find Your Listing
                 </strong>
               </Label>
 

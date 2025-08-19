@@ -177,9 +177,20 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   return (
     <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white focus:outline-none">
       <div className="w-full max-w-[1140px] mt-12 max-md:my-[30px] max-md:px-4 px-4">
-        {/* Desktop header with edit button */}
+
+        {/* PC Header with title and button */}
         {!isMobile && (
-          <div className="flex items-center justify-end mb-8">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <h3 className="text-xl font-bold text-foreground">
+                Step 2 - Facebook Ad Preview & Edit Ad
+              </h3>
+              {highlightedArea && (
+                <span className="text-sm font-normal text-muted-foreground animate-pulse">
+                  ← {highlightedArea === 'headline' ? 'Headline' : highlightedArea === 'adCopy' ? 'Ad Copy' : 'Image'} highlighted
+                </span>
+              )}
+            </div>
             <Button
               onClick={isEditing ? undefined : handleEdit}
               variant="outline"
@@ -192,7 +203,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
           </div>
         )}
 
-        <div className={`grid grid-cols-1 ${!isMobile ? 'lg:grid-cols-2' : ''} gap-10 max-md:gap-[40px] relative`}>
+        <div className={`grid grid-cols-1 ${!isMobile ? 'lg:grid-cols-2 lg:items-start' : ''} gap-10 max-md:gap-[40px] relative`}>
           {/* Connection Line - only visible on desktop */}
           {highlightedArea && (
             <div className="hidden lg:block absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
@@ -202,17 +213,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
           )}
 
           {/* Facebook-style Ad Preview */}
-          <div className="space-y-6 relative max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
-            <div className="mb-6 max-md:mb-[10px]">
-              <h3 className={`${isMobile ? 'text-lg' : 'text-xl'} font-bold text-foreground flex items-center gap-2 max-md:justify-center max-md:items-center`}>
-                <span className="w-2 h-2 bg-blue-500 rounded-full max-md:hidden"></span>
-                <span className="max-md:hidden">Facebook Ad Preview</span>
-                <span className="hidden max-md:block max-md:text-black">Step 2- Your Facebook Ad Preview</span>
-                {!isMobile && highlightedArea && (
-                  <span className="text-sm font-normal text-muted-foreground animate-pulse">
-                    ← {highlightedArea === 'headline' ? 'Headline' : highlightedArea === 'adCopy' ? 'Ad Copy' : 'Image'} highlighted
-                  </span>
-                )}
+          <div className="relative max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
+            {/* Mobile only title */}
+            <div className="mb-6 max-md:mb-[10px] hidden max-md:block">
+              <h3 className="text-lg font-bold text-black flex justify-center items-center">
+                Step 2- Your Facebook Ad Preview
               </h3>
             </div>
             <Card className={`${isMobile ? 'w-full' : 'max-w-md mx-auto lg:mx-0'} shadow-xl border-border bg-card relative max-md:flex max-md:flex-col max-md:justify-center max-md:items-center max-md:mt-[1px]`}>
@@ -560,10 +565,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
           {/* Editing Panel - Hidden on mobile */}
           {!isMobile && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold text-foreground mb-6">
-                Edit Your Ad Content
-              </h3>
+            <div>
 
             {isEditing ? (
               <div className="space-y-6">
