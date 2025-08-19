@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { trackMixPanel } from "@/lib/utils";
 
 export const FixedNavigation: React.FC = () => {
   const [isAtTop, setIsAtTop] = useState(true);
@@ -28,8 +29,13 @@ export const FixedNavigation: React.FC = () => {
     }
   }, [isMobileMenuOpen]);
 
-  const handleNavClick = (e: React.MouseEvent) => {
-    // Scroll to top or navigate to home
+  const handleNavClick = (e: React.MouseEvent, mixPanelItem:string) => {
+    console.log('mixPanelItem ===>>>', mixPanelItem)
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: mixPanelItem || ''
+    });
   };
 
   return (
@@ -39,7 +45,7 @@ export const FixedNavigation: React.FC = () => {
       <div className="w-full max-w-[1210px] mx-auto flex items-center h-full max-md:justify-between">
         {/* Logo */}
         <div className="flex items-center justify-center mr-8 max-md:mr-0 max-md:h-full">
-          <a href="https://lofty.com/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center max-md:h-full">
+          <a href="https://lofty.com/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center max-md:h-full" onClick={(e) => { handleNavClick(e, 'NavLogo') }}>
             <img
               src="https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2F0325b400e1904671b7c00a9f4f5084b6?format=webp&width=800"
               className={`h-8 transition-all duration-300 max-md:h-6 ${
@@ -54,7 +60,8 @@ export const FixedNavigation: React.FC = () => {
         <div className="nav-container items-center h-full hidden md:flex">
           <a
             href="/home?anchor=Products"
-            onClick={handleNavClick}
+            target="_blank"
+            onClick={(e) => { handleNavClick(e, 'NavProduct') }}
             className={`relative font-medium text-sm h-full flex items-center group ${
               isAtTop ? 'text-white' : 'text-[#515666]'
             }`}
@@ -75,7 +82,8 @@ export const FixedNavigation: React.FC = () => {
           </a>
           <a
             href="/home?anchor=CampaignCalculator"
-            onClick={handleNavClick}
+            target="_blank"
+            onClick={(e) => { handleNavClick(e, 'NavCalculator') }}
             className={`relative font-medium text-sm h-full flex items-center group ${
               isAtTop ? 'text-white' : 'text-[#515666]'
             }`}
@@ -96,7 +104,8 @@ export const FixedNavigation: React.FC = () => {
           </a>
           <a
             href="/home?anchor=Contact"
-            onClick={handleNavClick}
+            target="_blank"
+            onClick={(e) => { handleNavClick(e, 'NavContact') }}
             className={`relative font-medium text-sm h-full flex items-center group ${
               isAtTop ? 'text-white' : 'text-[#515666]'
             }`}
@@ -118,7 +127,10 @@ export const FixedNavigation: React.FC = () => {
 
         {/* Mobile menu button */}
         <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          onClick={(e) => {
+            handleNavClick(e, 'NavOpen');
+            setIsMobileMenuOpen(!isMobileMenuOpen) 
+          }}
           className={`md:hidden p-2 ml-auto ${
             isAtTop ? 'text-white' : 'text-[#515666]'
           }`}
@@ -140,7 +152,7 @@ export const FixedNavigation: React.FC = () => {
             <a
               href="/home?anchor=Products"
               onClick={(e) => {
-                handleNavClick(e);
+                handleNavClick(e, 'NavProduct');
                 setIsMobileMenuOpen(false);
               }}
               className="block px-3 py-2 text-sm font-medium text-[#515666] hover:bg-gray-50 rounded-md"
@@ -150,7 +162,7 @@ export const FixedNavigation: React.FC = () => {
             <a
               href="/home?anchor=CampaignCalculator"
               onClick={(e) => {
-                handleNavClick(e);
+                handleNavClick(e, 'NavCalculator');
                 setIsMobileMenuOpen(false);
               }}
               className="block px-3 py-2 text-sm font-medium text-[#515666] hover:bg-gray-50 rounded-md"
@@ -160,7 +172,7 @@ export const FixedNavigation: React.FC = () => {
             <a
               href="/home?anchor=Contact"
               onClick={(e) => {
-                handleNavClick(e);
+                handleNavClick(e, 'NavContact');
                 setIsMobileMenuOpen(false);
               }}
               className="block px-3 py-2 text-sm font-medium text-[#515666] hover:bg-gray-50 rounded-md"
