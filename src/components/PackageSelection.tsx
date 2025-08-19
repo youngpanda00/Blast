@@ -588,7 +588,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             // 添���轻微的晃动动画
             addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
 
-            // 创建晃动��画的CSS keyframes（��果不��在）
+            // 创建晃动��画的CSS keyframes（如果不��在）
             if (!document.querySelector('#gentle-shake-style')) {
               const style = document.createElement('style');
               style.id = 'gentle-shake-style';
@@ -1069,9 +1069,11 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       {/* Ad Preview Section */}
       <AdPreview
-        initialImage={previewPicture??"https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"}
-        initialHeadline="Beautiful Home in Prime Location"
-        initialAdCopy="Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!"
+        initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
+        initialHeadline="Don't miss out on this new listing"
+        initialAdCopy="✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡
+
+🗓️ Schedule a private viewing today."
         onAdUpdate={(data) => {
           console.log("Ad updated:", data);
           setAdPreviewData({

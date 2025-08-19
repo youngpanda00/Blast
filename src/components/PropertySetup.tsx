@@ -285,7 +285,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                     <div className="mb-4">
                       <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden relative">
                         <img
-                          src="https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                          src="https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                           alt="Property placeholder"
                           className="w-full h-full object-cover"
                         />

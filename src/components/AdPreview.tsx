@@ -33,7 +33,7 @@ const adCopyTemplates = [
   {
     id: "default",
     name: "Default",
-    copy: "🏡 NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!"
+    copy: "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today."
   },
   {
     id: "family",
@@ -48,9 +48,9 @@ const adCopyTemplates = [
 ];
 
 export const AdPreview: React.FC<AdPreviewProps> = ({
-  initialImage = "https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg",
-  initialHeadline = "Beautiful Home in Prime Location",
-  initialAdCopy = "Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!",
+  initialImage = "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800",
+  initialHeadline = "Don't miss out on this new listing",
+  initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.",
   onAdUpdate,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -60,7 +60,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [selectedFile, setSelectedFile] = useState(null);
   const [tempHeadline, setTempHeadline] = useState(headline);
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
-  const [selectedTemplate, setSelectedTemplate] = useState<string>("custom");
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("default");
   const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
   const [isEditingInline, setIsEditingInline] = useState<'headline' | 'adCopy' | null>(null);
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
@@ -104,18 +104,18 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   };
 
   const handleCancel = () => {
-    setImage('https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg')
-    setHeadline('Beautiful Home in Prime Location');
-    setAdCopy('Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!');
-    setTempHeadline('Beautiful Home in Prime Location');
-    setTempAdCopy('Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!');
+    setImage('https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800')
+    setHeadline("Don't miss out on this new listing");
+    setAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
+    setTempHeadline("Don't miss out on this new listing");
+    setTempAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
     setIsEditing(false);
     setIsMobileEditModalOpen(false);
     onAdUpdate?.(
       {
-        image: 'https://images.pexels.com/photos/5997993/pexels-photo-5997993.jpeg',
-        headline: 'Beautiful Home in Prime Location',
-        adCopy: 'Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!',
+        image: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
+        headline: "Don't miss out on this new listing",
+        adCopy: '✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.',
         selectedFile: null
       }
     )
@@ -288,7 +288,12 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         {(highlightedArea === 'adCopy' || isEditingInline === 'adCopy') && (
                           <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
                         )}
-                        {adCopy}
+                        {adCopy === "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today." ? (
+                          <>
+                            ✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡 <br />
+                            &nbsp;🗓️ Schedule a private viewing today.
+                          </>
+                        ) : adCopy}
                       </div>
                       {false && isMobile && (
                         <button
@@ -316,11 +321,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       className={`w-full h-52 max-md:h-[150px] object-cover ${
                         isMobile ? '' : 'rounded-t-lg'
                       } ${
-                        !isMobile && image.includes("pexels.com") ? 'filter blur-[2px]' : ''
+                        !isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
                       }`}
                     />
                     {/* Blur overlay for PC fallback image */}
-                    {!isMobile && image.includes("pexels.com") && (
+                    {!isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                       <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                         <div className="text-white text-center">
                           <div className="text-sm font-medium">Sample Property Image</div>
@@ -329,7 +334,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     )}
                   </div>
                   {/* Blurred overlay for mobile fallback image */}
-                  {isMobile && image.includes("pexels.com") && (
+                  {isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                     <div className="absolute inset-0 mx-4 bg-black/20 backdrop-blur-sm flex items-center justify-center">
                       <div className="text-white text-center">
                         <div className="text-sm font-medium">Sample Property Image</div>
@@ -752,7 +757,12 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         <div className="flex-1">
                           <div className="text-sm font-semibold text-gray-600 mb-1">Ad Copy</div>
                           <div className="text-gray-800 leading-relaxed group-hover:text-blue-800 transition-colors line-clamp-3">
-                            "{adCopy}"
+                            {adCopy === "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today." ? (
+                              <>
+                                "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡 <br />
+                                &nbsp;🗓️ Schedule a private viewing today."
+                              </>
+                            ) : `"${adCopy}"`}
                           </div>
                         </div>
                       </div>
@@ -769,11 +779,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                               src={image}
                               alt="Current ad image"
                               className={`w-full h-24 object-cover border border-gray-200 group-hover:scale-[1.02] transition-transform duration-300 ${
-                                image.includes("pexels.com") ? 'filter blur-[2px]' : ''
+                                image.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
                               }`}
                             />
                             {/* Blur overlay for fallback image */}
-                            {image.includes("pexels.com") && (
+                            {image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                               <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                                 <div className="text-white text-center">
                                   <div className="text-xs font-medium">Sample Image</div>
