@@ -13,11 +13,27 @@ interface PropertySetupProps {
   onCityUpdate?: (city: string | null) => void;
 }
 
+interface PropertyData {
+  id?: string;
+  fullAddress?: string;
+  address?: string;
+  price?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  baths?: number;
+  sqft?: number;
+  previewPicture?: string;
+  imageUrl?: string;
+  agentName?: string
+  [key: string]: any;
+}
+
 export const PropertySetup: React.FC<PropertySetupProps> = ({
   listingId,
   onAddressSelect: externalOnAddressSelect,
   onCityUpdate,
 }) => {
+
   const [addressInput, setAddressInput] = useState("");
   const [autoFilledData, setAutoFilledData] = useState<{
     baths?: number | string;
@@ -77,59 +93,127 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   const stateFromUrl = searchParams.get("state") || "CA";
   const zipFromUrl = searchParams.get("zip") || "95125";
 
-  const handleAddressSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Address submitted:", addressInput);
-  };
+  const [properties, setProperties] = useState<PropertyData[]>([]);
 
-  const handleAddressSelect = (addressData: any) => {
-    console.log("Address selected, API response:", addressData);
+  const fetchPropertyData = async (address: string) => {
+    if (!address.trim()) return;
+    try {
+      const response = await fetch(
+        `/listing-crm/listing/blast/searchByAddressV2?address=${encodeURIComponent(address)}`,
+        {
+          method: "GET"
+        },
+      );
+      const result = await response.json();
+      console.log('searchByAddressV2 ===>>', result)
 
-    // Extract data from addressData.data and auto-fill property information
-    if (addressData?.data) {
-      const data = addressData.data;
-      setAutoFilledData({
-        baths: data.baths.toLocaleString(),
-        beds: data.bedrooms.toLocaleString(),
-        previewPicture: data.previewPicture,
-        sqft: data.sqft.toLocaleString(),
-      });
+      if (result.data) {
+        // Handle both single property and array of properties
+        const propertyData = Array.isArray(result.data) ? result.data : [result.data];
+        // Show maximum of 2 properties
+        setProperties(propertyData.slice(0, 1));
+        const data = propertyData[0];
 
-      // Mark that user has manually selected an address
-      setHasUserSelectedAddress(true);
+        setAutoFilledData({
+          baths: data.baths.toLocaleString(),
+          beds: data.bedrooms.toLocaleString(),
+          previewPicture: data.previewPicture,
+          sqft: data.sqft.toLocaleString(),
+        });
 
-      // Parse fullAddress by splitting on first comma
-      if (data.fullAddress) {
-        const firstCommaIndex = data.fullAddress.indexOf(",");
-        if (firstCommaIndex !== -1) {
-          const streetAddress = data.fullAddress
-            .substring(0, firstCommaIndex)
-            .trim();
-          const cityStateZip = data.fullAddress
-            .substring(firstCommaIndex + 1)
-            .trim();
-          setParsedAddress({
-            streetAddress,
-            cityStateZip,
-          });
-        } else {
-          // If no comma found, use the whole address as street address
-          setParsedAddress({
-            streetAddress: data.fullAddress,
-            cityStateZip: "",
-          });
+        // Mark that user has manually selected an address
+        setHasUserSelectedAddress(true);
+
+        // Parse fullAddress by splitting on first comma
+        if (data.fullAddress) {
+          const firstCommaIndex = data.fullAddress.indexOf(",");
+          if (firstCommaIndex !== -1) {
+            const streetAddress = data.fullAddress
+              .substring(0, firstCommaIndex)
+              .trim();
+            const cityStateZip = data.fullAddress
+              .substring(firstCommaIndex + 1)
+              .trim();
+            setParsedAddress({
+              streetAddress,
+              cityStateZip,
+            });
+          } else {
+            // If no comma found, use the whole address as street address
+            setParsedAddress({
+              streetAddress: data.fullAddress,
+              cityStateZip: "",
+            });
+          }
         }
+        // Fetch listing labels for the selected property if id is available
+        if (data.id) {
+          fetchListingLabels(data.id);
+        }
+        // Call external callback if provided
+        externalOnAddressSelect?.(data);
+      } else {
+        setProperties([]);
       }
-
-      // Fetch listing labels for the selected property if id is available
-      if (data.id) {
-        fetchListingLabels(data.id);
-      }
+    } catch (error) {
+      console.error("Error fetching property info:", error);
+      setProperties([]);
     }
-
-    // Call external callback if provided
-    externalOnAddressSelect?.(addressData);
   };
+
+  // const handleAddressSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   console.log("Address submitted:", addressInput);
+  // };
+
+  // const handleAddressSelect = (addressData: any) => {
+  //   console.log("Address selected, API response:", addressData);
+
+  //   // Extract data from addressData.data and auto-fill property information
+  //   if (addressData?.data) {
+  //     const data = addressData.data;
+  //     setAutoFilledData({
+  //       baths: data.baths.toLocaleString(),
+  //       beds: data.bedrooms.toLocaleString(),
+  //       previewPicture: data.previewPicture,
+  //       sqft: data.sqft.toLocaleString(),
+  //     });
+
+  //     // Mark that user has manually selected an address
+  //     setHasUserSelectedAddress(true);
+
+  //     // Parse fullAddress by splitting on first comma
+  //     if (data.fullAddress) {
+  //       const firstCommaIndex = data.fullAddress.indexOf(",");
+  //       if (firstCommaIndex !== -1) {
+  //         const streetAddress = data.fullAddress
+  //           .substring(0, firstCommaIndex)
+  //           .trim();
+  //         const cityStateZip = data.fullAddress
+  //           .substring(firstCommaIndex + 1)
+  //           .trim();
+  //         setParsedAddress({
+  //           streetAddress,
+  //           cityStateZip,
+  //         });
+  //       } else {
+  //         // If no comma found, use the whole address as street address
+  //         setParsedAddress({
+  //           streetAddress: data.fullAddress,
+  //           cityStateZip: "",
+  //         });
+  //       }
+  //     }
+
+  //     // Fetch listing labels for the selected property if id is available
+  //     if (data.id) {
+  //       fetchListingLabels(data.id);
+  //     }
+  //   }
+
+  //   // Call external callback if provided
+  //   externalOnAddressSelect?.(addressData);
+  // };
 
   // Fetch listing labels when listingId is available
   useEffect(() => {
@@ -139,53 +223,53 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   }, [listingId]);
 
   // Handle listingInfo changes from URL listingId
-  React.useEffect(() => {
-    if (listingInfo?.data && !hasUserSelectedAddress) {
-      const data = listingInfo.data;
-      // Update city for notifications
-      onCityUpdate?.(data.city || null);
+  // React.useEffect(() => {
+  //   if (listingInfo?.data && !hasUserSelectedAddress) {
+  //     const data = listingInfo.data;
+  //     // Update city for notifications
+  //     onCityUpdate?.(data.city || null);
 
-      // Always update auto-filled data from listing info when user hasn't selected a different address
-      setAutoFilledData({
-        baths: data.bathrooms.toLocaleString(),
-        beds: data.bedrooms.toLocaleString(),
-        previewPicture: data.listingPictures.split("|")[0].trim(),
-        sqft: data.sqft.toLocaleString(),
-      });
+  //     // Always update auto-filled data from listing info when user hasn't selected a different address
+  //     setAutoFilledData({
+  //       baths: data.bathrooms.toLocaleString(),
+  //       beds: data.bedrooms.toLocaleString(),
+  //       previewPicture: data.listingPictures.split("|")[0].trim(),
+  //       sqft: data.sqft.toLocaleString(),
+  //     });
 
-      // Parse address from listing info
-      if (data.streetAddress) {
-        setParsedAddress({
-          streetAddress: data.streetAddress,
-          cityStateZip:
-            `${data.city || ""} ${data.state || ""} ${data.zipCode || ""}`.trim(),
-        });
-      }
+  //     // Parse address from listing info
+  //     if (data.streetAddress) {
+  //       setParsedAddress({
+  //         streetAddress: data.streetAddress,
+  //         cityStateZip:
+  //           `${data.city || ""} ${data.state || ""} ${data.zipCode || ""}`.trim(),
+  //       });
+  //     }
 
-      // Call external callback if provided
-      if (externalOnAddressSelect) {
-        // Create a mock addressData structure similar to search API response
-        const mockAddressData = {
-          data: {
-            previewPicture: data.listingPictures,
-            baths: data.bathrooms,
-            bedrooms: data.bedrooms,
-            sqft: data.sqft,
-            fullAddress: data.streetAddress
-              ? `${data.streetAddress}, ${data.city || ""} ${data.state || ""} ${data.zipCode || ""}`.trim()
-              : null,
-          },
-        };
+  //     // Call external callback if provided
+  //     if (externalOnAddressSelect) {
+  //       // Create a mock addressData structure similar to search API response
+  //       const mockAddressData = {
+  //         data: {
+  //           previewPicture: data.listingPictures,
+  //           baths: data.bathrooms,
+  //           bedrooms: data.bedrooms,
+  //           sqft: data.sqft,
+  //           fullAddress: data.streetAddress
+  //             ? `${data.streetAddress}, ${data.city || ""} ${data.state || ""} ${data.zipCode || ""}`.trim()
+  //             : null,
+  //         },
+  //       };
 
-        // Call external callback to update preview pictures
-        externalOnAddressSelect(mockAddressData);
-      }
-    } else if (listingInfo?.data && hasUserSelectedAddress) {
-      // Still update city for notifications even if user selected a different address
-      onCityUpdate?.(listingInfo.data.city || null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listingInfo, hasUserSelectedAddress]);
+  //       // Call external callback to update preview pictures
+  //       externalOnAddressSelect(mockAddressData);
+  //     }
+  //   } else if (listingInfo?.data && hasUserSelectedAddress) {
+  //     // Still update city for notifications even if user selected a different address
+  //     onCityUpdate?.(listingInfo.data.city || null);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [listingInfo, hasUserSelectedAddress]);
 
   return (
     <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-0" data-section="property-setup">
@@ -242,6 +326,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                   onChange={(value) => setAddressInput(value)}
                   onPlaceSelect={(place, address) => {
                     console.log('Place selected:', place, address);
+                    fetchPropertyData(address)
                   }}
                 />
               </div>
