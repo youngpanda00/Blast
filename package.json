@@ -5,9 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "VITE_APP=listingblast-pro vite",
-    "build": "VITE_APP=listingblast-pro vite build",
-    "move": "node ./script/move-to-blast.js listingblast",
-    "moveB": "node ./script/move-to-blast.js listingblast-pro",
+    "build_move": "VITE_APP=listingblast vite build && node ./script/move-to-blast.js listingblast",
+    "build_moveB": "VITE_APP=listingblast-pro vite build && node ./script/move-to-blast.js listingblast-pro",
     "build:dev": "VITE_APP=listingblast-pro vite build --mode development"
   },
   "dependencies": {

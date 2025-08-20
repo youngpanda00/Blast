@@ -546,7 +546,7 @@ const Index = ({ page }: { page?: "listing" }) => {
             <img
               src={
                 selectedPreviewPicture ||
-                "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
               }
               alt="Modern white house with pool"
               className={`w-full h-full object-cover ${
@@ -619,7 +619,7 @@ const Index = ({ page }: { page?: "listing" }) => {
               <img
                 src={
                   selectedPreviewPicture ||
-                  "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                  "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                 }
                 alt=""
                 className="w-full h-full object-cover filter blur-[30px]"
@@ -631,7 +631,7 @@ const Index = ({ page }: { page?: "listing" }) => {
               <img
                 src={
                   selectedPreviewPicture ||
-                  "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                  "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                 }
                 alt=""
                 className="w-full h-[200px] object-cover rounded-t-[20px]"
@@ -759,7 +759,7 @@ const Index = ({ page }: { page?: "listing" }) => {
           <img
             src={
               selectedPreviewPicture ||
-              "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+              "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
             }
             alt=""
             className="absolute inset-0 w-full h-full object-cover blur-[30px] rounded-xl"
@@ -770,7 +770,7 @@ const Index = ({ page }: { page?: "listing" }) => {
             <img
               src={
                 selectedPreviewPicture ||
-                "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
@@ -884,7 +884,7 @@ const Index = ({ page }: { page?: "listing" }) => {
               <img
                 src={
                   selectedPreviewPicture ||
-                  "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                  "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                 }
                 alt="Lakefront homes"
                 className="absolute left-0 top-[52px] w-full h-[150px] object-cover"
@@ -1016,7 +1016,7 @@ const Index = ({ page }: { page?: "listing" }) => {
             <img
               src={
                 selectedPreviewPicture ||
-                "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
@@ -1192,7 +1192,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         }}
       />
 
-      <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[50px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[50px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl">
+      <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[20px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl">
         <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
           <div className="gap-5 flex max-md:flex-col items-stretch max-md:gap-8">
             {!isMobile && (
@@ -1300,7 +1300,7 @@ const Index = ({ page }: { page?: "listing" }) => {
                     <InstagramPostComponent
                       imageUrl={
                         selectedPreviewPicture ||
-                        "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"
+                        "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                       }
                       viewMode={viewMode}
                       isSelectedProperty={!!selectedPreviewPicture}

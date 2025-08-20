@@ -985,13 +985,67 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        {/* Desktop: Price first, then Package details */}
+        {/* Desktop: Package details first, then Price below separator */}
         <div className="hidden md:block flex-shrink-0">
+          {/* Package details for desktop */}
+          <div className="space-y-2 md:space-y-3 mb-3">
+            <div className="flex justify-between text-xs md:text-sm">
+              <span
+                className={
+                  selectedPackage === pkg.id
+                    ? "text-white/80"
+                    : "text-black"
+                }
+              >
+                Ads duration
+              </span>
+              <span
+                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+              >
+                {pkg.duration}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs md:text-sm">
+              <span
+                className={
+                  selectedPackage === pkg.id
+                    ? "text-white/80"
+                    : "text-black"
+                }
+              >
+                Estimated views
+              </span>
+              <span
+                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+              >
+                {pkg.estimatedViews}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs md:text-sm">
+              <span
+                className={
+                  selectedPackage === pkg.id
+                    ? "text-white/80"
+                    : "text-black"
+                }
+              >
+                Estimated leads
+              </span>
+              <span
+                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+              >
+                {pkg.estimatedLeads}
+              </span>
+            </div>
+          </div>
+
           {/* Price section for desktop */}
-          <div className="mb-3">
+          <div
+            className={`border-t pt-3 md:pt-4 flex-shrink-0 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}
+          >
             <div className="flex items-baseline gap-2 flex-wrap">
               <span
-                className={`text-3xl md:text-4xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+                className={`text-2xl md:text-3xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
               >
                 {pkg.price}
               </span>
@@ -1002,62 +1056,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
               >
                 {paymentText}
               </span>
-            </div>
-          </div>
-
-          {/* Package details for desktop */}
-          <div
-            className={`border-t pt-3 md:pt-4 flex-shrink-0 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}
-          >
-            <div className="space-y-2 md:space-y-3">
-              <div className="flex justify-between text-xs md:text-sm">
-                <span
-                  className={
-                    selectedPackage === pkg.id
-                      ? "text-white/80"
-                      : "text-black"
-                  }
-                >
-                  Ads duration
-                </span>
-                <span
-                  className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
-                >
-                  {pkg.duration}
-                </span>
-              </div>
-              <div className="flex justify-between text-xs md:text-sm">
-                <span
-                  className={
-                    selectedPackage === pkg.id
-                      ? "text-white/80"
-                      : "text-black"
-                  }
-                >
-                  Estimated views
-                </span>
-                <span
-                  className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
-                >
-                  {pkg.estimatedViews}
-                </span>
-              </div>
-              <div className="flex justify-between text-xs md:text-sm">
-                <span
-                  className={
-                    selectedPackage === pkg.id
-                      ? "text-white/80"
-                      : "text-black"
-                  }
-                >
-                  Estimated leads
-                </span>
-                <span
-                  className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
-                >
-                  {pkg.estimatedLeads}
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -1071,9 +1069,11 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       {/* Ad Preview Section */}
       <AdPreview
-        initialImage={previewPicture??"https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg"}
-        initialHeadline="Beautiful Home in Prime Location"
-        initialAdCopy="Discover your dream home in this stunning property featuring modern amenities and a perfect location. Contact us today for a private showing!"
+        initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
+        initialHeadline="Don't miss out on this new listing"
+        initialAdCopy="✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡
+
+🗓️ Schedule a private viewing today."
         onAdUpdate={(data) => {
           console.log("Ad updated:", data);
           setAdPreviewData({
@@ -1092,7 +1092,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6 max-md:justify-center max-md:items-center">
           <div className="flex flex-col">
             <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
-              <span className="max-md:hidden">Select Your Package: Boost Views, Get Leads</span>
+              <span className="max-md:hidden">Step 3 - Select Your Package & Luanch Ad</span>
               <span className="hidden max-md:block">Step 3 - Publish Your Ad Now</span>
             </h2>
             {!hasValidListingId && process.env.NODE_ENV === 'production' && (
