@@ -133,11 +133,6 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
                   <span className="text-xl font-bold text-gray-900">
                     {currentPackage?.price}
                   </span>
-                  {currentPackage?.originalPrice && (
-                    <span className="text-sm text-gray-400 line-through">
-                      {currentPackage.originalPrice}
-                    </span>
-                  )}
                 </div>
                 <div className="text-xs text-gray-500">
                   {selectedPlan === 'monthly' ? 'Monthly billing' : 'One-time payment'}
