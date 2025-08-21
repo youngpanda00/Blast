@@ -80,28 +80,6 @@ export const FixedNavigation: React.FC = () => {
             ></span>
           </a>
           <a
-            href="/home?anchor=CampaignCalculator"
-            target="_blank"
-            onClick={(e) => { handleNavClick(e, 'NavCalculator') }}
-            className={`relative font-medium text-sm h-full flex items-center group ${
-              isAtTop ? 'text-white' : 'text-[#515666]'
-            }`}
-            style={{
-              marginRight: '35px',
-              transition: 'background-color 0.5s ease 0s, color 0.5s ease 0s, border-color 0.5s ease 0s'
-            }}
-          >
-            Campaign Calculator
-            <span 
-              className={`absolute bottom-0 left-0 w-full h-1 bg-[#3b5cde] opacity-0 rounded-t-[2px] ${
-                isAtTop ? '' : 'group-hover:opacity-100'
-              }`}
-              style={{
-                transition: 'opacity 0.5s ease 0s'
-              }}
-            ></span>
-          </a>
-          <a
             href="/home?anchor=Contact"
             target="_blank"
             onClick={(e) => { handleNavClick(e, 'NavContact') }}
@@ -157,16 +135,6 @@ export const FixedNavigation: React.FC = () => {
               className="block px-3 py-2 text-sm font-medium text-[#515666] hover:bg-gray-50 rounded-md"
             >
               Products
-            </a>
-            <a
-              href="/home?anchor=CampaignCalculator"
-              onClick={(e) => {
-                handleNavClick(e, 'NavCalculator');
-                setIsMobileMenuOpen(false);
-              }}
-              className="block px-3 py-2 text-sm font-medium text-[#515666] hover:bg-gray-50 rounded-md"
-            >
-              Campaign Calculator
             </a>
             <a
               href="/home?anchor=Contact"
