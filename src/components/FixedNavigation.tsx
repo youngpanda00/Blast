@@ -103,7 +103,7 @@ export const FixedNavigation: React.FC = () => {
       {/* Mobile menu dropdown */}
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg">
-          <div className="px-4 py-2 space-y-1">
+          <div className="px-4 py-2 space-y-1" style={{paddingBottom: 0}}>
             <a
               href="/home?anchor=Contact"
               onClick={(e) => {
