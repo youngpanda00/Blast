@@ -58,28 +58,6 @@ export const FixedNavigation: React.FC = () => {
         {/* Navigation Menu - next to logo on left */}
         <div className="nav-container items-center h-full hidden md:flex">
           <a
-            href="/home?anchor=Products"
-            target="_blank"
-            onClick={(e) => { handleNavClick(e, 'NavProduct') }}
-            className={`relative font-medium text-sm h-full flex items-center group ${
-              isAtTop ? 'text-white' : 'text-[#515666]'
-            }`}
-            style={{
-              marginRight: '35px',
-              transition: 'background-color 0.5s ease 0s, color 0.5s ease 0s, border-color 0.5s ease 0s'
-            }}
-          >
-            Products
-            <span 
-              className={`absolute bottom-0 left-0 w-full h-1 bg-[#3b5cde] opacity-0 rounded-t-[2px] ${
-                isAtTop ? '' : 'group-hover:opacity-100'
-              }`}
-              style={{
-                transition: 'opacity 0.5s ease 0s'
-              }}
-            ></span>
-          </a>
-          <a
             href="/home?anchor=Contact"
             target="_blank"
             onClick={(e) => { handleNavClick(e, 'NavContact') }}
@@ -126,16 +104,6 @@ export const FixedNavigation: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg">
           <div className="px-4 py-2 space-y-1">
-            <a
-              href="/home?anchor=Products"
-              onClick={(e) => {
-                handleNavClick(e, 'NavProduct');
-                setIsMobileMenuOpen(false);
-              }}
-              className="block px-3 py-2 text-sm font-medium text-[#515666] hover:bg-gray-50 rounded-md"
-            >
-              Products
-            </a>
             <a
               href="/home?anchor=Contact"
               onClick={(e) => {
