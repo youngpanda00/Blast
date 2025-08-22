@@ -91,7 +91,7 @@ export const ContactFooter: React.FC = () => {
         
         <div className="flex w-[717px] max-w-full items-stretch gap-5 leading-loose max-md:leading-[10px] flex-wrap justify-between mt-[30px]">
           <a
-            href="tel:+11234567890"
+            href="tel:8559817557"
             className="flex items-center gap-2.5 hover:text-[#E1E2E6] transition-colors"
           >
             <img
@@ -112,7 +112,7 @@ export const ContactFooter: React.FC = () => {
           </div>
           
           <a
-            href="mailto:support@loftyblast.com"
+            href="mailto:sales@loftyblast.com"
             className="flex items-center gap-2.5 whitespace-nowrap hover:text-[#E1E2E6] transition-colors"
           >
             <img
