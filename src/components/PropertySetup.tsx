@@ -34,6 +34,10 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   onCityUpdate,
 }) => {
 
+  const [properties, setProperties] = useState<PropertyData[]>([]);
+  const [showListingsRes, setShowListingsRes] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+
   const [addressInput, setAddressInput] = useState("");
   const [autoFilledData, setAutoFilledData] = useState<{
     baths?: number | string;
@@ -57,7 +61,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   ]);
 
   const searchParams = new URLSearchParams(window.location.search);
-  const { data: listingInfo, isLoading, error } = useListingInfo(listingId);
+  const { data: listingInfo, error } = useListingInfo(listingId);
 
   // Function to fetch listing labels
   const fetchListingLabels = async (currentListingId: string) => {
@@ -93,8 +97,6 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   const stateFromUrl = searchParams.get("state") || "CA";
   const zipFromUrl = searchParams.get("zip") || "95125";
 
-  const [properties, setProperties] = useState<PropertyData[]>([]);
-
   const fetchPropertyData = async (address: string) => {
     if (!address.trim()) return;
     try {
@@ -106,58 +108,63 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
       );
       const result = await response.json();
       console.log('searchByAddressV2 ===>>', result)
+      setLoading(false);
 
       if (result.data) {
         // Handle both single property and array of properties
         const propertyData = Array.isArray(result.data) ? result.data : [result.data];
         // Show maximum of 2 properties
-        setProperties(propertyData.slice(0, 1));
-        const data = propertyData[0];
+        setProperties(propertyData.slice(0, 2));
+        setShowListingsRes(true);
+        
+        // const data = propertyData[0];
 
-        setAutoFilledData({
-          baths: data.baths.toLocaleString(),
-          beds: data.bedrooms.toLocaleString(),
-          previewPicture: data.previewPicture,
-          sqft: data.sqft.toLocaleString(),
-        });
+        // setAutoFilledData({
+        //   baths: data.baths.toLocaleString(),
+        //   beds: data.bedrooms.toLocaleString(),
+        //   previewPicture: data.previewPicture,
+        //   sqft: data.sqft.toLocaleString(),
+        // });
 
-        // Mark that user has manually selected an address
-        setHasUserSelectedAddress(true);
+        // // Mark that user has manually selected an address
+        // setHasUserSelectedAddress(true);
 
-        // Parse fullAddress by splitting on first comma
-        if (data.fullAddress) {
-          const firstCommaIndex = data.fullAddress.indexOf(",");
-          if (firstCommaIndex !== -1) {
-            const streetAddress = data.fullAddress
-              .substring(0, firstCommaIndex)
-              .trim();
-            const cityStateZip = data.fullAddress
-              .substring(firstCommaIndex + 1)
-              .trim();
-            setParsedAddress({
-              streetAddress,
-              cityStateZip,
-            });
-          } else {
-            // If no comma found, use the whole address as street address
-            setParsedAddress({
-              streetAddress: data.fullAddress,
-              cityStateZip: "",
-            });
-          }
-        }
-        // Fetch listing labels for the selected property if id is available
-        if (data.id) {
-          fetchListingLabels(data.id);
-        }
-        // Call external callback if provided
-        externalOnAddressSelect?.(data);
+        // // Parse fullAddress by splitting on first comma
+        // if (data.fullAddress) {
+        //   const firstCommaIndex = data.fullAddress.indexOf(",");
+        //   if (firstCommaIndex !== -1) {
+        //     const streetAddress = data.fullAddress
+        //       .substring(0, firstCommaIndex)
+        //       .trim();
+        //     const cityStateZip = data.fullAddress
+        //       .substring(firstCommaIndex + 1)
+        //       .trim();
+        //     setParsedAddress({
+        //       streetAddress,
+        //       cityStateZip,
+        //     });
+        //   } else {
+        //     // If no comma found, use the whole address as street address
+        //     setParsedAddress({
+        //       streetAddress: data.fullAddress,
+        //       cityStateZip: "",
+        //     });
+        //   }
+        // }
+        // // Fetch listing labels for the selected property if id is available
+        // if (data.id) {
+        //   fetchListingLabels(data.id);
+        // }
+        // // Call external callback if provided
+        // externalOnAddressSelect?.(data);
       } else {
         setProperties([]);
+        setShowListingsRes(true);
       }
     } catch (error) {
       console.error("Error fetching property info:", error);
       setProperties([]);
+      setShowListingsRes(true);
     }
   };
 
@@ -271,6 +278,36 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [listingInfo, hasUserSelectedAddress]);
 
+  const renderPropertyCard = (property: PropertyData, index: number) => {
+    const address = property.fullAddress || property.address || "";
+    const price = property.price || "";
+    const bedrooms = property.bedrooms || 1;
+    const bathrooms = property.bathrooms || property.baths || 1;
+    const sqft = property.sqft || 1;
+    const image = property.previewPicture || property.imageUrl || "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg";
+    const agentName = property.agentName || ''
+
+    return (
+      <div key={property.id} className="flex" style={{ borderRadius: '5px', overflow: 'hidden', background: 'white', marginBottom: '15px', border: '1px solid #ffffff' }}>
+        <img src={image} alt={`Property at ${address}`} style={{ width: 133, height: 100}} />
+        <div style={{ padding: '15px 20px 15px 15px', width: '100%'}}>
+          <div className="text-sm" style={{ color: '#515666', lineHeight: '20px'}}>{address}</div>
+          <div className="flex text-xs" style={{lineHeight: '20px', color:'#797E8B'}}>
+            <div>{bedrooms > -1 ? bedrooms : '--'} BD</div>
+            <div className="text-gray-400" style={{margin:'0 5px'}}>•</div>
+            <div>{bathrooms > -1 ? bathrooms : '--'} BA</div>
+            <div className="text-gray-400" style={{margin:'0 5px'}}>•</div>
+            <div>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} Receptions</div>
+          </div>
+          <div className="flex text-sm" style={{ marginTop: '10px', justifyContent: 'space-between', alignItems: 'center'}}>
+            <div className="text-sm" style={{ fontWeight: '700', color: '#202437'}}>${new Intl.NumberFormat('en-US').format(+price)}</div>
+            <div className="text-xs" style={{color: '#A0A3AF'}}>Listed by: {agentName}</div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-0" data-section="property-setup">
       <div className="self-stretch my-auto max-md:max-w-full">
@@ -280,10 +317,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
         <div className="space-y-4">
           {/* Mobile-first address search section */}
           <div className="max-md:order-first max-md:mb-6">
-            <div className="p-4 rounded-xl border-0 max-md:p-4 max-md:pb-4 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 transition-all ease-in-out duration-500"
-                 style={{
-                   boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)"
-                 }}>
+            <div className="p-4 rounded-xl border-0 max-md:p-4 max-md:pb-4 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 transition-all ease-in-out duration-500">
               <Label
                 className="text-xl font-bold mb-3 block text-white max-md:text-base max-md:font-medium"
                 style={{
@@ -297,87 +331,40 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                 </strong>
               </Label>
 
-              {/* <form onSubmit={handleAddressSubmit} className="relative">
-                <div className="relative">
-                  <Input
-                    id="address-search-input"
-                    isAddressSearch={true}
-                    value={addressInput}
-                    onChange={(e) => setAddressInput(e.target.value)}
-                    onAddressSelect={handleAddressSelect}
-                    placeholder="Enter the property address"
-                    className="h-12 text-base border-0 focus:ring-2 focus:ring-white/30 transition-all bg-white/95 backdrop-blur-sm max-md:h-11 max-md:text-sm placeholder:text-gray-500 font-medium"
-                    style={{
-                      borderRadius: "10px",
-                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
-                    }}
-                  />
-                </div>
-              </form> */}
               <div className="bg-white/90 px-3.5 py-2.5 backdrop-blur-sm rounded-xl border border-white/20">
                 <GooglePlacesAutocomplete
                   ref={addressInputRef}
                   placeholder="Enter address"
                   value={addressInput}
-                  onChange={(value) => setAddressInput(value)}
+                  onChange={(value) => { 
+                    setAddressInput(value)
+                    if (!value) {
+                      setShowListingsRes(false)
+                    }
+                  }}
                   onPlaceSelect={(place, address) => {
                     console.log('Place selected:', place, address);
-                    fetchPropertyData(address)
+                    setLoading(true);
+                    fetchPropertyData(address);
                   }}
                 />
               </div>
 
               {/* Property Preview Section */}
               <div className="mt-4">
-                {(autoFilledData || parsedAddress) ? (
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                    {/* Property Image */}
-                    {autoFilledData?.previewPicture && (
-                      <div className="mb-4">
-                        <img
-                          src={autoFilledData.previewPicture.split("|")[0].trim()}
-                          alt="Property preview"
-                          className="w-full h-48 object-cover rounded-lg"
-                        />
-                      </div>
-                    )}
-
-                    {/* Address */}
-                    {parsedAddress && (
-                      <div className="text-center mb-4">
-                        <h4 className="text-lg font-medium text-gray-800">
-                          {parsedAddress.streetAddress}
-                        </h4>
-                        <p className="text-gray-600">
-                          {parsedAddress.cityStateZip}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Property Details */}
-                    {(autoFilledData?.beds || autoFilledData?.baths || autoFilledData?.sqft) && (
-                      <div className="flex items-center justify-center gap-6 text-gray-700">
-                        {autoFilledData.beds && (
-                          <div className="flex items-center gap-2">
-                            <Bed className="w-4 h-4" />
-                            <span className="text-sm font-medium">{Number(autoFilledData.beds) <= 0 ? 0 : autoFilledData.beds} beds</span>
-                          </div>
-                        )}
-                        {autoFilledData.baths && (
-                          <div className="flex items-center gap-2">
-                            <Bath className="w-4 h-4" />
-                            <span className="text-sm font-medium">{Number(autoFilledData.baths) <=0 ? 0 :  autoFilledData.baths} baths</span>
-                          </div>
-                        )}
-                        {autoFilledData.sqft && (
-                          <div className="flex items-center gap-2">
-                            <Square className="w-4 h-4" />
-                            <span className="text-sm font-medium">{Number(autoFilledData.sqft) <=0 ? 0 : autoFilledData.sqft} sqft</span>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                {showListingsRes && addressInput ? (
+                  <>
+                    <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
+                    <div className="flex" style={{ flexDirection: 'column' }}>
+                      {/* Property Cards - Show based on API response */}
+                      {  properties.map((property, index) => renderPropertyCard(property, index)) }
+                    </div>
+                    <div className="flex" style={{border: '1px dashed rgba(255,255,255, 0.4)', borderRadius: '6px',padding: '12px 20px', flexDirection: 'column', alignItems: 'center'}}>
+                      <div className="text-sm" style={{ color: '#ffffff', lineHeight: '20px'}}>Didn't find your listing?</div>
+                      <div className="text-xs" style={{ color: 'rgba(255,255,255, 0.7)', marginTop: '5px', marginBottom: '5px',lineHeight: '16px'}}>You Can Still Proceed with Your Pocket Listing</div>
+                      <div className="text-sm" style={{ width:'178px', background: 'white', borderRadius: '4px', padding: '5px 23px', color: '#3B5CDE' }}>Use My Own Listing</div>
+                    </div>
+                  </>
                 ) : (
                   <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hidden md:block">
                     {/* Placeholder content when no property is selected - Desktop only */}

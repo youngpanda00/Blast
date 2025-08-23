@@ -107,7 +107,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
         window.google?.maps?.event?.clearInstanceListeners?.(autocompleteRef.current);
       }
     };
-  }, []);
+  }, [loadGoogleMapsScript]);
 
   // Update input value when prop changes
   useEffect(() => {
