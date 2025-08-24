@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, forwardRef, useImperativeHandle } from "react";
+import React, { useRef, useEffect, useState, useCallback, forwardRef, useImperativeHandle, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 interface GooglePlacesAutocompleteProps {
@@ -7,6 +7,7 @@ interface GooglePlacesAutocompleteProps {
   onChange?: (value: string) => void;
   onPlaceSelect?: (place: any, address: string) => void;
   className?: string;
+  types?: string[]; // New prop for place types
 }
 
 interface GooglePlacesAutocompleteRef {
@@ -29,17 +30,24 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
   onChange,
   onPlaceSelect,
   className,
+  types = ['address'], // Default to address for backward compatibility
 }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState(value);
-  const [selectedPlace, setSelectedPlace] = useState<any>(null);
+  const selectedPlaceRef = useRef<any>(null);
+
+  // Generate random name to prevent autofill
+  const randomName = useMemo(() => {
+    return `address_${Math.random().toString(36).substring(2, 15)}`;
+  }, []);
 
   // Get the selected address or current input value
   const getSelectedAddress = useCallback(() => {
-    return selectedPlace?.formatted_address || inputValue;
-  }, [selectedPlace, inputValue]);
+    console.log('address', autocompleteRef.current.getPlace(), selectedPlaceRef.current)
+    return selectedPlaceRef.current?.formatted_address || inputValue;
+  }, [inputValue]);
 
   // Expose methods to parent components
   useImperativeHandle(ref, () => ({
@@ -51,24 +59,36 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     if (!window.google || !inputRef.current) return;
 
     const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-      types: ['address'],
+      types: types,
       componentRestrictions: { country: 'us' },
       fields: ['formatted_address', 'address_components', 'geometry', 'place_id']
     });
 
-    autocomplete.addListener('place_changed', () => {
+    const onPlaceChanged = () => {
       const place = autocomplete.getPlace();
       if (place.formatted_address) {
         const address = place.formatted_address;
+        selectedPlaceRef.current = place;
         setInputValue(address);
-        setSelectedPlace(place);
         onChange?.(address);
         onPlaceSelect?.(place, address);
       }
+    }
+
+    autocomplete.addListener('place_changed', onPlaceChanged);
+
+    // 额外监听输入框变化
+    inputRef.current.addEventListener('change', function() {
+      // 延迟检查以确保Autocomplete有机会处理
+      setTimeout(function() {
+        if (autocomplete.getPlace()) {
+          onPlaceChanged();
+        }
+      }, 300);
     });
 
     autocompleteRef.current = autocomplete;
-  }, [onChange, onPlaceSelect]);
+  }, [onChange, onPlaceSelect, setInputValue, types]);
 
   // Load Google Maps script
   const loadGoogleMapsScript = useCallback(() => {
@@ -78,7 +98,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     }
 
     setIsLoading(true);
-    
+
     // Create callback function for when script loads
     window.initGooglePlaces = () => {
       setIsLoading(false);
@@ -93,9 +113,9 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
       setIsLoading(false);
       console.error('Failed to load Google Maps script');
     };
-    
+
     document.head.appendChild(script);
-  }, [initializeAutocomplete]);
+  }, [initializeAutocomplete, setIsLoading]);
 
   // Load script on component mount
   useEffect(() => {
@@ -118,8 +138,8 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     const newValue = e.target.value;
     setInputValue(newValue);
     // Clear selected place if user types manually
-    if (selectedPlace && newValue !== selectedPlace.formatted_address) {
-      setSelectedPlace(null);
+    if (selectedPlaceRef.current && newValue !== selectedPlaceRef.current.formatted_address) {
+      selectedPlaceRef.current = null
     }
     onChange?.(newValue);
   };
@@ -128,6 +148,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     <input
       ref={inputRef}
       type="text"
+      name={randomName}
       placeholder={placeholder}
       value={inputValue}
       onChange={handleInputChange}

@@ -9,10 +9,11 @@ interface HeroProps {
   onGetStarted?: () => void;
   listingId?: string | null;
   onAddressSelect?: (addressData: any) => void;
+  onScrollToAdPreview?:() => void;
   onCityUpdate?: (city: string | null) => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAddressSelect, onCityUpdate }) => {
+export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAddressSelect, onCityUpdate, onScrollToAdPreview}) => {
   const isMobile = useIsMobile();
 
   return (
@@ -36,6 +37,9 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
 
           {/* Centered content layout */}
           <div className="flex w-full max-w-[900px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
+            <div className="hidden max-md:block bg-[#4C6EF5] text-white py-2 px-4 inline-block self-start md:self-auto" style={{ borderRadius: '40px', marginBottom: '30px' }}>
+              <span className="text-sm font-medium">AI-Powered Blast</span>
+            </div>
             {/* Main Content - Centered */}
             <div className="w-full text-center max-md:text-center">
               {/* Mobile: Restructured typography */}
@@ -56,62 +60,63 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
               </div>
 
               {/* Desktop: Modern layout */}
+              <div className="max-md:hidden bg-[#4C6EF5] text-white py-2 px-4 inline-block self-start md:self-auto" style={{ borderRadius: '40px', marginBottom: '30px' }}>
+                <span className="text-sm font-medium">AI-Powered Blast</span>
+              </div>
               <h1 className="max-md:hidden text-[42px] font-bold text-white tracking-[-1px] leading-[1.1] text-center">
                 1-Click Listing to Leads – No Extra Work, Faster Closings
               </h1>
-              <h2 className="max-md:hidden text-[20px] font-medium text-white/90 leading-[1.3] text-center mt-4">
+              <h2 className="max-md:hidden text-[18px] text-white/90 leading-[1.3] text-center mt-4">
                 Get Serious Buyer Leads and Build Seller Trust Instantly with Targeted Hyper-Local Listing Ads
               </h2>
 
               {/* Desktop: Stats and CTA integrated */}
               <div className="max-md:hidden space-y-6">
                 {/* Stats bar */}
-                <div className="flex items-center justify-center gap-[108px] mt-[10px]">
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                      <TrendingUp className="w-4 h-4 text-white" />
+                <div className="flex items-center justify-center gap-[108px] mt-[50px] mb-[50px]">
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      <img src='https://cdn.lofty.com/image/fs/servicetool/2025823/5/original_ca374909a31441ab.png' style={{ width: 16, height: 12}} />
                     </div>
                     <span className="font-medium text-white">
-                      <span className="block text-[16px] font-bold leading-8">5X Exposure</span>
-                      <span className="block text-sm font-normal">For Listing</span>
+                      <span className="block text-[20px] font-bold leading-5 mb-[10px]">5X Exposure</span>
+                      <span className="block text-sm font-normal" style={{opacity: 0.5, lineHeight: '14px'}}>For Listing</span>
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      <img src='https://cdn.lofty.com/image/fs/servicetool/2025823/5/original_d5e71449e4594d05.png' style={{ width: 16, height: 16}} />
+                    </div>
+                    <span className="font-medium text-white">
+                      <span className="block text-[20px] font-bold leading-5 mb-[10px]">Save 70%</span>
+                      <span className="block text-sm font-normal" style={{opacity: 0.5, lineHeight: '14px'}}>On Ad Costs</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                       <Zap className="w-4 h-4 text-white" />
                     </div>
                     <span className="font-medium text-white">
-                      <span className="block text-[16px] font-bold leading-8">Save 70%</span>
-                      <span className="block text-sm font-normal">On Ad Costs</span>
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                      </svg>
-                    </div>
-                    <span className="font-medium text-white">
-                      <span className="block text-[16px] font-bold leading-8">24 Hours</span>
-                      <span className="block text-sm font-normal">Go Live</span>
+                      <span className="block text-[20px] font-bold leading-5 mb-[10px]">24 Hours</span>
+                      <span className="block text-sm font-normal" style={{opacity: 0.5, lineHeight: '14px'}}>Go Live</span>
                     </span>
                   </div>
                 </div>
 
 
                 {/* Trust indicator */}
-                <div className="flex flex-wrap items-center justify-center gap-6 max-w-4xl mx-auto">
-                  <div className="flex items-center gap-3 text-white/80 hover:text-white transition-colors duration-200">
-                    <span className="text-lg">🚫</span>
-                    <span className="text-sm font-medium">No long-term contracts</span>
+                <div className="flex flex-wrap items-center justify-center gap-6 max-w-4xl mx-auto" style={{marginTop: 0}}>
+                  <div className="flex items-center gap-1.5 text-white/80 hover:text-white transition-colors duration-200">
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_ea222e03d4ce43dd.png' style={{ width: 12, height: 12}} />
+                    <span className="text-xs font-medium">No long-term contracts</span>
                   </div>
-                  <div className="flex items-center gap-3 text-white/80 hover:text-white transition-colors duration-200">
-                    <span className="text-lg">⏰</span>
-                    <span className="text-sm font-medium">Cancel anytime</span>
+                  <div className="flex items-center gap-1.5 text-white/80 hover:text-white transition-colors duration-200">
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_4e2cd6d815bb4a4a.png' style={{ width: 12, height: 12}} />
+                    <span className="text-xs font-medium">Cancel anytime</span>
                   </div>
-                  <div className="flex items-center gap-3 text-white/80 hover:text-white transition-colors duration-200">
-                    <span className="text-lg">🎯</span>
-                    <span className="text-sm font-medium">Results guaranteed</span>
+                  <div className="flex items-center gap-1.5 text-white/80 hover:text-white transition-colors duration-200">
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_d052b32ec1d64abe.png' style={{ width: 12, height: 12}} />
+                    <span className="text-xs font-medium">Results guaranteed</span>
                   </div>
                 </div>
               </div>
@@ -165,6 +170,7 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
                 <PropertySetup
                   listingId={listingId}
                   onAddressSelect={onAddressSelect}
+                  onScrollToAdPreview={onScrollToAdPreview}
                   onCityUpdate={onCityUpdate}
                 />
               </div>
@@ -173,16 +179,22 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
             {/* Trust indicator */}
             <div className="mt-6 max-md:mt-4">
               <div className="space-y-3 max-w-xs mx-auto max-md:flex max-md:flex-col max-md:items-stretch max-md:text-xs max-md:leading-[10px]">
-                <div className="flex items-center justify-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200">
-                  <span className="text-base">🚫</span>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_ea222e03d4ce43dd.png' style={{ width: 12, height: 12}} />
+                  </div>
                   <span className="text-sm max-md:text-base font-medium">No long-term contracts</span>
                 </div>
-                <div className="flex items-center justify-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200">
-                  <span className="text-base">⏰</span>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_4e2cd6d815bb4a4a.png' style={{ width: 12, height: 12}} />
+                  </div>
                   <span className="text-sm max-md:text-base font-medium">Cancel anytime</span>
                 </div>
-                <div className="flex items-center justify-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200">
-                  <span className="text-base">🎯</span>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_d052b32ec1d64abe.png' style={{ width: 12, height: 12}} />
+                  </div>
                   <span className="text-sm max-md:text-base font-medium">Results guaranteed</span>
                 </div>
               </div>

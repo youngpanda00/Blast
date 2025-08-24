@@ -66,7 +66,6 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
   const [isMobileEditModalOpen, setIsMobileEditModalOpen] = useState(false);
   const isMobile = useIsMobile();
-  const adPreviewRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(()=>{
     setImage(initialImage)
@@ -175,7 +174,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
 
 
   return (
-    <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white focus:outline-none">
+    <section id="ad-preview" tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white focus:outline-none">
       <div className="w-full max-w-[1140px] mt-12 max-md:my-[30px] max-md:px-4 px-4">
 
         {/* PC Header with title and button */}

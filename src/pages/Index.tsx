@@ -40,6 +40,9 @@ const Index = ({ page }: { page?: "listing" }) => {
     useState(false);
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
+  const [iscustomListing, setIsCustomListing] = useState(false);
+  const packageSelectionRef = React.useRef<HTMLDivElement>(null);
+  
 
   // Track ViewContent event state
   const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
@@ -78,25 +81,30 @@ const Index = ({ page }: { page?: "listing" }) => {
   const handleAddressSelect = React.useCallback((addressData) => {
     console.log("Address selected:", addressData);
 
-    if (addressData?.data?.previewPicture) {
+    setIsCustomListing(!!addressData?.isCustomListing)
+    if (addressData?.isCustomListing) {
+      // console.log('packageSelectionRef.current ==>>', packageSelectionRef.current)
+    }
+
+    if (addressData?.previewPicture) {
       // Handle multiple images separated by "|", take the first one
-      const firstImage = addressData.data.previewPicture.split("|")[0].trim();
+      const firstImage = addressData.previewPicture.split("|")[0].trim();
       setSelectedPreviewPicture(firstImage);
     }
     // Store the selected address ID to replace listingId when blast now is clicked
-    if (addressData?.data?.id) {
-      console.log("Setting selectedAddressId to:", addressData.data.id);
-      setSelectedAddressId(addressData.data.id);
+    if (addressData?.id) {
+      console.log("Setting selectedAddressId to:", addressData.id);
+      setSelectedAddressId(addressData.id);
     } else {
       console.warn("No address ID found in addressData:", addressData);
     }
     // Store listing data for ad display
-    if (addressData?.data) {
+    if (addressData) {
       setCurrentListingData({
-        beds: addressData.data.bedrooms || addressData.data.beds,
-        baths: addressData.data.bathrooms || addressData.data.baths,
-        address: addressData.data.fullAddress,
-        previewPicture: addressData.data.previewPicture,
+        beds: addressData.bedrooms || addressData.beds,
+        baths: addressData.bathrooms || addressData.baths,
+        address: addressData.fullAddress,
+        previewPicture: addressData.previewPicture,
       });
     }
   }, []);
@@ -124,6 +132,7 @@ const Index = ({ page }: { page?: "listing" }) => {
   const handleCityUpdate = React.useCallback((city: string | null) => {
     setListingCity(city);
   }, []);
+
 
   // Generate dynamic ad text based on current listing data
   const getAdText = () => {
@@ -226,6 +235,16 @@ const Index = ({ page }: { page?: "listing" }) => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [hasTrackedViewContent]);
+
+  const scrollToAdPreview = () => {
+    const adPreviewElement = document.getElementById('ad-preview');
+    if (adPreviewElement) {
+      adPreviewElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    setTimeout(() => {
+      
+    })
+  }
 
   const adSets = [
     {
@@ -1119,6 +1138,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         page={page}
         listingId={listingId}
         onAddressSelect={handleAddressSelect}
+        onScrollToAdPreview={scrollToAdPreview}
         onCityUpdate={handleCityUpdate}
         onGetStarted={() => {
           trackFBEvent('Start Promoting')
@@ -1199,6 +1219,7 @@ const Index = ({ page }: { page?: "listing" }) => {
               <PropertySetup
                 listingId={listingId}
                 onAddressSelect={handleAddressSelect}
+                onScrollToAdPreview={scrollToAdPreview}
                 onCityUpdate={handleCityUpdate}
               />
             )}
@@ -1332,6 +1353,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         </div>
 
         <PackageSelection
+          ref={packageSelectionRef}
           key={selectedAddressId}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
