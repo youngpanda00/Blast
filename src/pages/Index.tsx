@@ -40,7 +40,7 @@ const Index = ({ page }: { page?: "listing" }) => {
     useState(false);
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
-  const [iscustomListing, setIsCustomListing] = useState(false);
+  const [isCustomListing, setIsCustomListing] = useState(false);
   const packageSelectionRef = React.useRef<HTMLDivElement>(null);
   
 
@@ -241,9 +241,6 @@ const Index = ({ page }: { page?: "listing" }) => {
     if (adPreviewElement) {
       adPreviewElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-    setTimeout(() => {
-      
-    })
   }
 
   const adSets = [
@@ -1355,6 +1352,8 @@ const Index = ({ page }: { page?: "listing" }) => {
         <PackageSelection
           ref={packageSelectionRef}
           key={selectedAddressId}
+          isCustomListing={isCustomListing}
+          customAddress={currentListingData?.address}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
           onOpenCongratulationsModal={(email) => {

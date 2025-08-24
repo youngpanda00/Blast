@@ -17,9 +17,11 @@ import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 import { saveStepWithRetry, showErrorNotification, getUserFriendlyErrorMessage } from "@/utils/checkoutApi";
 
 interface PackageSelectionProps {
-  previewPicture?: string | null
+  previewPicture?: string | null;
   selectedAddressId?: string | null;
   onOpenCongratulationsModal: (email: string) => void;
+  isCustomListing?: boolean;
+  customAddress?: string | null;
 }
 
 interface AdData {
@@ -33,6 +35,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   previewPicture,
   selectedAddressId,
   onOpenCongratulationsModal,
+  isCustomListing,
+  customAddress
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
@@ -88,6 +92,9 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const getEffectiveListingId = () => {
     if (selectedAddressId) return selectedAddressId;
     if (listingId) return listingId;
+    if (isCustomListing && customAddress) {
+      return customAddress
+    }
 
     // In development, provide a fallback to allow testing
     if (process.env.NODE_ENV === 'development') {
@@ -123,6 +130,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
     const currentListingId = getEffectiveListingId();
+    console.log('isCustomListing ===>>>', isCustomListing, customAddress)
     if (!currentListingId) {
       console.warn("Checkout attempted without listing ID:", {
         selectedAddressId,
@@ -271,6 +279,18 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
     setIsLoading(true);
 
+    const startParams = new URLSearchParams();
+    const taskType = isCustomListing ? 'NORMAL' : 'ADS_EMAIL_GUIDE'
+    startParams.append("taskType", taskType);
+
+    await fetch("/api-blast/task/start", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: startParams,
+    });
+
     try {
       // Save step data with improved error handling
       const saveResult = await saveStepWithRetry({
@@ -342,420 +362,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const handleCheckout = async () => {
     await handleCheckoutWithPackage(selectedPackage, adPreviewData);
-  };
-
-  const handleCheckoutWithMobileConfig = async () => {
-    if (!mobileConfiguration) return;
-
-    // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
-    const currentListingId = getEffectiveListingId();
-    if (!currentListingId) {
-      console.warn("Checkout attempted without listing ID:", {
-        selectedAddressId,
-        listingId,
-        urlParams: Object.fromEntries(searchParams.entries()),
-        currentUrl: window.location.href
-      });
-
-      // Show the same address selection animation as before
-      const propertySetupSection = document.querySelector('[data-section="property-setup"]');
-      if (propertySetupSection) {
-        propertySetupSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-
-        setTimeout(() => {
-          const addressInput = (document.querySelector('#address-search-input') ||
-                               document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-          const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
-
-          if (addressInput && addressContainer) {
-            addressInput.focus();
-            const originalTransform = addressContainer.style.transform;
-            const originalBoxShadow = addressContainer.style.boxShadow;
-            const originalTransition = addressContainer.style.transition;
-
-            addressContainer.style.transition = 'all 0.5s ease';
-            addressContainer.style.transform = 'scale(1.08)';
-            addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
-            addressContainer.style.zIndex = '50';
-
-            addressInput.style.transition = 'all 0.5s ease';
-            addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
-            addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
-
-            if (!document.querySelector('#gentle-shake-style')) {
-              const style = document.createElement('style');
-              style.id = 'gentle-shake-style';
-              style.textContent = `
-                @keyframes gentle-shake {
-                  0%, 100% { transform: scale(1.08) translateX(0); }
-                  25% { transform: scale(1.08) translateX(-2px); }
-                  75% { transform: scale(1.08) translateX(2px); }
-                }
-              `;
-              document.head.appendChild(style);
-            }
-
-            setTimeout(() => {
-              addressContainer.style.transform = originalTransform || '';
-              addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
-              addressContainer.style.transition = originalTransition || '';
-              addressContainer.style.zIndex = '';
-              addressContainer.style.animation = '';
-              addressInput.style.boxShadow = '';
-              addressInput.style.transition = '';
-            }, 3500);
-          }
-        }, 900);
-      }
-
-      // Show toast notification
-      const showToastNotification = () => {
-        const existingToast = document.querySelector('#address-required-toast');
-        if (existingToast) {
-          existingToast.remove();
-        }
-
-        const toast = document.createElement('div');
-        toast.id = 'address-required-toast';
-        toast.innerHTML = `
-          <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #f87171;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 9999;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 300px;
-            animation: slideIn 0.3s ease-out;
-          ">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-            </svg>
-            Please select a property address first
-          </div>
-          <style>
-            @keyframes slideIn {
-              from { transform: translateX(100%); opacity: 0; }
-              to { transform: translateX(0); opacity: 1; }
-            }
-          </style>
-        `;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-          if (toast && toast.parentNode) {
-            toast.style.animation = 'slideIn 0.3s ease-out reverse';
-            setTimeout(() => toast.remove(), 300);
-          }
-        }, 4000);
-      };
-
-      showToastNotification();
-      console.error("No listing ID available (neither from address selection nor URL)");
-      return;
-    }
-
-    window.trackBlastNow?.();
-
-    const paymentMode = selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
-    setIsLoading(true);
-
-    try {
-      const saveResult = await saveStepWithRetry({
-        stepName: "ORDER",
-        data: {
-          dataList: [
-            {
-              data: currentListingId,
-              packageType: "LISTING",
-            },
-          ],
-          duration: mobileConfiguration.duration,
-          paymentMode: paymentMode,
-          customPrice: mobileConfiguration.price,
-          estimatedViews: mobileConfiguration.estimatedViews,
-          estimatedLeads: mobileConfiguration.leads,
-        },
-      });
-
-      if (!saveResult.success) {
-        throw new Error(saveResult.error || "Failed to save step data");
-      }
-
-      if (typeof (window as any).checkoutPop === "function") {
-        (window as any)
-          .checkoutPop()
-          .then(async (res) => {
-            setIsLoading(false);
-            console.log("res", res);
-            const email = res?.email || "";
-
-            try {
-              const startResponse = await fetch("/api-blast/task/start", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-
-              if (startResponse.ok) {
-                console.log("Task started successfully");
-              } else {
-                console.error("Failed to start task");
-              }
-            } catch (error) {
-              console.error("Error starting task:", error);
-            }
-
-            onOpenCongratulationsModal(email);
-          })
-          .catch(() => {
-            setIsLoading(false);
-            console.log("error");
-          });
-      } else {
-        setIsLoading(false);
-        console.error("checkoutPop function not available");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error during checkout:", error);
-      const userMessage = getUserFriendlyErrorMessage(error as Error);
-      showErrorNotification(userMessage, "Checkout Error");
-    }
-  };
-
-  const handleCheckoutOriginal = async () => {
-    // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
-    const currentListingId = getEffectiveListingId();
-    if (!currentListingId) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn("Checkout attempted without listing ID:", {
-          selectedAddressId,
-          listingId,
-          urlParams: Object.fromEntries(searchParams.entries())
-        });
-      }
-
-      // 如果没有选房�����滚动到PropertySetup模���并对输入框添加突出动画
-      const propertySetupSection = document.querySelector('[data-section="property-setup"]');
-
-      if (propertySetupSection) {
-        // 平滑滚���到PropertySetup模块
-        propertySetupSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-
-        // ���迟动画，等待滚动完���
-        setTimeout(() => {
-          // 查找地址输入框 - 优先使用ID，备用placeholder��位
-          const addressInput = (document.querySelector('#address-search-input') ||
-                               document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-          // 查找包含输入框的容器（���渐变背景的div��
-          const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
-
-          if (addressInput && addressContainer) {
-            // 聚焦到输入框
-            addressInput.focus();
-
-            // 对容器添加突出动画效果
-            const originalTransform = addressContainer.style.transform;
-            const originalBoxShadow = addressContainer.style.boxShadow;
-            const originalTransition = addressContainer.style.transition;
-
-            // 应用突出效果
-            addressContainer.style.transition = 'all 0.5s ease';
-            addressContainer.style.transform = 'scale(1.08)';
-            addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
-            addressContainer.style.zIndex = '50';
-
-            // ��输入框添加脉������果
-            addressInput.style.transition = 'all 0.5s ease';
-            addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
-
-            // 添���轻微的晃动动画
-            addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
-
-            // 创建晃动��画的CSS keyframes（如果不��在）
-            if (!document.querySelector('#gentle-shake-style')) {
-              const style = document.createElement('style');
-              style.id = 'gentle-shake-style';
-              style.textContent = `
-                @keyframes gentle-shake {
-                  0%, 100% { transform: scale(1.08) translateX(0); }
-                  25% { transform: scale(1.08) translateX(-2px); }
-                  75% { transform: scale(1.08) translateX(2px); }
-                }
-              `;
-              document.head.appendChild(style);
-            }
-
-            // 3.5秒后恢复��状
-            setTimeout(() => {
-              addressContainer.style.transform = originalTransform || '';
-              addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
-              addressContainer.style.transition = originalTransition || '';
-              addressContainer.style.zIndex = '';
-              addressContainer.style.animation = '';
-
-              addressInput.style.boxShadow = '';
-              addressInput.style.transition = '';
-            }, 3500);
-          }
-        }, 900); // 稍微延长等待时间确保滚动完成
-      }
-
-      // Show toast notification for missing address
-      const showToastNotification = () => {
-        // Remove any existing notifications
-        const existingToast = document.querySelector('#address-required-toast');
-        if (existingToast) {
-          existingToast.remove();
-        }
-
-        // Create toast notification
-        const toast = document.createElement('div');
-        toast.id = 'address-required-toast';
-        toast.innerHTML = `
-          <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #f87171;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 9999;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 300px;
-            animation: slideIn 0.3s ease-out;
-          ">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-            </svg>
-            Please select a property address first
-          </div>
-          <style>
-            @keyframes slideIn {
-              from { transform: translateX(100%); opacity: 0; }
-              to { transform: translateX(0); opacity: 1; }
-            }
-          </style>
-        `;
-
-        document.body.appendChild(toast);
-
-        // Auto remove after 4 seconds
-        setTimeout(() => {
-          if (toast && toast.parentNode) {
-            toast.style.animation = 'slideIn 0.3s ease-out reverse';
-            setTimeout(() => toast.remove(), 300);
-          }
-        }, 4000);
-      };
-
-      showToastNotification();
-
-      console.error(
-        "No listing ID available (neither from address selection nor URL)",
-      );
-      return;
-    }
-
-    window.trackBlastNow?.();
-    trackFBEvent('Blast Now CTA')
-
-    window.alert(`selectedPackage: ${selectedPackage}`);
-    const duration = packageToDuration[selectedPackage];
-
-    const paymentMode =
-      selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
-
-    setIsLoading(true);
-
-    try {
-      // Save step data with improved error handling
-      const saveResult = await saveStepWithRetry({
-        stepName: "ORDER",
-        data: {
-          dataList: [
-            {
-              data: currentListingId,
-              packageType: "LISTING",
-            },
-          ],
-          duration: duration,
-          paymentMode: paymentMode,
-        },
-      });
-
-      if (!saveResult.success) {
-        throw new Error(saveResult.error || "Failed to save step data");
-      }
-
-      // Call the external checkoutPop function
-      if (typeof (window as any).checkoutPop === "function") {
-        (window as any)
-          .checkoutPop()
-          .then(async (res) => {
-            setIsLoading(false);
-            console.log("res", res);
-            const email = res?.email || "";
-
-            // Call /api-blast/task/start before opening CongratulationsModal
-            try {
-              const startResponse = await fetch("/api-blast/task/start", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-
-              if (startResponse.ok) {
-                console.log("Task started successfully");
-              } else {
-                console.error("Failed to start task");
-              }
-            } catch (error) {
-              console.error("Error starting task:", error);
-            }
-
-            onOpenCongratulationsModal(email);
-          })
-          .catch(() => {
-            setIsLoading(false);
-            console.log("error");
-          });
-      } else {
-        setIsLoading(false);
-        console.error("checkoutPop function not available");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error during checkout:", error);
-
-      // Show user-friendly error message
-      const userMessage = getUserFriendlyErrorMessage(error as Error);
-      showErrorNotification(userMessage, "Checkout Error");
-    }
   };
 
   const handlePackageSelect = async (
