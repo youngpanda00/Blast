@@ -105,11 +105,11 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   // Development fallback - use a sample listing ID if none available
   const getEffectiveListingId = () => {
-    if (selectedAddressId) return selectedAddressId;
-    if (listingId) return listingId;
     if (isCustomListing && customAddress) {
       return customAddress
     }
+    if (selectedAddressId) return selectedAddressId;
+    if (listingId) return listingId;
 
     // In development, provide a fallback to allow testing
     if (process.env.NODE_ENV === 'development') {
@@ -145,7 +145,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
     const currentListingId = getEffectiveListingId();
-    console.log('isCustomListing ===>>>', isCustomListing, customAddress)
+    console.log('isCustomListing ===>>>', currentListingId)
     if (!currentListingId) {
       console.warn("Checkout attempted without listing ID:", {
         selectedAddressId,
