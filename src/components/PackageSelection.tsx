@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PricingCard } from "./PricingCard";
-import { AdPreview } from "./AdPreview";
+import AdPreview, { ChildMethods } from "./AdPreview";
 import { MobileAdConfiguration } from "./MobileAdConfiguration";
 import { Info, Diamond, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from 'embla-carousel-react';
@@ -22,6 +22,7 @@ interface PackageSelectionProps {
   onOpenCongratulationsModal: (email: string) => void;
   isCustomListing?: boolean;
   customAddress?: string | null;
+  onMethodsReady: (methods: SonMethods) => void;
 }
 
 interface AdData {
@@ -31,12 +32,18 @@ interface AdData {
     file?: object
 }
 
-export const PackageSelection: React.FC<PackageSelectionProps> = ({
+export interface SonMethods {
+  handleEdit: () => void;
+  handleCancel: () => void;
+}
+
+const PackageSelection: React.FC<PackageSelectionProps> = ({
   previewPicture,
   selectedAddressId,
   onOpenCongratulationsModal,
   isCustomListing,
-  customAddress
+  customAddress,
+  onMethodsReady
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
@@ -56,9 +63,17 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   } | null>(null);
   const [shouldHighlightMobileConfig, setShouldHighlightMobileConfig] = useState(false);
   const isMobile = useIsMobile();
-  const adPreviewRef = React.useRef<HTMLDivElement>(null);
-  
+
+  const [childMethods, setChildMethods] = useState<ChildMethods | null>(null);
+
   const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
+
+  useEffect(()=>{
+    onMethodsReady({
+      handleEdit: childMethods?.handleEdit,
+      handleCancel: childMethods?.handleCancel
+    })
+  }, [onMethodsReady, childMethods])
   
   // Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -676,12 +691,12 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       {/* Ad Preview Section */}
       <AdPreview
-        ref={adPreviewRef}
         initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
         initialHeadline="Don't miss out on this new listing"
         initialAdCopy="✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡
 
 🗓️ Schedule a private viewing today."
+        onMethodsReady={setChildMethods}
         onAdUpdate={(data) => {
           console.log("Ad updated:", data);
           setAdPreviewData({
@@ -821,3 +836,5 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     </>
   );
 };
+
+export default PackageSelection;

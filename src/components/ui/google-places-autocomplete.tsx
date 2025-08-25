@@ -146,6 +146,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
 
   return (
     <input
+      id="address-search-input"
       ref={inputRef}
       type="text"
       name={randomName}

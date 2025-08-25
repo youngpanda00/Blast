@@ -2,18 +2,19 @@ import React, { useState } from "react";
 import { FixedNavigation } from "./FixedNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Zap, TrendingUp } from "lucide-react";
-import { PropertySetup } from "./PropertySetup";
+import PropertySetup from "./PropertySetup";
+import { Search } from "lucide-react";
 
 interface HeroProps {
   page?: "listing";
-  onGetStarted?: () => void;
   listingId?: string | null;
   onAddressSelect?: (addressData: any) => void;
   onScrollToAdPreview?:() => void;
   onCityUpdate?: (city: string | null) => void;
+  onScrollToAddress?:() => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAddressSelect, onCityUpdate, onScrollToAdPreview}) => {
+export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, onCityUpdate, onScrollToAdPreview, onScrollToAddress}) => {
   const isMobile = useIsMobile();
 
   return (
@@ -103,6 +104,19 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
                   </div>
                 </div>
 
+                <div 
+                  className="flex" 
+                  style={{ width: 800, height: 70, background: '#ffffff', borderRadius: '100px', padding: '15px', justifyContent: 'space-between', cursor: 'pointer', marginBottom: '20px', marginTop: '0', marginLeft: 'auto', marginRight: 'auto'}}
+                  onClick={onScrollToAddress}
+                >
+                  <div className="flex items-center">
+                    <Search className="text-white" style={{ color: '#C6C8D1', width: '18px', height: '18px', marginRight: '10px'}} />
+                    <span className="text-base font-medium " style={{color: '#C6C8D1', lineHeight: '20px'}}>Enter the property address</span>
+                  </div>
+                  <div className="text-white text-sm flex items-center justify-center" style={{background: 'linear-gradient(90deg, #242FFC 0%, #8A54FF 100%)', width: '100px', height: '40px', borderRadius: '100px'}}>
+                    Search
+                  </div>
+                </div>
 
                 {/* Trust indicator */}
                 <div className="flex flex-wrap items-center justify-center gap-6 max-w-4xl mx-auto" style={{marginTop: 0}}>
@@ -172,6 +186,7 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
                   onAddressSelect={onAddressSelect}
                   onScrollToAdPreview={onScrollToAdPreview}
                   onCityUpdate={onCityUpdate}
+                  onMethodsReady={() => {}}
                 />
               </div>
             </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Hero } from "@/components/Hero";
-import { PropertySetup } from "@/components/PropertySetup";
-import { PackageSelection } from "@/components/PackageSelection";
+import PropertySetup, { ChildMethods } from "@/components/PropertySetup";
+import PackageSelection, { SonMethods } from "@/components/PackageSelection";
 import { ClientTestimonials } from "@/components/ClientTestimonials";
 import { FrequentlyAskedQuestions } from "@/components/FrequentlyAskedQuestions";
 import { ContactFooter } from "@/components/ContactFooter";
@@ -41,8 +41,10 @@ const Index = ({ page }: { page?: "listing" }) => {
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
   const [isCustomListing, setIsCustomListing] = useState(false);
-  const packageSelectionRef = React.useRef<HTMLDivElement>(null);
   
+  const [sonMethods, setSonMethods] = useState<SonMethods | null>(null)
+
+  const [childMethods, setChildMethods] = useState<ChildMethods | null>(null)
 
   // Track ViewContent event state
   const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
@@ -78,12 +80,14 @@ const Index = ({ page }: { page?: "listing" }) => {
   }, [listingId, selectedAddressId]);
 
   // Callback function to handle address selection from PropertySetup
-  const handleAddressSelect = React.useCallback((addressData) => {
+  const handleAddressSelect = useCallback((addressData) => {
     console.log("Address selected:", addressData);
 
-    setIsCustomListing(!!addressData?.isCustomListing)
+    setIsCustomListing(!!addressData?.isCustomListing);
     if (addressData?.isCustomListing) {
-      // console.log('packageSelectionRef.current ==>>', packageSelectionRef.current)
+      sonMethods?.handleEdit();
+    } else {
+      sonMethods?.handleCancel();
     }
 
     if (addressData?.previewPicture) {
@@ -107,7 +111,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         previewPicture: addressData.previewPicture,
       });
     }
-  }, []);
+  }, [sonMethods]);
 
   // Add global unhandled promise rejection handler for API fetch errors
   useEffect(() => {
@@ -1137,76 +1141,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         onAddressSelect={handleAddressSelect}
         onScrollToAdPreview={scrollToAdPreview}
         onCityUpdate={handleCityUpdate}
-        onGetStarted={() => {
-          trackFBEvent('Start Promoting')
-          const propertySetupSection = document.querySelector('[data-section="property-setup"]');
-
-          if (propertySetupSection) {
-            // Smooth scroll to PropertySetup section
-            propertySetupSection.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center'
-            });
-
-            // Add highlighting animation after scrolling
-            setTimeout(() => {
-              // Find address input - use both ID and placeholder selectors
-              const addressInput = (document.querySelector('#address-search-input') ||
-                                   document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-              // Find containing gradient container
-              const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
-
-              if (addressInput && addressContainer) {
-                // Focus on input
-                addressInput.focus();
-
-                // Apply highlight effect
-                const originalTransform = addressContainer.style.transform;
-                const originalBoxShadow = addressContainer.style.boxShadow;
-                const originalTransition = addressContainer.style.transition;
-
-                // Apply highlighting effects
-                addressContainer.style.transition = 'all 0.5s ease';
-                addressContainer.style.transform = 'scale(1.08)';
-                addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
-                addressContainer.style.zIndex = '50';
-
-                // Add input focus ring
-                addressInput.style.transition = 'all 0.5s ease';
-                addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
-
-                // Add gentle shake animation
-                addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
-
-                // Create shake animation keyframes if not exists
-                if (!document.querySelector('#gentle-shake-style')) {
-                  const style = document.createElement('style');
-                  style.id = 'gentle-shake-style';
-                  style.textContent = `
-                    @keyframes gentle-shake {
-                      0%, 100% { transform: scale(1.08) translateX(0); }
-                      25% { transform: scale(1.08) translateX(-2px); }
-                      75% { transform: scale(1.08) translateX(2px); }
-                    }
-                  `;
-                  document.head.appendChild(style);
-                }
-
-                // Restore original styles after 3.5 seconds
-                setTimeout(() => {
-                  addressContainer.style.transform = originalTransform || '';
-                  addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
-                  addressContainer.style.transition = originalTransition || '';
-                  addressContainer.style.zIndex = '';
-                  addressContainer.style.animation = '';
-
-                  addressInput.style.boxShadow = '';
-                  addressInput.style.transition = '';
-                }, 3500);
-              }
-            }, 900); // Wait for scroll to complete
-          }
-        }}
+        onScrollToAddress={childMethods?.scrollToForm}
       />
 
       <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[20px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl">
@@ -1218,6 +1153,7 @@ const Index = ({ page }: { page?: "listing" }) => {
                 onAddressSelect={handleAddressSelect}
                 onScrollToAdPreview={scrollToAdPreview}
                 onCityUpdate={handleCityUpdate}
+                onMethodsReady={setChildMethods}
               />
             )}
 
@@ -1350,12 +1286,12 @@ const Index = ({ page }: { page?: "listing" }) => {
         </div>
 
         <PackageSelection
-          ref={packageSelectionRef}
           key={selectedAddressId}
           isCustomListing={isCustomListing}
           customAddress={currentListingData?.address}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
+          onMethodsReady={setSonMethods}
           onOpenCongratulationsModal={(email) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);

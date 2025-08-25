@@ -12,6 +12,11 @@ interface PropertySetupProps {
   onAddressSelect?: (addressData: any) => void;
   onCityUpdate?: (city: string | null) => void;
   onScrollToAdPreview?: () => void;
+  onMethodsReady: (methods: ChildMethods) => void;
+}
+
+export interface ChildMethods {
+  scrollToForm: () => void;
 }
 
 interface PropertyData {
@@ -29,11 +34,12 @@ interface PropertyData {
   [key: string]: any;
 }
 
-export const PropertySetup: React.FC<PropertySetupProps> = ({
+const PropertySetup: React.FC<PropertySetupProps> = ({
   listingId,
   onAddressSelect: externalOnAddressSelect,
   onScrollToAdPreview,
   onCityUpdate,
+  onMethodsReady
 }) => {
 
   const [properties, setProperties] = useState<PropertyData[]>([]);
@@ -42,7 +48,7 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
   const isMobile = useIsMobile();
   const [targteId, setTargetId] = useState('');
   const [isCustom, setIsCustom] = useState(false);
-
+  const [isInputHighlighted, setIsInputHighlighted] = useState(false);
 
   const [addressInput, setAddressInput] = useState("");
 
@@ -88,7 +94,6 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
     }
   };
 
-  const addressInputRef = useRef<HTMLInputElement>(null);
 
   // Get address information from URL parameters
   const addressFromUrl = searchParams.get("address");
@@ -141,8 +146,25 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
       previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
       fullAddress: addressInput
     });
-    onScrollToAdPreview()
+    onScrollToAdPreview();
   }
+
+  const scrollToForm = () => {
+    const formElement = document.querySelector(
+      "input[placeholder*='Enter address']",
+    ) as HTMLInputElement;
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: "smooth", block: "center" });
+      setIsInputHighlighted(true);
+      setTimeout(() => {setIsInputHighlighted(false);formElement.focus();}, 1500);
+    }
+  };
+
+  useEffect(()=>{
+    onMethodsReady({
+      scrollToForm
+    })
+  }, [onMethodsReady])
 
   // Fetch listing labels when listingId is available
   useEffect(() => {
@@ -212,9 +234,10 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
                 </strong>
               </Label>
 
-              <div className="bg-white/90 px-3.5 py-2.5 backdrop-blur-sm rounded-xl border border-white/20">
+              <div className={`bg-white/90 px-3.5 py-2.5 backdrop-blur-sm rounded-xl border border-white/20 ${
+                isInputHighlighted ? "ring-4 ring-accent/50 border-accent shadow-lg scale-105" : ""}
+              `}>
                 <GooglePlacesAutocomplete
-                  ref={addressInputRef}
                   placeholder="Enter address"
                   value={addressInput}
                   onChange={(value) => { 
@@ -299,3 +322,5 @@ export const PropertySetup: React.FC<PropertySetupProps> = ({
     </section>
   );
 };
+
+export default PropertySetup;

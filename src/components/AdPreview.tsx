@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -27,6 +27,12 @@ interface AdPreviewProps {
   initialHeadline?: string;
   initialAdCopy?: string;
   onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object }) => void;
+  onMethodsReady: (methods: ChildMethods) => void;
+}
+
+export interface ChildMethods {
+  handleEdit: () => void;
+  handleCancel: () => void;
 }
 
 const adCopyTemplates = [
@@ -47,11 +53,12 @@ const adCopyTemplates = [
   }
 ];
 
-export const AdPreview: React.FC<AdPreviewProps> = ({
+const AdPreview: React.FC<AdPreviewProps> = ({
   initialImage = "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800",
   initialHeadline = "Don't miss out on this new listing",
   initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.",
   onAdUpdate,
+  onMethodsReady
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [headline, setHeadline] = useState(initialHeadline);
@@ -71,7 +78,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     setImage(initialImage)
   }, [initialImage])
 
-  const handleEdit = () => {
+  const handleEdit = useCallback(() => {
     setTempHeadline(headline);
     setTempAdCopy(adCopy);
     setSelectedTemplate("custom");
@@ -83,7 +90,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "edit"
     });
     trackFBEvent('Edit Ad')
-  };
+  }, []);
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
@@ -102,7 +109,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
   };
 
-  const handleCancel = () => {
+  const handleCancel = useCallback(() => {
     setImage('https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800')
     setHeadline("Don't miss out on this new listing");
     setAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
@@ -118,7 +125,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
         selectedFile: null
       }
     )
-  };
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -171,6 +178,13 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     }
     setShowTemplateDropdown(false);
   };
+
+  useEffect(()=>{
+    onMethodsReady({
+      handleEdit,
+      handleCancel
+    })
+  }, [onMethodsReady, handleEdit, handleCancel])
 
 
   return (
@@ -809,3 +823,5 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     </section>
   );
 };
+
+export default AdPreview;
