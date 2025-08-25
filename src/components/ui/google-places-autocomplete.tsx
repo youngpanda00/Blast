@@ -115,7 +115,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     };
 
     document.head.appendChild(script);
-  }, [initializeAutocomplete, setIsLoading]);
+  }, [initializeAutocomplete]);
 
   // Load script on component mount
   useEffect(() => {
@@ -127,7 +127,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
         window.google?.maps?.event?.clearInstanceListeners?.(autocompleteRef.current);
       }
     };
-  }, [loadGoogleMapsScript]);
+  }, []);
 
   // Update input value when prop changes
   useEffect(() => {
