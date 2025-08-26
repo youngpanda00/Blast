@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PricingCard } from "./PricingCard";
 import AdPreview, { ChildMethods } from "./AdPreview";
 import { MobileAdConfiguration } from "./MobileAdConfiguration";
@@ -35,6 +35,8 @@ interface AdData {
 export interface SonMethods {
   handleEdit: () => void;
   handleCancel: () => void;
+  setIsMobileEditModalOpen: (status:boolean) => void;
+  getAdPreviewData: () => AdData;
 }
 
 const PackageSelection: React.FC<PackageSelectionProps> = ({
@@ -68,12 +70,18 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
 
+  const getAdPreviewData = useCallback(() => {
+    return adPreviewData
+  }, [adPreviewData])
+
   useEffect(()=>{
     onMethodsReady({
       handleEdit: childMethods?.handleEdit,
-      handleCancel: childMethods?.handleCancel
+      handleCancel: childMethods?.handleCancel,
+      setIsMobileEditModalOpen: childMethods?.setIsMobileEditModalOpen,
+      getAdPreviewData
     })
-  }, [onMethodsReady, childMethods])
+  }, [onMethodsReady, childMethods, getAdPreviewData])
   
   // Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({

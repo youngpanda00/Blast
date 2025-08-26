@@ -33,6 +33,7 @@ interface AdPreviewProps {
 export interface ChildMethods {
   handleEdit: () => void;
   handleCancel: () => void;
+  setIsMobileEditModalOpen: (status:boolean) => void;
 }
 
 const adCopyTemplates = [
@@ -182,9 +183,10 @@ const AdPreview: React.FC<AdPreviewProps> = ({
   useEffect(()=>{
     onMethodsReady({
       handleEdit,
-      handleCancel
+      handleCancel,
+      setIsMobileEditModalOpen
     })
-  }, [onMethodsReady, handleEdit, handleCancel])
+  }, [onMethodsReady, handleEdit, handleCancel, setIsMobileEditModalOpen])
 
 
   return (

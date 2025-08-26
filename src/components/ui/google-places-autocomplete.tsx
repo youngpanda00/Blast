@@ -12,6 +12,7 @@ interface GooglePlacesAutocompleteProps {
 
 interface GooglePlacesAutocompleteRef {
   getSelectedAddress: () => string;
+  onFocus: () => void;
 }
 
 // Extend the Window interface to include Google Maps
@@ -49,10 +50,15 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     return selectedPlaceRef.current?.formatted_address || inputValue;
   }, [inputValue]);
 
+  const onFocus = useCallback(() => {
+    inputRef.current?.focus()
+  }, [inputRef])
+
   // Expose methods to parent components
   useImperativeHandle(ref, () => ({
     getSelectedAddress,
-  }), [getSelectedAddress]);
+    onFocus,
+  }), [getSelectedAddress, onFocus]);
 
   // Initialize Google Places Autocomplete
   const initializeAutocomplete = useCallback(() => {
@@ -127,7 +133,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
         window.google?.maps?.event?.clearInstanceListeners?.(autocompleteRef.current);
       }
     };
-  }, []);
+  }, [loadGoogleMapsScript]);
 
   // Update input value when prop changes
   useEffect(() => {

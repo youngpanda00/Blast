@@ -49,6 +49,13 @@ const Index = ({ page }: { page?: "listing" }) => {
   // Track ViewContent event state
   const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
 
+  useEffect(() => {
+    const data = sonMethods?.getAdPreviewData()
+    if (isCustomListing) {
+      setSelectedPreviewPicture(data?.imageUrl);
+    }
+  }, [sonMethods, isCustomListing])
+
   // Handle escape key and body scroll for zoom modal
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -85,7 +92,11 @@ const Index = ({ page }: { page?: "listing" }) => {
 
     setIsCustomListing(!!addressData?.isCustomListing);
     if (addressData?.isCustomListing) {
-      sonMethods?.handleEdit();
+      if (isMobile) {
+        sonMethods?.setIsMobileEditModalOpen(true);
+      } else {
+        sonMethods?.handleEdit();
+      }
     } else {
       sonMethods?.handleCancel();
     }
@@ -111,7 +122,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         previewPicture: addressData.previewPicture,
       });
     }
-  }, [sonMethods]);
+  }, [sonMethods, isMobile]);
 
   // Add global unhandled promise rejection handler for API fetch errors
   useEffect(() => {

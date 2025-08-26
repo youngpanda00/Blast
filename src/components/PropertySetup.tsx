@@ -51,6 +51,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const [isInputHighlighted, setIsInputHighlighted] = useState(false);
 
   const [addressInput, setAddressInput] = useState("");
+  const addressInputRef = useRef<{onFocus:()=> void}>(null);
 
   // Track if user has manually selected an address to prevent overriding
   const [hasUserSelectedAddress, setHasUserSelectedAddress] = useState(false);
@@ -154,9 +155,13 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       "input[placeholder*='Enter address']",
     ) as HTMLInputElement;
     if (formElement) {
-      formElement.scrollIntoView({ behavior: "smooth", block: "center" });
       setIsInputHighlighted(true);
-      setTimeout(() => {setIsInputHighlighted(false);formElement.focus();}, 1500);
+      addressInputRef.current.onFocus();
+      setTimeout(() => {setIsInputHighlighted(false);}, 1500);
+      window.scrollTo({
+        top: 380,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -238,6 +243,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                 isInputHighlighted ? "ring-4 ring-accent/50 border-accent shadow-lg scale-105" : ""}
               `}>
                 <GooglePlacesAutocomplete
+                  ref={addressInputRef}
                   placeholder="Enter address"
                   value={addressInput}
                   onChange={(value) => { 
