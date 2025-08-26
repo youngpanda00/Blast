@@ -98,7 +98,12 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "edit"
     });
     trackFBEvent('Edit Ad')
-  }, []);
+  }, [isCustomListing]);
+
+
+  useEffect(() => {
+    setUploadImage('');
+  }, [isCustomListing])
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
