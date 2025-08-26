@@ -209,7 +209,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
             </div>
             <div className="flex text-sm" style={{ marginTop: isMobile ? '14px' : '10px', flexDirection: isMobile ? 'column' : 'row', justifyContent: isMobile ? '' :'space-between', alignItems: isMobile ? 'self-start' : 'center'}}>
               <div className="text-sm" style={{ fontWeight: '700', color: '#202437'}}>${new Intl.NumberFormat('en-US').format(+price)}</div>
-              <div className="text-xs" style={{color: '#A0A3AF', width: isMobile ? '100%': 'calc(100% - 100px)', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: isMobile ? 'left':'right'}}>Listed by: {agentName}</div>
+              <div className="text-xs" style={{color: '#A0A3AF', width: isMobile ? '100%': 'calc(100% - 100px)', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: isMobile ? 'left':'right'}}>Listed by: {agentName || '--'}</div>
             </div>
           </div>
         </div>
