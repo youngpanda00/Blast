@@ -23,7 +23,53 @@ declare global {
   }
 }
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyC4rNb_nZBSOCmtXVJoFHWbG8seYSQbOl0";
+const GOOGLE_MAPS_API_KEY = "AIzaSyBhcF7Zarimx9v3e2GBtfKmhmLcXJCkjNI";
+
+
+const useGoogleMapsScript = ():{isLoading: boolean;isGoogleLoaded: boolean }=>{
+    const [isLoading, setIsLoading] = useState(false);
+    const [isGoogleLoaded, setGoogleLoad] = useState<boolean>(false);
+    if (window.google || isGoogleLoaded) {
+      //setGoogleLoad(true);
+      //initializeAutocomplete();
+      return {
+        isLoading,
+        isGoogleLoaded
+      };
+    }
+
+    if(isLoading){
+      return {
+        isLoading,
+        isGoogleLoaded
+      };
+    }
+
+    setIsLoading(true);
+
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initGooglePlaces`;
+    script.async = true;
+    script.defer = true;
+    script.onerror = () => {
+      setIsLoading(false);
+      console.error('Failed to load Google Maps script');
+    };
+    script.onload = ()=>{
+      setIsLoading(false);
+      window.initGooglePlaces = () => {
+        setGoogleLoad(true);
+        // initializeAutocomplete();
+      };
+    }
+
+    document.head.appendChild(script);
+    return {
+      isLoading,
+      isGoogleLoaded
+    }
+}
+
 
 export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, GooglePlacesAutocompleteProps>(({
   placeholder = "Enter address",
@@ -35,7 +81,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
 }, ref) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteRef = useRef<any>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const {isLoading, isGoogleLoaded} = useGoogleMapsScript();
   const [inputValue, setInputValue] = useState(value);
   const selectedPlaceRef = useRef<any>(null);
 
@@ -72,6 +118,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
 
     const onPlaceChanged = () => {
       const place = autocomplete.getPlace();
+      console.log('onPlaceChanged ==>>>', place)
       if (place.formatted_address) {
         const address = place.formatted_address;
         selectedPlaceRef.current = place;
@@ -96,48 +143,17 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     autocompleteRef.current = autocomplete;
   }, [onChange, onPlaceSelect, setInputValue, types]);
 
-  // Load Google Maps script
-  const loadGoogleMapsScript = useCallback(() => {
-    if (window.google) {
-      initializeAutocomplete();
-      return;
-    }
-
-    setIsLoading(true);
-
-    // Create callback function for when script loads
-    window.initGooglePlaces = () => {
-      setIsLoading(false);
-      initializeAutocomplete();
-    };
-
-    if(isLoading){
-      return ;
-    }
-
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initGooglePlaces`;
-    script.async = true;
-    script.defer = true;
-    script.onerror = () => {
-      setIsLoading(false);
-      console.error('Failed to load Google Maps script');
-    };
-
-    document.head.appendChild(script);
-  }, [initializeAutocomplete]);
 
   // Load script on component mount
   useEffect(() => {
-    loadGoogleMapsScript();
-    
+    initializeAutocomplete()
     // Cleanup function
     return () => {
       if (autocompleteRef.current) {
         window.google?.maps?.event?.clearInstanceListeners?.(autocompleteRef.current);
       }
     };
-  }, [loadGoogleMapsScript]);
+  }, [isGoogleLoaded,initializeAutocomplete]);
 
   // Update input value when prop changes
   useEffect(() => {

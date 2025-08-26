@@ -205,7 +205,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
               <div className="text-gray-400" style={{margin: isMobile ? '0 3px' : '0 5px'}}>•</div>
               <div>{bathrooms > -1 ? bathrooms : '--'} BA</div>
               <div className="text-gray-400" style={{margin: isMobile ? '0 3px' : '0 5px'}}>•</div>
-              <div>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} Receptions</div>
+              <div>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</div>
             </div>
             <div className="flex text-sm" style={{ marginTop: isMobile ? '14px' : '10px', flexDirection: isMobile ? 'column' : 'row', justifyContent: isMobile ? '' :'space-between', alignItems: isMobile ? 'self-start' : 'center'}}>
               <div className="text-sm" style={{ fontWeight: '700', color: '#202437'}}>${new Intl.NumberFormat('en-US').format(+price)}</div>

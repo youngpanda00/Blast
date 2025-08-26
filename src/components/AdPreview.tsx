@@ -23,9 +23,11 @@ import {
 } from "./ui/dialog";
 
 interface AdPreviewProps {
+  isCustomListing?: boolean,
   initialImage?: string;
   initialHeadline?: string;
   initialAdCopy?: string;
+  previewPicture?: string;
   onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object }) => void;
   onMethodsReady: (methods: ChildMethods) => void;
 }
@@ -33,7 +35,7 @@ interface AdPreviewProps {
 export interface ChildMethods {
   handleEdit: () => void;
   handleCancel: () => void;
-  handleSave: () => void;
+  handleSave: () => boolean;
   setIsMobileEditModalOpen: (status:boolean) => void;
 }
 
@@ -56,6 +58,8 @@ const adCopyTemplates = [
 ];
 
 const AdPreview: React.FC<AdPreviewProps> = ({
+  isCustomListing,
+  previewPicture,
   initialImage = "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800",
   initialHeadline = "Don't miss out on this new listing",
   initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.",
@@ -66,11 +70,13 @@ const AdPreview: React.FC<AdPreviewProps> = ({
   const [headline, setHeadline] = useState(initialHeadline);
   const [adCopy, setAdCopy] = useState(initialAdCopy);
   const [image, setImage] = useState(initialImage);
+  const [uploadImage, setUploadImage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [tempHeadline, setTempHeadline] = useState(headline);
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("default");
   const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
+  const [ highlightedAreaError, setHighlightedAreaError] = useState<'headline' | 'adCopy' | 'image' | null>(null);
   const [isEditingInline, setIsEditingInline] = useState<'headline' | 'adCopy' | null>(null);
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
   const [isMobileEditModalOpen, setIsMobileEditModalOpen] = useState(false);
@@ -105,14 +111,23 @@ const AdPreview: React.FC<AdPreviewProps> = ({
   };
 
   const handleSave = useCallback(() => {
+    if (isCustomListing && !uploadImage) {
+      console.log('please upload image')
+      setHighlightedAreaError('image');
+      return false
+    }
     setHeadline(tempHeadline);
     setAdCopy(tempAdCopy);
     setIsEditing(false);
     onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
-  }, []);
+    return true
+  }, [image, tempHeadline, tempAdCopy, isCustomListing, uploadImage]);
 
   const handleCancel = useCallback(() => {
-    setImage('https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800')
+    const pic = isCustomListing ? 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800' : previewPicture
+    const uploadImg = isCustomListing ? '' : previewPicture
+    setImage(pic);
+    setUploadImage(uploadImg);
     setHeadline("Don't miss out on this new listing");
     setAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
     setTempHeadline("Don't miss out on this new listing");
@@ -121,23 +136,44 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setIsMobileEditModalOpen(false);
     onAdUpdate?.(
       {
-        image: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
+        image: pic,
         headline: "Don't miss out on this new listing",
         adCopy: '✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.',
         selectedFile: null
       }
     )
-  }, []);
+  }, [isCustomListing, previewPicture]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setSelectedFile(file);
+    setHighlightedAreaError(null);
     if (file) {
       const url = URL.createObjectURL(file);
       setImage(url);
+      setUploadImage(url);
       onAdUpdate?.({ image: url, headline, adCopy, selectedFile });
     }
   };
+
+  const handleSaveInMobile = useCallback(() => {
+    if (isCustomListing && !uploadImage) {
+      console.log('please upload image')
+      setHighlightedAreaError('image');
+      return false
+    }
+    setHeadline(tempHeadline);
+    setAdCopy(tempAdCopy);
+    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
+    setIsMobileEditModalOpen(false);
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "Save Ad Edit",
+      click_action: "save"
+    });
+    trackFBEvent('Save Ad Edit');
+  }, [isCustomListing, uploadImage])
 
   const handleInlineEdit = (type: 'headline' | 'adCopy') => {
     setIsEditingInline(type);
@@ -533,10 +569,18 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                       <div>
                         <Label className="text-sm font-medium">Property Image</Label>
                         <div className="mt-2 flex items-center gap-3">
-                          <div className="w-16 h-16 rounded-lg overflow-hidden border">
-                            <img src={image} alt="Current" className="w-full h-full object-cover" />
-                          </div>
-                          <label className="cursor-pointer">
+                          {
+                            !isCustomListing ? (
+                              <div className="w-16 h-16 rounded-lg overflow-hidden border">
+                                <img src={image} alt="Current" className="w-full h-full object-cover" />
+                              </div>
+                            ):(
+                              uploadImage && <div className="w-16 h-16 rounded-lg overflow-hidden border">
+                                <img src={uploadImage} alt="Current" className="w-full h-full object-cover" />
+                              </div>
+                            )
+                          }
+                          <label className="cursor-pointer" style={{position: 'relative'}}>
                             <input
                               type="file"
                               accept="image/*"
@@ -544,8 +588,11 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                               className="hidden"
                             />
                             <Button variant="outline" size="sm" asChild>
-                              <span>Change Image</span>
+                              <span className={`${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': ''}`}> { isCustomListing && !uploadImage ? 'Upload Image' : 'Change Image' }</span>
                             </Button>
+                            {
+                              highlightedAreaError === 'image' && <div className="xs red-400" style={{color: '#f87171'}}>please upload image</div>
+                            }
                           </label>
                         </div>
                       </div>
@@ -553,19 +600,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                       {/* Action Buttons */}
                       <div className="flex gap-3 pt-4">
                         <Button
-                          onClick={() => {
-                            setHeadline(tempHeadline);
-                            setAdCopy(tempAdCopy);
-                            onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
-                            setIsMobileEditModalOpen(false);
-                            trackMixPanel("click", {
-                              page_name: "ListingBlastSP",
-                              feature_name: "ListingBlast",
-                              click_item: "Save Ad Edit",
-                              click_action: "save"
-                            });
-                            trackFBEvent('Save Ad Edit');
-                          }}
+                          onClick={handleSaveInMobile}
                           className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                         >
                           Save Changes
@@ -700,26 +735,41 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                     onMouseEnter={() => setHighlightedArea('image')}
                     onMouseLeave={() => setHighlightedArea(null)}
                   >
-                    <img
-                      src={image}
-                      alt="Current ad image"
-                      className={`w-20 h-20 object-cover rounded-lg border-2 shadow-sm transition-all duration-300 ${
-                        highlightedArea === 'image'
-                          ? 'border-green-400 shadow-lg ring-2 ring-green-200 scale-105'
-                          : 'border-border'
-                      }`}
-                    />
+                    {
+                      !isCustomListing ? (
+                        <img
+                          src={image}
+                          alt="Current ad image"
+                          className={`w-20 h-20 object-cover rounded-lg border-2 shadow-sm transition-all duration-300 ${
+                            highlightedArea === 'image'
+                              ? 'border-green-400 shadow-lg ring-2 ring-green-200 scale-105'
+                              : 'border-border'
+                          }`}
+                        />
+                      ) :
+                      (uploadImage && <img
+                          src={uploadImage}
+                          alt="Current ad image"
+                          className={`w-20 h-20 object-cover rounded-lg border-2 shadow-sm transition-all duration-300 ${
+                            highlightedArea === 'image'
+                              ? 'border-green-400 shadow-lg ring-2 ring-green-200 scale-105'
+                              : 'border-border'
+                          }`}
+                        />
+                      )
+                    }
                     <div className="flex-1 space-y-2">
                       <Input
                         id="image"
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
-                        className={`text-sm bg-background transition-all duration-300 ${
-                          highlightedArea === 'image'
+                        className={`text-sm bg-background transition-all duration-300
+                          ${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': 'border-border'}
+                          ${highlightedArea === 'image' && highlightedAreaError !== 'image'
                             ? 'border-green-400 ring-2 ring-green-200'
-                            : 'border-border'
-                        }`}
+                            : 'border-border'}
+                        `}
                       />
                       <p className="text-xs text-muted-foreground">
                         <span>Recommended Aspect Ratio: 1:1 or 4:5</span>

@@ -152,9 +152,9 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
-    childMethods.handleSave();
+    console.log('checkout adPreviewData ===>>>', adPreviewData)
     const currentListingId = getEffectiveListingId();
-    console.log('isCustomListing ===>>>', currentListingId)
+    console.log('isCustomListing ===>>>', isCustomListing, currentListingId)
     if (!currentListingId) {
       console.warn("Checkout attempted without listing ID:", {
         selectedAddressId,
@@ -295,6 +295,10 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     }
 
     window.trackBlastNow?.();
+
+    if (isCustomListing && (!adPreviewData || !adPreviewData.file)) {
+      return window?.common?.utils?.toast?.({content: 'please upload your Ad Image ', time: 3000})
+    }
 
     const duration = packageToDuration[packageType];
 
@@ -700,6 +704,8 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       {/* Ad Preview Section */}
       <AdPreview
+        isCustomListing={isCustomListing}
+        previewPicture={previewPicture}
         initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
         initialHeadline="Don't miss out on this new listing"
         initialAdCopy="✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡
