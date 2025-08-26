@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { GooglePlacesAutocomplete } from "./ui/google-places-autocomplete";
@@ -150,6 +150,19 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     onScrollToAdPreview();
   }
 
+  const handlePlaceSelect = useCallback((place, address) => {
+    console.log('Place selected:', place, address);
+    setLoading(true);
+    fetchPropertyData(address);
+  }, [])
+
+  const handleAddressChange = useCallback((value) => { 
+    setAddressInput(value)
+    if (!value) {
+      setShowListingsRes(false)
+    }
+  }, [])
+
   const scrollToForm = () => {
     const formElement = document.querySelector(
       "input[placeholder*='Enter address']",
@@ -246,17 +259,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                   ref={addressInputRef}
                   placeholder="Enter address"
                   value={addressInput}
-                  onChange={(value) => { 
-                    setAddressInput(value)
-                    if (!value) {
-                      setShowListingsRes(false)
-                    }
-                  }}
-                  onPlaceSelect={(place, address) => {
-                    console.log('Place selected:', place, address);
-                    setLoading(true);
-                    fetchPropertyData(address);
-                  }}
+                  onChange={handleAddressChange}
+                  onPlaceSelect={handlePlaceSelect}
                 />
               </div>
 

@@ -31,7 +31,6 @@ const useGoogleMapsScript = ():{isLoading: boolean;isGoogleLoaded: boolean }=>{
     const [isGoogleLoaded, setGoogleLoad] = useState<boolean>(false);
     if (window.google || isGoogleLoaded) {
       //setGoogleLoad(true);
-      //initializeAutocomplete();
       return {
         isLoading,
         isGoogleLoaded
@@ -46,7 +45,9 @@ const useGoogleMapsScript = ():{isLoading: boolean;isGoogleLoaded: boolean }=>{
     }
 
     setIsLoading(true);
-
+    window.initGooglePlaces = () => {
+      setGoogleLoad(true);
+    };
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&callback=initGooglePlaces`;
     script.async = true;
@@ -57,10 +58,6 @@ const useGoogleMapsScript = ():{isLoading: boolean;isGoogleLoaded: boolean }=>{
     };
     script.onload = ()=>{
       setIsLoading(false);
-      window.initGooglePlaces = () => {
-        setGoogleLoad(true);
-        // initializeAutocomplete();
-      };
     }
 
     document.head.appendChild(script);
@@ -106,8 +103,8 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     onFocus,
   }), [getSelectedAddress, onFocus]);
 
-  // Initialize Google Places Autocomplete
-  const initializeAutocomplete = useCallback(() => {
+  // Load script on component mount
+  useEffect(() => {
     if (!window.google || !inputRef.current) return;
 
     const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
@@ -130,30 +127,37 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
 
     autocomplete.addListener('place_changed', onPlaceChanged);
 
-    // 额外监听输入框变化
-    inputRef.current.addEventListener('change', function() {
+    const onInputChange = function(e) {
       // 延迟检查以确保Autocomplete有机会处理
+      if(!e.target.value.trim()){
+        setInputValue('');
+        onChange?.('');
+        return ;
+      }
       setTimeout(function() {
-        if (autocomplete.getPlace()) {
-          onPlaceChanged();
+        const place = autocomplete.getPlace();
+        console.log("=====input change",place)
+        if (place && place.formatted_address) {
+          //  const address = place.formatted_address;
+           selectedPlaceRef.current = place;
+          // onPlaceChanged();
         }
       }, 300);
-    });
+    }
+    // 额外监听输入框变化
+    inputRef.current.addEventListener('change',onInputChange );
 
     autocompleteRef.current = autocomplete;
-  }, [onChange, onPlaceSelect, setInputValue, types]);
-
-
-  // Load script on component mount
-  useEffect(() => {
-    initializeAutocomplete()
     // Cleanup function
     return () => {
       if (autocompleteRef.current) {
         window.google?.maps?.event?.clearInstanceListeners?.(autocompleteRef.current);
       }
+      if (inputRef.current) {
+        inputRef.current.removeEventListener('change',onInputChange);
+      }
     };
-  }, [isGoogleLoaded,initializeAutocomplete]);
+  }, [isGoogleLoaded,inputRef.current]);
 
   // Update input value when prop changes
   useEffect(() => {
