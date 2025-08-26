@@ -33,6 +33,7 @@ interface AdPreviewProps {
 export interface ChildMethods {
   handleEdit: () => void;
   handleCancel: () => void;
+  handleSave: () => void;
   setIsMobileEditModalOpen: (status:boolean) => void;
 }
 
@@ -103,12 +104,12 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     }
   };
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     setHeadline(tempHeadline);
     setAdCopy(tempAdCopy);
     setIsEditing(false);
     onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
-  };
+  }, []);
 
   const handleCancel = useCallback(() => {
     setImage('https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800')
@@ -184,9 +185,10 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     onMethodsReady({
       handleEdit,
       handleCancel,
+      handleSave,
       setIsMobileEditModalOpen
     })
-  }, [onMethodsReady, handleEdit, handleCancel, setIsMobileEditModalOpen])
+  }, [onMethodsReady, handleEdit, handleSave, handleCancel, setIsMobileEditModalOpen])
 
 
   return (

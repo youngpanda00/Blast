@@ -152,6 +152,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
+    childMethods.handleSave();
     const currentListingId = getEffectiveListingId();
     console.log('isCustomListing ===>>>', currentListingId)
     if (!currentListingId) {
