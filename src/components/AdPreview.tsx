@@ -100,7 +100,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "edit"
     });
     trackFBEvent('Edit Ad')
-  }, [isCustomListing]);
+  }, []);
 
 
   useEffect(() => {
