@@ -123,7 +123,6 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
   const handleSave = useCallback(() => {
     if (isCustomListing && !uploadImage) {
-      console.log('please upload image')
       setHighlightedAreaError('image');
       return false
     }

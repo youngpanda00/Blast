@@ -102,12 +102,9 @@ const Index = ({ page }: { page?: "listing" }) => {
 
     setIsCustomListing(!!addressData?.isCustomListing);
     if (addressData?.isCustomListing && addressData?.fullAddress) {
-      if (isMobile) {
-        sonMethods?.setIsMobileEditModalOpen(true);
-        sonMethods?.handleEditMobile();
-      } else {
-        sonMethods?.handleEdit();
-      }
+        // sonMethods?.setIsMobileEditModalOpen(true);
+        // sonMethods?.handleEditMobile();
+        // sonMethods?.handleEdit();
     } else {
       sonMethods?.handleCancel();
     }
@@ -121,7 +118,7 @@ const Index = ({ page }: { page?: "listing" }) => {
     if (addressData?.id) {
       console.log("Setting selectedAddressId to:", addressData.id);
       setSelectedAddressId(addressData.id);
-    } else if (isCustomListing) {
+    } else if (addressData?.isCustomListing) {
       setSelectedAddressId(addressData.fullAddress);
     } else {
       setSelectedAddressId('');

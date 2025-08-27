@@ -72,6 +72,8 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
 
+  const [hasValidListingId, setHasValidListingId] = useState('')
+
   const getAdPreviewData = useCallback(() => {
     return adPreviewData
   }, [adPreviewData])
@@ -112,8 +114,10 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     });
   }
 
-  // Check if we have a valid listing ID from either source
-  const hasValidListingId = selectedAddressId || listingId;
+  useEffect(() => {
+    setHasValidListingId(selectedAddressId)
+  }, [selectedAddressId])
+
 
   // Development fallback - use a sample listing ID if none available
   const getEffectiveListingId = () => {
