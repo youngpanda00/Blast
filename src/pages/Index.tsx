@@ -105,6 +105,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         sonMethods?.handleEdit();
       }
     } else {
+      sonMethods?.setUploadImage('');
       sonMethods?.handleCancel();
     }
 

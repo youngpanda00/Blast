@@ -36,6 +36,7 @@ export interface SonMethods {
   handleEdit: () => void;
   handleCancel: () => void;
   handleEditMobile: () => void;
+  setUploadImage: (image:string) => void;
   setIsMobileEditModalOpen: (status:boolean) => void;
   getAdPreviewData: () => AdData;
 }
@@ -80,6 +81,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
       handleEdit: childMethods?.handleEdit,
       handleCancel: childMethods?.handleCancel,
       handleEditMobile: childMethods?.handleEditMobile,
+      setUploadImage: childMethods?.setUploadImage,
       setIsMobileEditModalOpen: childMethods?.setIsMobileEditModalOpen,
       getAdPreviewData
     })

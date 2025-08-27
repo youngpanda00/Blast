@@ -37,6 +37,7 @@ export interface ChildMethods {
   handleCancel: () => void;
   handleSave: () => boolean;
   handleEditMobile: () => void;
+  setUploadImage: (image: string) => void;
   setIsMobileEditModalOpen: (status:boolean) => void;
 }
 
@@ -234,6 +235,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       handleEdit,
       handleCancel,
       handleSave,
+      setUploadImage,
       handleEditMobile,
       setIsMobileEditModalOpen
     })
