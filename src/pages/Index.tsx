@@ -46,6 +46,12 @@ const Index = ({ page }: { page?: "listing" }) => {
 
   const [childMethods, setChildMethods] = useState<ChildMethods | null>(null)
 
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const refreshWithKey = () => {
+    setRefreshKey(prevKey => prevKey + 1);
+  }
+
   // Track ViewContent event state
   const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
 
@@ -94,6 +100,7 @@ const Index = ({ page }: { page?: "listing" }) => {
     if (addressData?.isCustomListing) {
       if (isMobile) {
         sonMethods?.setIsMobileEditModalOpen(true);
+        sonMethods?.handleEditMobile();
       } else {
         sonMethods?.handleEdit();
       }
@@ -110,8 +117,11 @@ const Index = ({ page }: { page?: "listing" }) => {
     if (addressData?.id) {
       console.log("Setting selectedAddressId to:", addressData.id);
       setSelectedAddressId(addressData.id);
+    } else if (isCustomListing) {
+      setSelectedAddressId(addressData.fullAddress);
     } else {
-      console.warn("No address ID found in addressData:", addressData);
+      setSelectedAddressId('');
+      console.warn("No Select property");
     }
     // Store listing data for ad display
     if (addressData) {
@@ -411,10 +421,10 @@ const Index = ({ page }: { page?: "listing" }) => {
                 }
                 alt=""
                 className={`w-full h-full object-cover ${
-                  !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                  (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
                 }`}
               />
-              {!selectedPreviewPicture && (
+              {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
                 <div className="absolute inset-0 bg-black bg-opacity-20 rounded-t-[5.903px]"></div>
               )}
             </div>
@@ -581,10 +591,10 @@ const Index = ({ page }: { page?: "listing" }) => {
               }
               alt="Modern white house with pool"
               className={`w-full h-full object-cover ${
-                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
               }`}
             />
-            {!selectedPreviewPicture && (
+            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20 rounded"></div>
             )}
           </div>
@@ -805,10 +815,10 @@ const Index = ({ page }: { page?: "listing" }) => {
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
-                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
               }`}
             />
-            {!selectedPreviewPicture && (
+            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             )}
           </div>
@@ -1051,10 +1061,10 @@ const Index = ({ page }: { page?: "listing" }) => {
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
-                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
               }`}
             />
-            {!selectedPreviewPicture && (
+            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             )}
           </div>
@@ -1144,7 +1154,7 @@ const Index = ({ page }: { page?: "listing" }) => {
   const currentSet = adSets[currentSetIndex];
 
   return (
-    <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20">
+    <div key={refreshKey} className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20">
       <PurchaseNotification listingCity={listingCity} />
       <Hero
         page={page}
@@ -1268,7 +1278,7 @@ const Index = ({ page }: { page?: "listing" }) => {
                         "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                       }
                       viewMode={viewMode}
-                      isSelectedProperty={!!selectedPreviewPicture}
+                      isSelectedProperty={!!selectedPreviewPicture && selectedPreviewPicture.indexOf('cdn.builder.io') === -1}
                     />
                   ) : (
                     <img
@@ -1306,6 +1316,7 @@ const Index = ({ page }: { page?: "listing" }) => {
           onOpenCongratulationsModal={(email) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
+            refreshWithKey();
           }}
         />
       </main>

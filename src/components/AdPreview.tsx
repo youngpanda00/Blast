@@ -36,6 +36,7 @@ export interface ChildMethods {
   handleEdit: () => void;
   handleCancel: () => void;
   handleSave: () => boolean;
+  handleEditMobile: () => void;
   setIsMobileEditModalOpen: (status:boolean) => void;
 }
 
@@ -161,6 +162,12 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     }
   };
 
+  const handleEditMobile = useCallback(() => {
+    setTempHeadline(headline);
+    setTempAdCopy(adCopy);
+    setSelectedTemplate("custom");
+  }, [])
+
   const handleSaveInMobile = useCallback(() => {
     if (isCustomListing && !uploadImage) {
       console.log('please upload image')
@@ -227,9 +234,10 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       handleEdit,
       handleCancel,
       handleSave,
+      handleEditMobile,
       setIsMobileEditModalOpen
     })
-  }, [onMethodsReady, handleEdit, handleSave, handleCancel, setIsMobileEditModalOpen])
+  }, [onMethodsReady, handleEdit, handleSave, handleCancel, handleEditMobile, setIsMobileEditModalOpen])
 
 
   return (
@@ -498,11 +506,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                       variant="outline"
                       size="sm"
                       className="border-blue-500 text-blue-500 hover:bg-blue-50 max-md:w-[90%] max-md:rounded-[26px] max-md:overflow-hidden max-md:border-[#3b5cde] max-md:text-[#3b5cde] max-md:h-[40px]"
-                      onClick={() => {
-                        setTempHeadline(headline);
-                        setTempAdCopy(adCopy);
-                        setSelectedTemplate("custom");
-                      }}
+                      onClick={handleEditMobile}
                     >
                       Edit Your Ad
                     </Button>

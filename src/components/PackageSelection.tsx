@@ -35,6 +35,7 @@ interface AdData {
 export interface SonMethods {
   handleEdit: () => void;
   handleCancel: () => void;
+  handleEditMobile: () => void;
   setIsMobileEditModalOpen: (status:boolean) => void;
   getAdPreviewData: () => AdData;
 }
@@ -78,6 +79,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     onMethodsReady({
       handleEdit: childMethods?.handleEdit,
       handleCancel: childMethods?.handleCancel,
+      handleEditMobile: childMethods?.handleEditMobile,
       setIsMobileEditModalOpen: childMethods?.setIsMobileEditModalOpen,
       getAdPreviewData
     })
@@ -113,9 +115,6 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   // Development fallback - use a sample listing ID if none available
   const getEffectiveListingId = () => {
-    if (isCustomListing && customAddress) {
-      return customAddress
-    }
     if (selectedAddressId) return selectedAddressId;
     if (listingId) return listingId;
 
@@ -349,25 +348,6 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
             setIsLoading(false);
             console.log("res", res);
             const email = res?.email || "";
-
-            // Call /api-blast/task/start before opening CongratulationsModal
-            try {
-              const startResponse = await fetch("/api-blast/task/start", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-
-              if (startResponse.ok) {
-                console.log("Task started successfully");
-              } else {
-                console.error("Failed to start task");
-              }
-            } catch (error) {
-              console.error("Error starting task:", error);
-            }
-
             onOpenCongratulationsModal(email);
           })
           .catch(() => {
@@ -733,7 +713,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
               <span className="max-md:hidden">Step 3 - Select Your Package & Luanch Ad</span>
               <span className="hidden max-md:block">Step 3 - Publish Your Ad Now</span>
             </h2>
-            {!hasValidListingId && process.env.NODE_ENV === 'production' && (
+            {!hasValidListingId && (
               <p className="text-sm text-orange-600 mt-1">
                 ⚠️ Please select a property address above to continue
               </p>
