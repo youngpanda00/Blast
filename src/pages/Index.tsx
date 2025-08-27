@@ -50,6 +50,10 @@ const Index = ({ page }: { page?: "listing" }) => {
 
   const refreshWithKey = () => {
     setRefreshKey(prevKey => prevKey + 1);
+    setCurrentListingData(null);
+    setSelectedAddressId('');
+    setSelectedPreviewPicture('');
+    setIsCustomListing(true);
   }
 
   // Track ViewContent event state
@@ -94,10 +98,10 @@ const Index = ({ page }: { page?: "listing" }) => {
 
   // Callback function to handle address selection from PropertySetup
   const handleAddressSelect = useCallback((addressData) => {
-    console.log("Address selected:", addressData);
+    console.log("Address selected:", addressData, isMobile);
 
     setIsCustomListing(!!addressData?.isCustomListing);
-    if (addressData?.isCustomListing) {
+    if (addressData?.isCustomListing && addressData?.fullAddress) {
       if (isMobile) {
         sonMethods?.setIsMobileEditModalOpen(true);
         sonMethods?.handleEditMobile();
@@ -105,7 +109,6 @@ const Index = ({ page }: { page?: "listing" }) => {
         sonMethods?.handleEdit();
       }
     } else {
-      sonMethods?.setUploadImage('');
       sonMethods?.handleCancel();
     }
 

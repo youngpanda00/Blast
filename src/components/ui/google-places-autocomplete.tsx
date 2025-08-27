@@ -115,7 +115,7 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
 
     const onPlaceChanged = () => {
       const place = autocomplete.getPlace();
-      // console.log('onPlaceChanged ==>>>', place)
+      console.log('onPlaceChanged ==>>>', place)
       if (place.formatted_address) {
         const address = place.formatted_address;
         selectedPlaceRef.current = place;
@@ -136,13 +136,13 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
       }
       setTimeout(function() {
         const place = autocomplete.getPlace();
-        // console.log("=====input change",place)
-        if (place && place.formatted_address) {
-          //  const address = place.formatted_address;
+        // console.log("=====input change", place)
+        if (place) {
+          // const address = place.formatted_address;
            selectedPlaceRef.current = place;
           // onPlaceChanged();
         }
-      }, 500);
+      }, 300);
     }
     // 额外监听输入框变化
     inputRef.current.addEventListener('change',onInputChange );
@@ -151,9 +151,11 @@ export const GooglePlacesAutocomplete = forwardRef<GooglePlacesAutocompleteRef, 
     // Cleanup function
     return () => {
       if (autocompleteRef.current) {
-        window.google?.maps?.event?.clearInstanceListeners?.(autocompleteRef.current);
+        // window.google?.maps?.event?.clearInstanceListeners?.(autocompleteRef.current);
       }
-      inputRef.current.removeEventListener('change',onInputChange);
+      if (inputRef.current) {
+        inputRef.current.removeEventListener('change',onInputChange);
+      }
     };
   }, [isGoogleLoaded, onChange, onPlaceSelect, types]);
 

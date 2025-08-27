@@ -89,10 +89,14 @@ const AdPreview: React.FC<AdPreviewProps> = ({
   }, [initialImage])
 
   const handleEdit = useCallback(() => {
+    console.log('handleEdit ===>>>', isEditing)
+    if (isEditing) {
+      return false
+    }
+    setIsEditing(true);
     setTempHeadline(headline);
     setTempAdCopy(adCopy);
     setSelectedTemplate("custom");
-    setIsEditing(true);
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
       feature_name: "ListingBlast",
@@ -100,7 +104,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "edit"
     });
     trackFBEvent('Edit Ad')
-  }, []);
+  }, [headline, adCopy, isEditing]);
 
 
   useEffect(() => {
@@ -260,7 +264,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
               )}
             </div>
             <Button
-              onClick={isEditing ? undefined : handleEdit}
+              onClick={handleEdit}
               variant="outline"
               className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200"
               disabled={isEditing}

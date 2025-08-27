@@ -12,6 +12,7 @@ interface PropertySetupProps {
   onAddressSelect?: (addressData: any) => void;
   onCityUpdate?: (city: string | null) => void;
   onScrollToAdPreview?: () => void;
+  onEditAdPreview?: () => void;
   onMethodsReady: (methods: ChildMethods) => void;
 }
 
@@ -52,6 +53,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
   const [addressInput, setAddressInput] = useState("");
   const addressInputRef = useRef<{onFocus:()=> void}>(null);
+
+  const [addressPlace, setAddressPlace] = useState('');
 
   // Track if user has manually selected an address to prevent overriding
   const [hasUserSelectedAddress, setHasUserSelectedAddress] = useState(false);
@@ -139,25 +142,26 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     setHasUserSelectedAddress(true);
   };
 
-  const handleCustomCard = () => {
+  const handleCustomCard = useCallback(() => {
     setTargetId('');
     setIsCustom(true);
     externalOnAddressSelect?.({
       isCustomListing: true,
       previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
-      fullAddress: addressInput
+      fullAddress: addressPlace
     });
     onScrollToAdPreview();
-  }
+  }, [addressPlace])
 
   const handlePlaceSelect = useCallback((place, address) => {
     console.log('Place selected:', place, address);
+    setAddressPlace(address);
     setTargetId('');
     setIsCustom(false);
     setLoading(true);
     fetchPropertyData(address);
     externalOnAddressSelect?.({
-      isCustomListing: false,
+      isCustomListing: true,
       previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
       fullAddress: ''
     });
@@ -169,7 +173,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       setShowListingsRes(false)
     } else {
       externalOnAddressSelect?.({
-        isCustomListing: false,
+        isCustomListing: true,
         previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
         fullAddress: ''
       });
@@ -288,7 +292,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                     </div>
                     <div 
                       className="flex" style={{border: '1px dashed rgba(255,255,255, 0.4)', borderRadius: '6px', padding: isMobile ? '22px 15px':'12px 20px', flexDirection: 'column', alignItems: 'center'}}
-                      onClick={() => handleCustomCard()}
+                      onClick={handleCustomCard}
                     >
                       <div className="text-sm" style={{ color: '#ffffff', lineHeight: '20px'}}>Didn't find your listing?</div>
                       <div className="text-xs" style={{ color: 'rgba(255,255,255, 0.7)', marginTop: '5px', marginBottom: '5px',lineHeight: '16px'}}>You Can Still Proceed with Your Pocket Listing</div>
