@@ -54,6 +54,7 @@ const Index = ({ page }: { page?: "listing" }) => {
     setSelectedAddressId('');
     setSelectedPreviewPicture('');
     setIsCustomListing(true);
+    setIsEditingAd(false);
   }
 
   // Track ViewContent event state
