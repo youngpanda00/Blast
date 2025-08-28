@@ -10,7 +10,7 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Hero } from "@/components/Hero";
 import PropertySetup, { ChildMethods } from "@/components/PropertySetup";
-import PackageSelection, { SonMethods } from "@/components/PackageSelection";
+import PackageSelection from "@/components/PackageSelection";
 import { ClientTestimonials } from "@/components/ClientTestimonials";
 import { FrequentlyAskedQuestions } from "@/components/FrequentlyAskedQuestions";
 import { ContactFooter } from "@/components/ContactFooter";
@@ -41,10 +41,10 @@ const Index = ({ page }: { page?: "listing" }) => {
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
   const [isCustomListing, setIsCustomListing] = useState(false);
-  
-  const [sonMethods, setSonMethods] = useState<SonMethods | null>(null)
 
   const [childMethods, setChildMethods] = useState<ChildMethods | null>(null)
+
+  const [isEditingAd, setIsEditingAd] = useState(false)
 
   const [refreshKey, setRefreshKey] = useState(0)
 
@@ -58,13 +58,6 @@ const Index = ({ page }: { page?: "listing" }) => {
 
   // Track ViewContent event state
   const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
-
-  useEffect(() => {
-    const data = sonMethods?.getAdPreviewData()
-    if (isCustomListing) {
-      setSelectedPreviewPicture(data?.imageUrl);
-    }
-  }, [sonMethods, isCustomListing])
 
   // Handle escape key and body scroll for zoom modal
   useEffect(() => {
@@ -98,15 +91,13 @@ const Index = ({ page }: { page?: "listing" }) => {
 
   // Callback function to handle address selection from PropertySetup
   const handleAddressSelect = useCallback((addressData) => {
-    console.log("Address selected:", addressData, isMobile);
+    console.log("Address selected:", addressData);
 
     setIsCustomListing(!!addressData?.isCustomListing);
     if (addressData?.isCustomListing && addressData?.fullAddress) {
-        // sonMethods?.setIsMobileEditModalOpen(true);
-        // sonMethods?.handleEditMobile();
-        // sonMethods?.handleEdit();
+      setIsEditingAd(true);
     } else {
-      sonMethods?.handleCancel();
+      setIsEditingAd(false);
     }
 
     if (addressData?.previewPicture) {
@@ -133,7 +124,7 @@ const Index = ({ page }: { page?: "listing" }) => {
         previewPicture: addressData.previewPicture,
       });
     }
-  }, [sonMethods, isMobile]);
+  }, []);
 
   // Add global unhandled promise rejection handler for API fetch errors
   useEffect(() => {
@@ -1308,16 +1299,18 @@ const Index = ({ page }: { page?: "listing" }) => {
         </div>
 
         <PackageSelection
-          key={selectedAddressId}
+          isEditingAd={isEditingAd}
           isCustomListing={isCustomListing}
           customAddress={currentListingData?.address}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
-          onMethodsReady={setSonMethods}
           onOpenCongratulationsModal={(email) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
             refreshWithKey();
+          }}
+          updateAdInfo={(data) => {
+            setSelectedPreviewPicture(data?.imageUrl)
           }}
         />
       </main>

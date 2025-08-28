@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { PricingCard } from "./PricingCard";
-import AdPreview, { ChildMethods } from "./AdPreview";
+import AdPreview from "./AdPreview";
 import { MobileAdConfiguration } from "./MobileAdConfiguration";
 import { Info, Diamond, ChevronLeft, ChevronRight } from "lucide-react";
 import useEmblaCarousel from 'embla-carousel-react';
@@ -21,33 +21,26 @@ interface PackageSelectionProps {
   selectedAddressId?: string | null;
   onOpenCongratulationsModal: (email: string) => void;
   isCustomListing?: boolean;
+  isEditingAd?: boolean;
   customAddress?: string | null;
-  onMethodsReady: (methods: SonMethods) => void;
+  updateAdInfo?: (data: AdData) => void
 }
 
 interface AdData {
-    imageUrl?: string | null,
-    headline?: string | null,
-    mainText? : string | null,
-    file?: object
-}
-
-export interface SonMethods {
-  handleEdit: () => void;
-  handleCancel: () => void;
-  handleEditMobile: () => void;
-  setUploadImage: (image:string) => void;
-  setIsMobileEditModalOpen: (status:boolean) => void;
-  getAdPreviewData: () => AdData;
+  imageUrl?: string | null;
+  headline?: string | null;
+  mainText?: string | null;
+  file?: object
 }
 
 const PackageSelection: React.FC<PackageSelectionProps> = ({
   previewPicture,
   selectedAddressId,
   onOpenCongratulationsModal,
+  isEditingAd,
   isCustomListing,
   customAddress,
-  onMethodsReady
+  updateAdInfo
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
@@ -68,26 +61,9 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   const [shouldHighlightMobileConfig, setShouldHighlightMobileConfig] = useState(false);
   const isMobile = useIsMobile();
 
-  const [childMethods, setChildMethods] = useState<ChildMethods | null>(null);
-
   const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
 
   const [hasValidListingId, setHasValidListingId] = useState('')
-
-  const getAdPreviewData = useCallback(() => {
-    return adPreviewData
-  }, [adPreviewData])
-
-  useEffect(()=>{
-    onMethodsReady({
-      handleEdit: childMethods?.handleEdit,
-      handleCancel: childMethods?.handleCancel,
-      handleEditMobile: childMethods?.handleEditMobile,
-      setUploadImage: childMethods?.setUploadImage,
-      setIsMobileEditModalOpen: childMethods?.setIsMobileEditModalOpen,
-      getAdPreviewData
-    })
-  }, [onMethodsReady, childMethods, getAdPreviewData])
   
   // Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -104,20 +80,9 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   // Get listingId from URL
   const listingId = searchParams.get("assetKey");
 
-  // Debug logging (only in development)
-  if (process.env.NODE_ENV === 'development') {
-    console.log("PackageSelection Debug:", {
-      selectedAddressId,
-      listingId,
-      urlParams: Object.fromEntries(searchParams.entries()),
-      currentUrl: window.location.href
-    });
-  }
-
   useEffect(() => {
     setHasValidListingId(selectedAddressId)
   }, [selectedAddressId])
-
 
   // Development fallback - use a sample listing ID if none available
   const getEffectiveListingId = () => {
@@ -157,9 +122,8 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
-    console.log('checkout adPreviewData ===>>>', adPreviewData)
     const currentListingId = getEffectiveListingId();
-    console.log('isCustomListing ===>>>', isCustomListing, currentListingId)
+    // console.log('checkout adPreviewData ===>>>', adPreviewData, currentListingId)
     if (!currentListingId) {
       console.warn("Checkout attempted without listing ID:", {
         selectedAddressId,
@@ -690,16 +654,20 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       {/* Ad Preview Section */}
       <AdPreview
+        key={selectedAddressId}
         isCustomListing={isCustomListing}
         previewPicture={previewPicture}
+        isEditingAd={isEditingAd}
+        selectedAddressId={selectedAddressId}
         initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
         initialHeadline="Don't miss out on this new listing"
         initialAdCopy="✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡
 
 🗓️ Schedule a private viewing today."
-        onMethodsReady={setChildMethods}
         onAdUpdate={(data) => {
-          console.log("Ad updated:", data);
+          updateAdInfo({
+            imageUrl: data.image
+          })
           setAdPreviewData({
             imageUrl: data.image,
             headline: data.headline,

@@ -23,23 +23,16 @@ import {
 } from "./ui/dialog";
 
 interface AdPreviewProps {
-  isCustomListing?: boolean,
+  isCustomListing?: boolean;
+  isEditingAd?: boolean;
   initialImage?: string;
   initialHeadline?: string;
   initialAdCopy?: string;
   previewPicture?: string;
+  selectedAddressId?: string;
   onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object }) => void;
-  onMethodsReady: (methods: ChildMethods) => void;
 }
 
-export interface ChildMethods {
-  handleEdit: () => void;
-  handleCancel: () => void;
-  handleSave: () => boolean;
-  handleEditMobile: () => void;
-  setUploadImage: (image: string) => void;
-  setIsMobileEditModalOpen: (status:boolean) => void;
-}
 
 const adCopyTemplates = [
   {
@@ -60,13 +53,14 @@ const adCopyTemplates = [
 ];
 
 const AdPreview: React.FC<AdPreviewProps> = ({
+  isEditingAd,
+  selectedAddressId,
   isCustomListing,
   previewPicture,
   initialImage = "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800",
   initialHeadline = "Don't miss out on this new listing",
   initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.",
-  onAdUpdate,
-  onMethodsReady
+  onAdUpdate
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [headline, setHeadline] = useState(initialHeadline);
@@ -86,10 +80,9 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
   useEffect(()=>{
     setImage(initialImage)
-  }, [initialImage])
+  }, [initialImage]);
 
   const handleEdit = useCallback(() => {
-    console.log('handleEdit ===>>>', isEditing)
     if (isEditing) {
       return false
     }
@@ -104,7 +97,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "edit"
     });
     trackFBEvent('Edit Ad')
-  }, [headline, adCopy, isEditing]);
+  }, []);
 
 
   useEffect(() => {
@@ -121,7 +114,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     }
   };
 
-  const handleSave = useCallback(() => {
+  const handleSave = () => {
     if (isCustomListing && !uploadImage) {
       setHighlightedAreaError('image');
       return false
@@ -131,7 +124,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setIsEditing(false);
     onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
     return true
-  }, [image, tempHeadline, tempAdCopy, isCustomListing, uploadImage]);
+  }
 
   const handleCancel = useCallback(() => {
     const pic = isCustomListing ? 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800' : previewPicture
@@ -152,7 +145,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
         selectedFile: null
       }
     )
-  }, [isCustomListing, previewPicture]);
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -172,7 +165,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setSelectedTemplate("custom");
   }, [])
 
-  const handleSaveInMobile = useCallback(() => {
+  const handleSaveInMobile = () => {
     if (isCustomListing && !uploadImage) {
       console.log('please upload image')
       setHighlightedAreaError('image');
@@ -189,7 +182,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "save"
     });
     trackFBEvent('Save Ad Edit');
-  }, [isCustomListing, uploadImage])
+  }
 
   const handleInlineEdit = (type: 'headline' | 'adCopy') => {
     setIsEditingInline(type);
@@ -233,16 +226,16 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setShowTemplateDropdown(false);
   };
 
-  useEffect(()=>{
-    onMethodsReady({
-      handleEdit,
-      handleCancel,
-      handleSave,
-      setUploadImage,
-      handleEditMobile,
-      setIsMobileEditModalOpen
-    })
-  }, [onMethodsReady, handleEdit, handleSave, handleCancel, handleEditMobile, setIsMobileEditModalOpen])
+  useEffect(() => {
+    if (isEditingAd) {
+      if (isMobile) {
+        setIsMobileEditModalOpen(true);
+        handleEditMobile();
+      } else {
+        handleEdit();
+      }
+    }
+  }, [isEditingAd, isMobile, handleEditMobile, handleEdit])
 
 
   return (
@@ -392,11 +385,11 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                       className={`w-full h-52 max-md:h-[150px] object-cover ${
                         isMobile ? '' : 'rounded-t-lg'
                       } ${
-                        !isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
+                        !isMobile && image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
                       }`}
                     />
                     {/* Blur overlay for PC fallback image */}
-                    {!isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
+                    {!isMobile && image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                       <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                         <div className="text-white text-center">
                           <div className="text-sm font-medium">Sample Property Image</div>
@@ -405,7 +398,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                     )}
                   </div>
                   {/* Blurred overlay for mobile fallback image */}
-                  {isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
+                  {isMobile && image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                     <div className="absolute inset-0 mx-4 bg-black/20 backdrop-blur-sm flex items-center justify-center">
                       <div className="text-white text-center">
                         <div className="text-sm font-medium">Sample Property Image</div>
@@ -860,11 +853,11 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                               src={image}
                               alt="Current ad image"
                               className={`w-full h-24 object-cover border border-gray-200 group-hover:scale-[1.02] transition-transform duration-300 ${
-                                image.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
+                                image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
                               }`}
                             />
                             {/* Blur overlay for fallback image */}
-                            {image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
+                            {image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                               <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                                 <div className="text-white text-center">
                                   <div className="text-xs font-medium">Sample Image</div>

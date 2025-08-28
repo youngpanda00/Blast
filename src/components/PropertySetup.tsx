@@ -56,9 +56,6 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
   const [addressPlace, setAddressPlace] = useState('');
 
-  // Track if user has manually selected an address to prevent overriding
-  const [hasUserSelectedAddress, setHasUserSelectedAddress] = useState(false);
-
   const [parsedAddress, setParsedAddress] = useState<{
     streetAddress?: string;
     cityStateZip?: string;
@@ -138,11 +135,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     setTargetId(data.id);
     setIsCustom(false);
     externalOnAddressSelect?.(data);
-    // Mark that user has manually selected an address
-    setHasUserSelectedAddress(true);
   };
 
-  const handleCustomCard = useCallback(() => {
+  const handleCustomCard = () => {
     setTargetId('');
     setIsCustom(true);
     externalOnAddressSelect?.({
@@ -151,9 +146,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       fullAddress: addressPlace
     });
     onScrollToAdPreview();
-  }, [addressPlace])
+  }
 
-  const handlePlaceSelect = useCallback((place, address) => {
+  const handlePlaceSelect = (place, address) => {
     console.log('Place selected:', place, address);
     setAddressPlace(address);
     setTargetId('');
@@ -165,9 +160,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
       fullAddress: ''
     });
-  }, [])
+  }
 
-  const handleAddressChange = useCallback((value) => { 
+  const handleAddressChange = (value) => { 
     setAddressInput(value)
     if (!value) {
       setShowListingsRes(false)
@@ -177,7 +172,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
         fullAddress: ''
       });
     }
-  }, [])
+  }
 
   const scrollToForm = () => {
     const formElement = document.querySelector(
