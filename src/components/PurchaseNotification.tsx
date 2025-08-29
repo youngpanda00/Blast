@@ -181,8 +181,8 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   // Update data with random intervals for realistic effect
   useEffect(() => {
     const scheduleNextUpdate = () => {
-      // Random interval between 4-12 seconds for more realistic timing
-      const randomInterval = Math.floor(Math.random() * 8000) + 4000;
+      // Random interval between 10-15 seconds for more realistic timing
+      const randomInterval = Math.floor(Math.random() * 5000) + 10000;
 
       const timeout = setTimeout(() => {
         updateAllData();

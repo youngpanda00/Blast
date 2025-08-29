@@ -225,9 +225,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
           <div style={{ padding: isMobile ? '0 0 0 10px' : '15px 20px 15px 15px', width: '100%'}}>
             <div className="text-sm font-medium" style={{ color: '#515666', lineHeight: isMobile ? '1.2':'20px', textAlign: 'left', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: isMobile ? 'normal' : 'nowrap'}}>{address}</div>
             <div className="flex text-xs" style={{lineHeight: isMobile ? '12px' : '20px', color:'#797E8B', marginTop: isMobile ? '5px': 0}}>
-              <div>{bedrooms > -1 ? bedrooms : '--'} BD</div>
+              <div>{bedrooms > -1 ? bedrooms : '--'} BD{ bedrooms > 1 ? 's' : ''}</div>
               <div className="text-gray-400" style={{margin: isMobile ? '0 3px' : '0 5px'}}>•</div>
-              <div>{bathrooms > -1 ? bathrooms : '--'} BA</div>
+              <div>{bathrooms > -1 ? bathrooms : '--'} BA{bathrooms > 1 ? 's' : ''}</div>
               <div className="text-gray-400" style={{margin: isMobile ? '0 3px' : '0 5px'}}>•</div>
               <div>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</div>
             </div>
