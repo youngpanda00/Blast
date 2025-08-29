@@ -270,71 +270,32 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     }
 
     const duration = packageToDuration[packageType];
-
     const paymentMode =
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
-
-    setIsLoading(true);
-
-    const startParams = new URLSearchParams();
     const taskType = isCustomListing ? 'NORMAL' : 'ADS_EMAIL_GUIDE'
-    startParams.append("taskType", taskType);
+    
+    const packageInfo = {
+      taskType,
+      currentListingId,
+      duration,
+      paymentMode
+    }
+    console.log('checkoutPop ===>>>', adPreviewData, packageInfo)
 
-    await fetch("/api-blast/task/start", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: startParams,
-    });
-
-    try {
-      // Save step data with improved error handling
-      const saveResult = await saveStepWithRetry({
-        stepName: "ORDER",
-        data: {
-          dataList: [
-            {
-              data: currentListingId,
-              packageType: "LISTING",
-            },
-          ],
-          duration: duration,
-          paymentMode: paymentMode,
-        },
-      });
-
-      if (!saveResult.success) {
-        throw new Error(saveResult.error || "Failed to save step data");
-      }
-
-      console.log('checkoutPop ===>>>', adPreviewData)
-
-      // Call the external checkoutPop function
-      if (typeof (window as any).checkoutPop === "function") {
-        (window as any)
-          .checkoutPop(adPreviewData)
-          .then(async (res) => {
-            setIsLoading(false);
-            console.log("res", res);
-            const email = res?.email || "";
-            onOpenCongratulationsModal(email);
-          })
-          .catch(() => {
-            setIsLoading(false);
-            console.log("error");
-          });
-      } else {
-        setIsLoading(false);
-        console.error("checkoutPop function not available");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error during checkout:", error);
-
-      // Show user-friendly error message
-      const userMessage = getUserFriendlyErrorMessage(error as Error);
-      showErrorNotification(userMessage, "Checkout Error");
+    // Call the external checkoutPop function
+    if (typeof (window as any).checkoutPop === "function") {
+      (window as any)
+        .checkoutPop(adPreviewData, packageInfo)
+        .then(async (res) => {
+          console.log("res", res);
+          const email = res?.email || "";
+          onOpenCongratulationsModal(email);
+        })
+        .catch(() => {
+          console.log("error");
+        });
+    } else {
+      console.error("checkoutPop function not available");
     }
   };
 
@@ -650,7 +611,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   return (
     <>
-      <LoadingOverlay isVisible={isLoading} />
+      {/* <LoadingOverlay isVisible={isLoading} /> */}
 
       {/* Ad Preview Section */}
       <AdPreview
