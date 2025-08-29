@@ -272,10 +272,20 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     const duration = packageToDuration[packageType];
     const paymentMode =
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
+
+    const startParams = new URLSearchParams();
     const taskType = isCustomListing ? 'NORMAL' : 'ADS_EMAIL_GUIDE'
+    startParams.append("taskType", taskType);
+
+    await fetch("/api-blast/task/start", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: startParams,
+    });
     
     const packageInfo = {
-      taskType,
       currentListingId,
       duration,
       paymentMode
