@@ -263,79 +263,44 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
     window.trackBlastNow?.();
 
-    const duration = packageToDuration[packageType];
 
+    const duration = packageToDuration[packageType];
     const paymentMode =
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
 
-    setIsLoading(true);
+    const startParams = new URLSearchParams();
+    const taskType = 'ADS_EMAIL_GUIDE'
+    startParams.append("taskType", taskType);
 
-    try {
-      // Save step data with improved error handling
-      const saveResult = await saveStepWithRetry({
-        stepName: "ORDER",
-        data: {
-          dataList: [
-            {
-              data: currentListingId,
-              packageType: "LISTING",
-            },
-          ],
-          duration: duration,
-          paymentMode: paymentMode,
-        },
-      });
+    await fetch("/api-blast/task/start", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: startParams,
+    });
+    
+    const packageInfo = {
+      currentListingId,
+      duration,
+      paymentMode
+    }
+    console.log('checkoutPop ===>>>', adPreviewData, packageInfo)
 
-      if (!saveResult.success) {
-        throw new Error(saveResult.error || "Failed to save step data");
-      }
-
-      console.log('checkoutPop ===>>>', adPreviewData)
-
-      // Call the external checkoutPop function
-      if (typeof (window as any).checkoutPop === "function") {
-        (window as any)
-          .checkoutPop(adPreviewData)
-          .then(async (res) => {
-            setIsLoading(false);
-            console.log("res", res);
-            const email = res?.email || "";
-
-            // Call /api-blast/task/start before opening CongratulationsModal
-            try {
-              const startResponse = await fetch("/api-blast/task/start", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-
-              if (startResponse.ok) {
-                console.log("Task started successfully");
-              } else {
-                console.error("Failed to start task");
-              }
-            } catch (error) {
-              console.error("Error starting task:", error);
-            }
-
-            onOpenCongratulationsModal(email);
-          })
-          .catch(() => {
-            setIsLoading(false);
-            console.log("error");
-          });
-      } else {
-        setIsLoading(false);
-        console.error("checkoutPop function not available");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error during checkout:", error);
-
-      // Show user-friendly error message
-      const userMessage = getUserFriendlyErrorMessage(error as Error);
-      showErrorNotification(userMessage, "Checkout Error");
+    // Call the external checkoutPop function
+    if (typeof (window as any).checkoutPop === "function") {
+      (window as any)
+        .checkoutPop(adPreviewData, packageInfo)
+        .then(async (res) => {
+          console.log("res", res);
+          const email = res?.email || "";
+          onOpenCongratulationsModal(email);
+        })
+        .catch(() => {
+          console.log("error");
+        });
+    } else {
+      console.error("checkoutPop function not available");
     }
   };
 
