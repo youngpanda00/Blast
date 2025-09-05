@@ -44,7 +44,7 @@ export const FixedNavigation: React.FC = () => {
       <div className="w-full max-w-[1210px] mx-auto flex items-center h-full max-md:justify-between">
         {/* Logo */}
         <div className="flex items-center justify-center mr-8 max-md:mr-0 max-md:h-full">
-          <a href="https://lofty.com/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center max-md:h-full" onClick={(e) => { handleNavClick(e, 'NavLogo') }}>
+          <a href="https://lofty.com/?fromblast=1" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center max-md:h-full" onClick={(e) => { handleNavClick(e, 'NavLogo') }}>
             <img
               src="https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2F0325b400e1904671b7c00a9f4f5084b6?format=webp&width=800"
               className={`h-8 transition-all duration-300 max-md:h-6 ${
