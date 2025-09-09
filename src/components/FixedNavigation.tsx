@@ -4,6 +4,7 @@ import { trackMixPanel } from "@/lib/utils";
 export const FixedNavigation: React.FC = () => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [utmSource, setUtmSource] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,6 +30,16 @@ export const FixedNavigation: React.FC = () => {
     }
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const src = params.get('utm_source');
+      if (src && src.trim().length > 0) {
+        setUtmSource(src);
+      }
+    } catch (err) {}
+  }, []);
+
   const handleNavClick = (e: React.MouseEvent, mixPanelItem:string) => {
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
@@ -37,6 +48,8 @@ export const FixedNavigation: React.FC = () => {
     });
   };
 
+  const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://lofty.com/?fromblast=2&utm_source=${encodeURIComponent(utmSource)}` : 'https://lofty.com/?fromblast=2';
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 bg-white px-[22px] max-md:px-4 h-[60px] max-md:h-[50px] flex items-center border-b border-gray-100 transition-all duration-300 ${
       isAtTop ? 'nav-transparent' : ''
@@ -44,7 +57,7 @@ export const FixedNavigation: React.FC = () => {
       <div className="w-full max-w-[1210px] mx-auto flex items-center h-full max-md:justify-between">
         {/* Logo */}
         <div className="flex items-center justify-center mr-8 max-md:mr-0 max-md:h-full">
-          <a href="https://lofty.com/?fromblast=2" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center max-md:h-full" onClick={(e) => { handleNavClick(e, 'NavLogo') }}>
+          <a href={loftyHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center max-md:h-full" onClick={(e) => { handleNavClick(e, 'NavLogo') }}>
             <img
               src="https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2F0325b400e1904671b7c00a9f4f5084b6?format=webp&width=800"
               className={`h-8 transition-all duration-300 max-md:h-6 ${
