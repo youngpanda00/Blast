@@ -148,8 +148,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     onScrollToAdPreview();
   }
 
-  const handlePlaceSelect = (place, address) => {
-    console.log('Place selected:', place, address);
+  const handleAddressSelect = (address) => {
     setAddressPlace(address);
     setTargetId('');
     setIsCustom(false);
@@ -263,17 +262,24 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                 </strong>
               </Label>
 
-              <div className={`bg-white/90 px-3.5 py-2.5 backdrop-blur-sm rounded-xl border border-white/20 ${
+              {/* <div className={`bg-white/90 px-3.5 py-2.5 backdrop-blur-sm rounded-xl border border-white/20 ${
                 isInputHighlighted ? "ring-4 ring-accent/50 border-accent shadow-lg scale-105" : ""}
-              `}>
-                <GooglePlacesAutocomplete
-                  ref={addressInputRef}
-                  placeholder="Enter address"
+              `}> */}
+                
+                <Input
+                  id="address-search-input"
+                  isAddressSearch={true}
                   value={addressInput}
-                  onChange={handleAddressChange}
-                  onPlaceSelect={handlePlaceSelect}
+                  onChange={(e) => handleAddressChange(e.target.value)}
+                  onAddressSelect={handleAddressSelect}
+                  placeholder="Enter the property address"
+                  className="h-12 text-base border-0 focus:ring-2 focus:ring-white/30 transition-all bg-white/95 backdrop-blur-sm max-md:h-11 max-md:text-sm placeholder:text-gray-500 font-medium"
+                  style={{
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"
+                  }}
                 />
-              </div>
+              {/* </div> */}
 
               {/* Property Preview Section */}
               <div className="mt-4">

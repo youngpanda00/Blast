@@ -92,7 +92,7 @@ const Index = ({ page }: { page?: "listing" }) => {
 
   // Callback function to handle address selection from PropertySetup
   const handleAddressSelect = useCallback((addressData) => {
-    console.log("Address selected:", addressData);
+    // console.log("Address selected:", addressData);
 
     setIsCustomListing(!!addressData?.isCustomListing);
     if (addressData?.isCustomListing && addressData?.fullAddress) {

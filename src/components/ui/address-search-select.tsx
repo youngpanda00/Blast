@@ -63,7 +63,7 @@ const AddressSearchSelect = React.forwardRef<
       setLoading(true);
       try {
         const response = await fetch(
-          `/listing-crm/listing/blast/suggestAddress?key=${encodeURIComponent(key)}`,
+          `/api-blast/listing/address-suggestions?keyword=${encodeURIComponent(key)}`,
           {
             method: "GET"
           },
@@ -71,8 +71,9 @@ const AddressSearchSelect = React.forwardRef<
 
         if (response.ok) {
           const { data } = await response.json();
-          console.log("suggestAddress", data);
-          setSuggestions(Array.isArray(data) ? data : []);
+          // console.log("suggestAddress", data);
+          const suggestions = (data?.suggestions || []).map(it => it.address)
+          setSuggestions(suggestions);
         } else {
           setSuggestions([]);
         }
@@ -107,23 +108,24 @@ const AddressSearchSelect = React.forwardRef<
         setSearchTerm("");
         setOpen(false);
         onValueChange?.(address);
+        onAddressSelect?.(address)
 
         // Call the searchByAddress API
-        try {
-          const response = await fetch(
-            `/listing-crm/listing/blast/searchByAddress?address=${encodeURIComponent(address)}`,
-            {
-              method: "GET"
-            },
-          );
+        // try {
+        //   const response = await fetch(
+        //     `/listing-crm/listing/blast/searchByAddress?address=${encodeURIComponent(address)}`,
+        //     {
+        //       method: "GET"
+        //     },
+        //   );
 
-          if (response.ok) {
-            const data = await response.json();
-            onAddressSelect?.(data);
-          }
-        } catch (error) {
-          console.error("Failed to search by address:", error);
-        }
+        //   if (response.ok) {
+        //     const data = await response.json();
+        //     onAddressSelect?.(data);
+        //   }
+        // } catch (error) {
+        //   console.error("Failed to search by address:", error);
+        // }
       },
       [onValueChange, onAddressSelect],
     );
