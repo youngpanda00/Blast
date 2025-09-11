@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
-import { GooglePlacesAutocomplete } from "./ui/google-places-autocomplete";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Bed, Bath, Square, CheckCircle, Search } from "lucide-react";
@@ -50,9 +49,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const [targteId, setTargetId] = useState('');
   const [isCustom, setIsCustom] = useState(false);
   const [isInputHighlighted, setIsInputHighlighted] = useState(false);
+  // const [autoOpen, setAutoOpen] = useState(false)
 
   const [addressInput, setAddressInput] = useState("");
-  const addressInputRef = useRef<{onFocus:()=> void}>(null);
 
   const [addressPlace, setAddressPlace] = useState('');
 
@@ -153,6 +152,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     setTargetId('');
     setIsCustom(false);
     setLoading(true);
+    // setAutoOpen(false);
     fetchPropertyData(address);
     externalOnAddressSelect?.({
       isCustomListing: true,
@@ -175,11 +175,11 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
   const scrollToForm = () => {
     const formElement = document.querySelector(
-      "input[placeholder*='Enter address']",
+      "#address-search-input"
     ) as HTMLInputElement;
     if (formElement) {
       setIsInputHighlighted(true);
-      addressInputRef.current.onFocus();
+      // setAutoOpen(true);
       setTimeout(() => {setIsInputHighlighted(false);}, 1500);
       window.scrollTo({
         top: 380,
@@ -273,7 +273,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                   onChange={(e) => handleAddressChange(e.target.value)}
                   onAddressSelect={handleAddressSelect}
                   placeholder="Enter the property address"
-                  className="h-12 text-base border-0 focus:ring-2 focus:ring-white/30 transition-all bg-white/95 backdrop-blur-sm max-md:h-11 max-md:text-sm placeholder:text-gray-500 font-medium"
+                  className={`h-12 text-base border-0 focus:ring-2 focus:ring-white/30 transition-all bg-white/95 backdrop-blur-sm max-md:h-11 max-md:text-sm placeholder:text-gray-500 ${isInputHighlighted ? "ring-4 ring-accent/50 border-accent shadow-lg scale-105" : ""}`}
                   style={{
                     borderRadius: "10px",
                     boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)"

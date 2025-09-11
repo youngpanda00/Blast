@@ -26,6 +26,7 @@ interface AddressSearchSelectProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  autoOpen?:boolean;
 }
 
 const AddressSearchSelect = React.forwardRef<
@@ -40,6 +41,7 @@ const AddressSearchSelect = React.forwardRef<
       onAddressSelect,
       placeholder = "搜索地址...",
       disabled,
+      autoOpen,
       ...props
     },
     ref,
@@ -108,24 +110,9 @@ const AddressSearchSelect = React.forwardRef<
         setSearchTerm("");
         setOpen(false);
         onValueChange?.(address);
-        onAddressSelect?.(address)
+        onAddressSelect?.(address);
 
-        // Call the searchByAddress API
-        // try {
-        //   const response = await fetch(
-        //     `/listing-crm/listing/blast/searchByAddress?address=${encodeURIComponent(address)}`,
-        //     {
-        //       method: "GET"
-        //     },
-        //   );
-
-        //   if (response.ok) {
-        //     const data = await response.json();
-        //     onAddressSelect?.(data);
-        //   }
-        // } catch (error) {
-        //   console.error("Failed to search by address:", error);
-        // }
+        
       },
       [onValueChange, onAddressSelect],
     );
@@ -143,6 +130,10 @@ const AddressSearchSelect = React.forwardRef<
         }
       };
     }, []);
+
+    // React.useEffect(() => {
+    //   setOpen(autoOpen)
+    // }, [autoOpen])
 
     // Get displayed suggestions
     const displayedSuggestions = React.useMemo(() => {
