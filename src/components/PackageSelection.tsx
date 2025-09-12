@@ -288,7 +288,8 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     const packageInfo = {
       currentListingId,
       duration,
-      paymentMode
+      paymentMode,
+      isCustomListing
     }
     console.log('checkoutPop ===>>>', adPreviewData, packageInfo)
 
