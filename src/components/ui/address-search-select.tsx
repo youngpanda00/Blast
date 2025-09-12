@@ -247,7 +247,7 @@ const AddressSearchSelect = React.forwardRef<
                       />
                       <div style={{display: 'flex', position: 'relative', flex: 1}}>
                         <span className="truncate" style={{marginRight: '60px', width: isMobile ? '200px' : '300px'}}>{highlightText(item.address, searchTerm)}</span>
-                        <span style={{ position: 'absolute', right: 0, top: 0, borderRadius: '8px', padding: '0 5px', color: item.source === 'MLS' ? '#7b1fa2' : '#0088d1', background: item.source === 'MLS' ? '#f4e4f5' : '#e1f5fe', fontSize: '12px', fontWeight: '600' }}>{item.source}</span>
+                        {item.source === 'MLS' && <span style={{ position: 'absolute', right: 0, top: 0, borderRadius: '8px', padding: '0 5px', color: item.source === 'MLS' ? '#7b1fa2' : '#0088d1', background: item.source === 'MLS' ? '#f4e4f5' : '#e1f5fe', fontSize: '12px', fontWeight: '600' }}>{item.source}</span>}
                       </div>
                     </CommandItem>
                   ))}
