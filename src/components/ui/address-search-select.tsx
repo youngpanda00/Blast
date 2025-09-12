@@ -29,6 +29,11 @@ interface AddressSearchSelectProps {
   autoOpen?:boolean;
 }
 
+interface suggestionItem {
+  address: string,
+  source: string
+}
+
 const AddressSearchSelect = React.forwardRef<
   HTMLButtonElement,
   AddressSearchSelectProps
@@ -48,7 +53,7 @@ const AddressSearchSelect = React.forwardRef<
   ) => {
     const [open, setOpen] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState("");
-    const [suggestions, setSuggestions] = React.useState<string[]>([]);
+    const [suggestions, setSuggestions] = React.useState<suggestionItem[]>([]);
     const [loading, setLoading] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState(value || "");
     const isMobile = useIsMobile();
@@ -74,7 +79,7 @@ const AddressSearchSelect = React.forwardRef<
         if (response.ok) {
           const { data } = await response.json();
           // console.log("suggestAddress", data);
-          const suggestions = (data?.suggestions || []).map(it => it.address)
+          const suggestions = data?.suggestions || []
           setSuggestions(suggestions);
         } else {
           setSuggestions([]);
@@ -111,8 +116,6 @@ const AddressSearchSelect = React.forwardRef<
         setOpen(false);
         onValueChange?.(address);
         onAddressSelect?.(address);
-
-        
       },
       [onValueChange, onAddressSelect],
     );
@@ -227,22 +230,25 @@ const AddressSearchSelect = React.forwardRef<
                 )
               ) : (
                 <CommandGroup>
-                  {displayedSuggestions.map((address, index) => (
+                  {displayedSuggestions.map((item, index) => (
                     <CommandItem
                       key={index}
-                      value={address}
-                      onSelect={() => handleSelectAddress(address)}
+                      value={item.address}
+                      onSelect={() => handleSelectAddress(item.address)}
                       className="cursor-pointer"
                     >
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          selectedValue === address
+                          selectedValue === item.address
                             ? "opacity-100"
                             : "opacity-0",
                         )}
                       />
-                      <span className="truncate">{highlightText(address, searchTerm)}</span>
+                      <div style={{display: 'flex', position: 'relative', flex: 1}}>
+                        <span className="truncate" style={{marginRight: '60px', width: isMobile ? '200px' : 'auto'}}>{highlightText(item.address, searchTerm)}</span>
+                        <span style={{ position: 'absolute', right: 0, top: 0, borderRadius: '8px', padding: '0 5px', color: item.source === 'MLS' ? '#7b1fa2' : '#0088d1', background: item.source === 'MLS' ? '#f4e4f5' : '#e1f5fe', fontSize: '12px', fontWeight: '600' }}>{item.source}</span>
+                      </div>
                     </CommandItem>
                   ))}
                 </CommandGroup>
