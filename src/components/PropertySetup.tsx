@@ -43,12 +43,14 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 }) => {
 
   const [properties, setProperties] = useState<PropertyData[]>([]);
+  const [targetPropertyInfo, setTargetPropertyInfo]=useState<PropertyData>({})
   const [showListingsRes, setShowListingsRes] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const isMobile = useIsMobile();
   const [targteId, setTargetId] = useState('');
   const [isCustom, setIsCustom] = useState(false);
   const [isInputHighlighted, setIsInputHighlighted] = useState(false);
+  const [isShowTargetCard, setIsShowTargetCard] = useState(false);
   // const [autoOpen, setAutoOpen] = useState(false)
 
   const [addressInput, setAddressInput] = useState("");
@@ -131,13 +133,24 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   };
 
   const handleListingCard = (data?: PropertyData) => {
+    setIsShowTargetCard(true);
+    setTargetPropertyInfo(data);
+  };
+
+  const confirmListing = (data?: PropertyData) => {
     setTargetId(data.id);
     setIsCustom(false);
     externalOnAddressSelect?.(data);
-  };
+  }
+  const cancelListing = () => {
+    setIsShowTargetCard(false);
+    setTargetPropertyInfo({});
+  }
 
   const handleCustomCard = () => {
     setTargetId('');
+    setTargetPropertyInfo({})
+    setIsShowTargetCard(false);
     setIsCustom(true);
     externalOnAddressSelect?.({
       isCustomListing: true,
@@ -150,6 +163,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const handleAddressSelect = (address) => {
     setAddressPlace(address);
     setTargetId('');
+    setTargetPropertyInfo({});
+    setIsShowTargetCard(false);
     setIsCustom(false);
     setLoading(true);
     // setAutoOpen(false);
@@ -200,6 +215,43 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       fetchListingLabels(listingId);
     }
   }, [listingId]);
+
+  const renderTargetCardInfo = (property: PropertyData) => {
+    const address = property.fullAddress || property.address || "";
+    const price = property.price || "";
+    const bedrooms = property.bedrooms || 1;
+    const bathrooms = property.bathrooms || property.baths || 1;
+    const sqft = property.sqft || 1;
+    const image = property.previewPicture || property.imageUrl || "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg";
+    const agentName = property.agentName || ''
+
+    return (
+      <div key={property.id} className="flex" style={{ flexDirection: 'column'}}>
+        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: '180px', objectFit: 'fill', marginBottom: '30px'}} />
+        <div className="text-sm font-medium" style={{ color: '#515666', lineHeight: isMobile ? '1.2':'20px', textAlign: 'center', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
+        <div className="text-xs" style={{color: '#A0A3AF', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: 'center', marginTop: '10px'}}>Listed by: {agentName || '--'}</div>
+        <div className="flex items-center justify-center gap-6 text-gray-400">
+          <div className="flex items-center gap-2">
+            <Bed className="w-4 h-4" />
+            <span className="text-sm">{bedrooms > -1 ? bedrooms : '--'} BD{ bedrooms > 1 ? 's' : ''}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Bath className="w-4 h-4" />
+            <span className="text-sm">{bathrooms > -1 ? bathrooms : '--'} BA{bathrooms > 1 ? 's' : ''}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Square className="w-4 h-4" />
+            <span className="text-sm">{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</span>
+          </div>
+        </div>
+        <div className="flex justify-center items-center" style={{gap: '10px'}}>
+          <span onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>return</span>
+          <span onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>confrim</span>
+        </div>
+      </div>
+    )
+
+  }
 
   const renderPropertyCard = (property: PropertyData, index: number) => {
     const address = property.fullAddress || property.address || "";
@@ -288,7 +340,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                     <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
                     <div className="flex" style={{ flexDirection: 'column' }}>
                       {/* Property Cards - Show based on API response */}
-                      {  properties.map((property, index) => renderPropertyCard(property, index)) }
+                      { !isShowTargetCard && properties.map((property, index) => renderPropertyCard(property, index)) }
+                      { isShowTargetCard && renderTargetCardInfo(targetPropertyInfo) }
                     </div>
                     <div 
                       className="flex" style={{border: '1px dashed rgba(255,255,255, 0.4)', borderRadius: '6px', padding: isMobile ? '22px 15px':'12px 20px', flexDirection: 'column', alignItems: 'center'}}
