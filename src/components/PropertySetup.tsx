@@ -226,27 +226,29 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     const agentName = property.agentName || ''
 
     return (
-      <div key={property.id} className="flex" style={{ flexDirection: 'column'}}>
-        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: '180px', objectFit: 'fill', marginBottom: '30px'}} />
-        <div className="text-sm font-medium" style={{ color: '#515666', lineHeight: isMobile ? '1.2':'20px', textAlign: 'center', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
-        <div className="text-xs" style={{color: '#A0A3AF', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: 'center', marginTop: '10px'}}>Listed by: {agentName || '--'}</div>
-        <div className="flex items-center justify-center gap-6 text-gray-400">
-          <div className="flex items-center gap-2">
-            <Bed className="w-4 h-4" />
-            <span className="text-sm">{bedrooms > -1 ? bedrooms : '--'} BD{ bedrooms > 1 ? 's' : ''}</span>
+      <div key={property.id} className="flex" style={{ flexDirection: 'column', padding: isMobile ? '10px 10px 15px' : '15px 15px 18px', background: '#ffffff', borderRadius: '6px'}}>
+        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: isMobile ? '118px' : '180px', objectFit: 'fill', marginBottom: isMobile ? '15px': '30px'}} />
+        <div style={{ padding: isMobile ? '0 13px' : '0 33px'}}>
+          <div className="text-sm font-medium" style={{ color: '#202437', fontSize: isMobile ? '14px':'20px', textAlign: 'center', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
+          <div className="text-xs" style={{color: '#A0A3AF', fontSize: isMobile ? '12px': '15px', lineHeight: isMobile ? '12px': '20px', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: 'center', marginTop: isMobile ? '5px': '10px'}}>Listed by: {agentName || '--'}</div>
+          <div className="flex items-center justify-center gap-6 text-gray-400" style={{ marginTop: isMobile ? '15px' : '25px'}}>
+            <div className="flex items-center gap-2">
+              <Bed className="w-4 h-4" />
+              <span className={isMobile ? 'text-xs' : 'text-sm'}>{bedrooms > -1 ? bedrooms : '--'} BD{ bedrooms > 1 ? 's' : ''}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Bath className="w-4 h-4" />
+              <span className={isMobile ? 'text-xs' : 'text-sm'}>{bathrooms > -1 ? bathrooms : '--'} BA{bathrooms > 1 ? 's' : ''}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Square className="w-4 h-4" />
+              <span className={isMobile ? 'text-xs' : 'text-sm'}>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Bath className="w-4 h-4" />
-            <span className="text-sm">{bathrooms > -1 ? bathrooms : '--'} BA{bathrooms > 1 ? 's' : ''}</span>
+          <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
+            <span onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>return</span>
+            <span onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>confrim</span>
           </div>
-          <div className="flex items-center gap-2">
-            <Square className="w-4 h-4" />
-            <span className="text-sm">{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</span>
-          </div>
-        </div>
-        <div className="flex justify-center items-center" style={{gap: '10px'}}>
-          <span onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>return</span>
-          <span onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>confrim</span>
         </div>
       </div>
     )
