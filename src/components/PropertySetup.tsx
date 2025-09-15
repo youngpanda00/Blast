@@ -141,6 +141,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     setTargetId(data.id);
     setIsCustom(false);
     externalOnAddressSelect?.(data);
+    onScrollToAdPreview();
   }
   const cancelListing = () => {
     setIsShowTargetCard(false);
@@ -227,7 +228,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
     return (
       <div key={property.id} className="flex" style={{ flexDirection: 'column', padding: isMobile ? '10px 10px 15px' : '15px 15px 18px', background: '#ffffff', borderRadius: '6px'}}>
-        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: isMobile ? '118px' : '180px', objectFit: 'fill', marginBottom: isMobile ? '15px': '30px'}} />
+        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: isMobile ? '118px' : '180px', objectFit: 'fill', marginBottom: isMobile ? '15px': '30px', borderRadius: '6px'}} />
         <div style={{ padding: isMobile ? '0 13px' : '0 33px'}}>
           <div className="text-sm font-medium" style={{ color: '#202437', fontSize: isMobile ? '14px':'20px', textAlign: 'center', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
           <div className="text-xs" style={{color: '#A0A3AF', fontSize: isMobile ? '12px': '15px', lineHeight: isMobile ? '12px': '20px', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: 'center', marginTop: isMobile ? '5px': '10px'}}>Listed by: {agentName || '--'}</div>
@@ -246,8 +247,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
             </div>
           </div>
           <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
-            <span onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>return</span>
-            <span onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>confrim</span>
+            <span className="flex justify-center items-center" onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>return</span>
+            <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>confrim</span>
           </div>
         </div>
       </div>
@@ -345,14 +346,14 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                       { !isShowTargetCard && properties.map((property, index) => renderPropertyCard(property, index)) }
                       { isShowTargetCard && renderTargetCardInfo(targetPropertyInfo) }
                     </div>
-                    <div 
+                    { !isShowTargetCard && <div 
                       className="flex" style={{border: '1px dashed rgba(255,255,255, 0.4)', borderRadius: '6px', padding: isMobile ? '22px 15px':'12px 20px', flexDirection: 'column', alignItems: 'center'}}
                       onClick={handleCustomCard}
                     >
                       <div className="text-sm" style={{ color: '#ffffff', lineHeight: '20px'}}>Didn't find your listing?</div>
                       <div className="text-xs" style={{ color: 'rgba(255,255,255, 0.7)', marginTop: '5px', marginBottom: '5px',lineHeight: '16px'}}>You Can Still Proceed with Your Pocket Listing</div>
                       <div className="text-sm" style={{ width:'178px', background: 'white', borderRadius: '4px', padding: '5px 23px', color: '#3B5CDE', cursor: 'pointer' }}>Use My Own Listing</div>
-                    </div>
+                    </div>}
                   </div>
                 ) : (
                   <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hidden md:block">
