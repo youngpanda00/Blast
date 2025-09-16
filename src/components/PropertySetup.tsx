@@ -105,6 +105,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
   const fetchPropertyData = async (address: string) => {
     if (!address.trim()) return;
+    setLoading(true);
     try {
       const response = await fetch(
         `/listing-crm/listing/blast/searchByAddressV2?address=${encodeURIComponent(address)}`,
@@ -129,6 +130,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       console.error("Error fetching property info:", error);
       setProperties([]);
       setShowListingsRes(true);
+      setLoading(false);
     }
   };
 
@@ -216,6 +218,33 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       fetchListingLabels(listingId);
     }
   }, [listingId]);
+
+  const renderLoadingCard = () => {
+    return (
+      <div style={{minHeight: isMobile? '' : '400px'}}>
+        <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
+        <div className="flex items-center justify-center" style={{ textAlign: 'center', padding: '0 40px', height: isMobile ? '120px' : '100px', border: '1px dashed rgba(255, 255, 255, 0.4)', borderRadius: '6px' }}>
+            <img style={{ width: '36px', height: '36px',marginRight: '10px' }} src="https://cdn.lofty.com/image/fs/servicetool/2025916/13/original_7a6c09d4e2904c25.png" alt="" />
+            <span style={{ fontSize: '20px', color: '#C6C8D1' }}>Loading</span>
+        </div>
+      </div>
+    )
+  }
+
+  const renderEmptyCardInfo = () => {
+    return (
+      <div 
+        className="flex items-center justify-center" style={{ flexDirection: 'column', padding: isMobile ? '22px 25px': '54px 30px', border: '1px dashed rgba(255, 255, 255, 0.4)', borderRadius: '6px'}}
+        onClick={handleCustomCard}
+      >
+        <img style={{ width: isMobile ? '32px' : '60px', height: isMobile ? '32px' : '60px', marginBottom: '5px'}} src="https://cdn.lofty.com/image/fs/servicetool/2025916/13/original_c170f5bbc05a42a3.png" />
+        <div style={{ fontSize: isMobile ? '14px' : '22px', lineHeight: '1.5', fontWeight: '500', color: '#ffffff', marginBottom: isMobile ? '15px' : '18px', textAlign: 'center'}}>Didn’t find your listing</div>
+        <div style={{ fontSize: isMobile ? '12px' : '18px', fontWeight: '700', lineHeight: '1.5', color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center' }}>You were looking for: {addressPlace}</div>
+        <div style={{ fontSize: isMobile ? '12px' : '18px', marginBottom: isMobile ? '10px' : '15px', lineHeight: '1.5', color: 'rgba(255, 255, 255, 0.7)', textAlign: 'center'}}>But we can't find the listing, you can still create the ad with simple steps</div>
+        <div className="flex items-center justify-center" style={{ height: isMobile ? '30px' : '40px', borderRadius: '4px', padding: isMobile ? '0 20px' : '0 30px', background: '#ffffff', color: '#3B5CDE', fontSize: isMobile ? '14px' : '16px', fontWeight: '500', cursor: 'pointer'}}>Continue With My Own Listing</div>
+      </div>
+    )
+  }
 
   const renderTargetCardInfo = (property: PropertyData) => {
     const address = property.fullAddress || property.address || "";
@@ -338,15 +367,17 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
               {/* Property Preview Section */}
               <div className="mt-4">
-                {showListingsRes && addressInput ? (
+                {isLoading && renderLoadingCard()}
+                {showListingsRes && addressInput && !isLoading ? (
                   <div style={{minHeight: isMobile? '' : '400px'}}>
                     <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
-                    <div className="flex" style={{ flexDirection: 'column' }}>
+                    { !properties.length && renderEmptyCardInfo()}
+                    { !!properties.length && <div className="flex" style={{ flexDirection: 'column' }}>
                       {/* Property Cards - Show based on API response */}
                       { !isShowTargetCard && properties.map((property, index) => renderPropertyCard(property, index)) }
                       { isShowTargetCard && renderTargetCardInfo(targetPropertyInfo) }
-                    </div>
-                    { !isShowTargetCard && <div 
+                    </div>}
+                    { !isShowTargetCard && !!properties.length && <div 
                       className="flex" style={{border: '1px dashed rgba(255,255,255, 0.4)', borderRadius: '6px', padding: isMobile ? '22px 15px':'12px 20px', flexDirection: 'column', alignItems: 'center'}}
                       onClick={handleCustomCard}
                     >
@@ -356,7 +387,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                     </div>}
                   </div>
                 ) : (
-                  <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hidden md:block">
+                  !isLoading && <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 border border-white/20 text-center hidden md:block">
                     {/* Placeholder content when no property is selected - Desktop only */}
                     <div className="mb-4">
                       <div className="w-full h-48 bg-gray-100 rounded-lg overflow-hidden relative">
