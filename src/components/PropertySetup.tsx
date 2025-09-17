@@ -224,7 +224,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       <div style={{minHeight: isMobile? '' : '400px'}}>
         <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
         <div className="flex items-center justify-center" style={{ textAlign: 'center', padding: '0 40px', height: isMobile ? '120px' : '100px', border: '1px dashed rgba(255, 255, 255, 0.4)', borderRadius: '6px' }}>
-            <img style={{ width: '36px', height: '36px',marginRight: '10px', animation: 'loadRotate 1.5s infinite forwards' }} src="https://cdn.lofty.com/image/fs/servicetool/2025916/13/original_7a6c09d4e2904c25.png" alt="" />
+            <img style={{ width: '36px', height: '36px',marginRight: '10px' }} src="https://cdn.lofty.com/image/fs/servicetool/2025916/13/original_7a6c09d4e2904c25.png" alt="" />
             <span style={{ fontSize: '20px', color: '#C6C8D1' }}>Loading</span>
         </div>
       </div>
