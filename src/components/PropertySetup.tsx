@@ -277,7 +277,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
           </div>
           <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
             <span className="flex justify-center items-center" onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>Back</span>
-            <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>Confrim</span>
+            <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>Confirm</span>
           </div>
         </div>
       </div>
