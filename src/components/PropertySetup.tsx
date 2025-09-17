@@ -257,7 +257,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
     return (
       <div key={property.id} className="flex" style={{ flexDirection: 'column', padding: isMobile ? '10px 10px 15px' : '15px 15px 18px', background: '#ffffff', borderRadius: '6px'}}>
-        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: isMobile ? '118px' : '180px', objectFit: 'fill', marginBottom: isMobile ? '15px': '30px', borderRadius: '6px'}} />
+        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: isMobile ? '118px' : '180px', objectFit: 'cover', marginBottom: isMobile ? '15px': '30px', borderRadius: '6px'}} />
         <div style={{ padding: isMobile ? '0 13px' : '0 33px'}}>
           <div className="text-sm font-medium" style={{ color: '#202437', fontSize: isMobile ? '14px':'20px', textAlign: 'center', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
           <div className="text-xs" style={{color: '#A0A3AF', fontSize: isMobile ? '12px': '15px', lineHeight: isMobile ? '12px': '20px', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: 'center', marginTop: isMobile ? '5px': '10px'}}>Listed by: {agentName || '--'}</div>
