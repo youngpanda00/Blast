@@ -304,7 +304,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
               <img src="https://cdn.lofty.com/image/fs/servicetool/2025824/13/original_03d678ea004049a5.png" style={{width: '36px', height: '36px'}} alt="" />
             </div>
           )}
-          <img src={image} alt={`Property at ${address}`} style={{ width: isMobile ? 100 : 133, minHeight: 100, maxHeight: 120, minWidth: isMobile ? 100 : 133, objectFit: 'cover'}} />
+          <img src={image} alt={`Property at ${address}`} style={{ width: isMobile ? 100 : 133, minHeight: 100, maxHeight: isMobile ? 100 : 120, minWidth: isMobile ? 100 : 133, objectFit: 'cover'}} />
           <div style={{ padding: isMobile ? '0 0 0 10px' : '15px 20px 15px 15px', width: '100%'}}>
             <div className="text-sm font-medium" style={{ color: '#515666', lineHeight: isMobile ? '1.2':'20px', textAlign: 'left', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
             <div className="flex text-xs" style={{lineHeight: isMobile ? '12px' : '20px', color:'#797E8B', marginTop: isMobile ? '5px': 0}}>
