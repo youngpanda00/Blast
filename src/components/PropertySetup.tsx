@@ -224,7 +224,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       <div style={{minHeight: isMobile? '' : '400px'}}>
         <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
         <div className="flex items-center justify-center" style={{ textAlign: 'center', padding: '0 40px', height: isMobile ? '120px' : '100px', border: '1px dashed rgba(255, 255, 255, 0.4)', borderRadius: '6px' }}>
-            <img style={{ width: '36px', height: '36px',marginRight: '10px' }} src="https://cdn.lofty.com/image/fs/servicetool/2025916/13/original_7a6c09d4e2904c25.png" alt="" />
+            <img style={{ width: '36px', height: '36px', marginRight: '10px', animation: 'logo-spin 1.5s linear infinite' }} src="https://cdn.lofty.com/image/fs/servicetool/2025916/13/original_7a6c09d4e2904c25.png" alt="" />
             <span style={{ fontSize: '20px', color: '#C6C8D1' }}>Loading</span>
         </div>
       </div>
@@ -304,9 +304,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
               <img src="https://cdn.lofty.com/image/fs/servicetool/2025824/13/original_03d678ea004049a5.png" style={{width: '36px', height: '36px'}} alt="" />
             </div>
           )}
-          <img src={image} alt={`Property at ${address}`} style={{ width: isMobile ? 100 : 133, minHeight: 100, minWidth: isMobile ? 100 : 133, objectFit: 'cover'}} />
+          <img src={image} alt={`Property at ${address}`} style={{ width: isMobile ? 100 : 133, minHeight: 100, maxHeight: 120, minWidth: isMobile ? 100 : 133, objectFit: 'cover'}} />
           <div style={{ padding: isMobile ? '0 0 0 10px' : '15px 20px 15px 15px', width: '100%'}}>
-            <div className="text-sm font-medium" style={{ color: '#515666', lineHeight: isMobile ? '1.2':'20px', textAlign: 'left', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
+            <div className="text-sm font-medium" style={{ color: '#515666', lineHeight: isMobile ? '1.2':'20px', textAlign: 'left', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
             <div className="flex text-xs" style={{lineHeight: isMobile ? '12px' : '20px', color:'#797E8B', marginTop: isMobile ? '5px': 0}}>
               <div>{bedrooms > -1 ? bedrooms : '--'} BD{ bedrooms > 1 ? 's' : ''}</div>
               <div className="text-gray-400" style={{margin: isMobile ? '0 3px' : '0 5px'}}>•</div>
