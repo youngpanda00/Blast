@@ -94,7 +94,10 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       return false
     }
     setIsEditing(true);
-    console.log('tempAdCopy ===>>>', tempAdCopy, '_', adCopy)
+    console.log('tempAdCopy ===>>>', tempAdCopy)
+    if (!tempAdCopy) {
+      setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+    }
     setTempHeadline(headline);
     setSelectedTemplate("custom");
     trackMixPanel("click", {
@@ -104,7 +107,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "edit"
     });
     trackFBEvent('Edit Ad')
-  }, []);
+  }, [tempAdCopy, headline, isEditing, addressName]);
 
 
   useEffect(() => {
@@ -172,9 +175,11 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
   const handleEditMobile = useCallback(() => {
     setTempHeadline(headline);
-    console.log('handleEditMobile ===>>>', tempAdCopy, adCopy)
+    if (!tempAdCopy) {
+      setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+    }
     setSelectedTemplate("custom");
-  }, [])
+  }, [tempAdCopy, addressName, headline])
 
   const handleSaveInMobile = () => {
     if (isCustomListing && !uploadImage) {
