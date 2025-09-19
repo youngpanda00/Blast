@@ -152,7 +152,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const confirmListing = (data?: PropertyData) => {
     setTargetId(data.id);
     setIsCustom(false);
-    externalOnAddressSelect?.({ ...data, addressName: addressPlace });
+    externalOnAddressSelect?.({ ...data, addressName: data?.fullAddress });
     onScrollToAdPreview();
     setHideConfirm(true);
   }
@@ -188,7 +188,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       isCustomListing: true,
       previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
       fullAddress: '',
-      addressName: addressPlace
+      addressName: address
     });
   }
 
@@ -200,7 +200,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
         isCustomListing: true,
         previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
         fullAddress: '',
-        addressName: addressPlace
+        addressName: ''
       });
     }
   }
