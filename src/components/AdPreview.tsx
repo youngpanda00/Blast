@@ -94,6 +94,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       return false
     }
     setIsEditing(true);
+    console.log('tempAdCopy ===>>>', tempAdCopy, '_', adCopy)
     setTempHeadline(headline);
     setSelectedTemplate("custom");
     trackMixPanel("click", {
@@ -171,7 +172,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
   const handleEditMobile = useCallback(() => {
     setTempHeadline(headline);
-    setTempAdCopy(adCopy);
+    console.log('handleEditMobile ===>>>', tempAdCopy, adCopy)
     setSelectedTemplate("custom");
   }, [])
 
