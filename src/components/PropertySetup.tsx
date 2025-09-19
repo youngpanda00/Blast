@@ -49,6 +49,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const isMobile = useIsMobile();
   const [targteId, setTargetId] = useState('');
   const [isCustom, setIsCustom] = useState(false);
+  const [hideConfirm, setHideConfirm] = useState(false);
   const [isInputHighlighted, setIsInputHighlighted] = useState(false);
   const [isShowTargetCard, setIsShowTargetCard] = useState(false);
   // const [autoOpen, setAutoOpen] = useState(false)
@@ -67,6 +68,10 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     "Water View",
     "Brand New Home"
   ]);
+
+  useEffect(() => {
+    setHideConfirm(false);
+  }, [addressPlace])
 
   const searchParams = new URLSearchParams(window.location.search);
 
@@ -120,8 +125,13 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
         // Handle both single property and array of properties
         const propertyData = Array.isArray(result.data) ? result.data : [result.data];
         // Show maximum of 2 properties
-        setProperties(propertyData.slice(0, 2));
+        const resultList = propertyData.slice(0, 2);
+        setProperties(resultList);
         setShowListingsRes(true);
+        if (resultList.length === 1) {
+          setIsShowTargetCard(true);
+          setTargetPropertyInfo(resultList[0]);
+        }
       } else {
         setProperties([]);
         setShowListingsRes(true);
@@ -142,8 +152,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const confirmListing = (data?: PropertyData) => {
     setTargetId(data.id);
     setIsCustom(false);
-    externalOnAddressSelect?.(data);
+    externalOnAddressSelect?.({ ...data, addressName: addressPlace });
     onScrollToAdPreview();
+    setHideConfirm(true);
   }
   const cancelListing = () => {
     setIsShowTargetCard(false);
@@ -158,7 +169,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     externalOnAddressSelect?.({
       isCustomListing: true,
       previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
-      fullAddress: addressPlace
+      fullAddress: addressPlace,
+      addressName: addressPlace
     });
     onScrollToAdPreview();
   }
@@ -175,7 +187,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     externalOnAddressSelect?.({
       isCustomListing: true,
       previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
-      fullAddress: ''
+      fullAddress: '',
+      addressName: addressPlace
     });
   }
 
@@ -186,7 +199,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       externalOnAddressSelect?.({
         isCustomListing: true,
         previewPicture: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
-        fullAddress: ''
+        fullAddress: '',
+        addressName: addressPlace
       });
     }
   }
@@ -275,10 +289,10 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
               <span className={isMobile ? 'text-xs' : 'text-sm'}>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</span>
             </div>
           </div>
-          <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
+          { !hideConfirm && <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
             <span className="flex justify-center items-center" onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>Back</span>
             <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>Confirm</span>
-          </div>
+          </div> }
         </div>
       </div>
     )

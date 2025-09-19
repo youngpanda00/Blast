@@ -41,6 +41,7 @@ const Index = ({ page }: { page?: "listing" }) => {
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
   const [isCustomListing, setIsCustomListing] = useState(false);
+  const [ addressName, setAddressName] = useState('');
 
   const [childMethods, setChildMethods] = useState<ChildMethods | null>(null)
 
@@ -93,6 +94,8 @@ const Index = ({ page }: { page?: "listing" }) => {
   // Callback function to handle address selection from PropertySetup
   const handleAddressSelect = useCallback((addressData) => {
     // console.log("Address selected:", addressData);
+
+    setAddressName(addressData?.addressName);
 
     setIsCustomListing(!!addressData?.isCustomListing);
     if (addressData?.isCustomListing && addressData?.fullAddress) {
@@ -1303,6 +1306,7 @@ const Index = ({ page }: { page?: "listing" }) => {
           isEditingAd={isEditingAd}
           isCustomListing={isCustomListing}
           customAddress={currentListingData?.address}
+          addressName={addressName}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
           onOpenCongratulationsModal={(email) => {

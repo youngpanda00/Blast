@@ -24,6 +24,7 @@ import {
 
 interface AdPreviewProps {
   isCustomListing?: boolean;
+  addressName?: string;
   isEditingAd?: boolean;
   initialImage?: string;
   initialHeadline?: string;
@@ -38,7 +39,7 @@ const adCopyTemplates = [
   {
     id: "default",
     name: "Default",
-    copy: "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today."
+    copy: "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!"
   },
   {
     id: "family",
@@ -54,12 +55,13 @@ const adCopyTemplates = [
 
 const AdPreview: React.FC<AdPreviewProps> = ({
   isEditingAd,
+  addressName,
   selectedAddressId,
   isCustomListing,
   previewPicture,
   initialImage = "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800",
   initialHeadline = "Don't miss out on this new listing",
-  initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.",
+  initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!",
   onAdUpdate
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -82,13 +84,17 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setImage(initialImage)
   }, [initialImage]);
 
+  useEffect(() => {
+    setAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+    setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+  }, [addressName])
+
   const handleEdit = useCallback(() => {
     if (isEditing) {
       return false
     }
     setIsEditing(true);
     setTempHeadline(headline);
-    setTempAdCopy(adCopy);
     setSelectedTemplate("custom");
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
@@ -109,7 +115,11 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     if (templateId !== "custom") {
       const template = adCopyTemplates.find(t => t.id === templateId);
       if (template) {
-        setTempAdCopy(template.copy);
+        if (template.id === 'default') {
+          setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+        } else {
+          setTempAdCopy(template.copy);
+        }
       }
     }
   };
@@ -132,16 +142,16 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setImage(pic);
     setUploadImage(uploadImg);
     setHeadline("Don't miss out on this new listing");
-    setAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
+    setAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
     setTempHeadline("Don't miss out on this new listing");
-    setTempAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
+    setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
     setIsEditing(false);
     setIsMobileEditModalOpen(false);
     onAdUpdate?.(
       {
         image: pic,
         headline: "Don't miss out on this new listing",
-        adCopy: '✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.',
+        adCopy: `✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`,
         selectedFile: null
       }
     )
@@ -218,8 +228,13 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     if (templateId !== "custom") {
       const template = adCopyTemplates.find(t => t.id === templateId);
       if (template) {
-        setTempAdCopy(template.copy);
-        setAdCopy(template.copy);
+        if (template.id === 'default') {
+          setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+          setAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+        } else {
+          setTempAdCopy(template.copy);
+          setAdCopy(template.copy);
+        }
         onAdUpdate?.({ image, headline, adCopy: template.copy, selectedFile });
       }
     }
@@ -352,22 +367,8 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                         {(highlightedArea === 'adCopy' || isEditingInline === 'adCopy') && (
                           <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
                         )}
-                        {adCopy === "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today." ? (
-                          <>
-                            ✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡 <br />
-                            &nbsp;🗓️ Schedule a private viewing today.
-                          </>
-                        ) : adCopy}
+                        {adCopy}
                       </div>
-                      {false && isMobile && (
-                        <button
-                          onClick={() => handleInlineEdit('adCopy')}
-                          className="absolute top-2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
-                          aria-label="Edit text"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                      )}
                     </div>
                   )}
                 </div>
@@ -403,24 +404,6 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                       <div className="text-white text-center">
                         <div className="text-sm font-medium">Sample Property Image</div>
                       </div>
-                    </div>
-                  )}
-                  {false && isMobile && (
-                    <div className="absolute bottom-2 right-2">
-                      <label className="cursor-pointer w-11 h-11 bg-black/30 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150">
-                        <Pencil className="w-4 h-4" />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            handleImageUpload(e);
-                            setHighlightedArea('image');
-                            setTimeout(() => setHighlightedArea(null), 2000);
-                          }}
-                          className="hidden"
-                          aria-label="Edit image"
-                        />
-                      </label>
                     </div>
                   )}
                 </div>
@@ -463,15 +446,6 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                       <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
                     )}
                     {headline}
-                    {false && isMobile && (
-                      <button
-                        onClick={() => handleInlineEdit('headline')}
-                        className="absolute top-1/2 -translate-y-1/2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
-                        aria-label="Edit title"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </button>
-                    )}
                   </h4>
                 )}
 
@@ -538,7 +512,11 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                             if (value !== "custom") {
                               const template = adCopyTemplates.find(t => t.id === value);
                               if (template) {
-                                setTempAdCopy(template.copy);
+                                if (template.id === 'default') {
+                                  setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+                                } else {
+                                  setTempAdCopy(template.copy);
+                                }
                               }
                             }
                           }}
@@ -831,12 +809,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                         <div className="flex-1">
                           <div className="text-sm font-semibold text-gray-600 mb-1">Ad Copy</div>
                           <div className="text-gray-800 leading-relaxed group-hover:text-blue-800 transition-colors line-clamp-3">
-                            {adCopy === "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today." ? (
-                              <>
-                                "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡 <br />
-                                &nbsp;🗓️ Schedule a private viewing today."
-                              </>
-                            ) : `"${adCopy}"`}
+                            {adCopy}
                           </div>
                         </div>
                       </div>

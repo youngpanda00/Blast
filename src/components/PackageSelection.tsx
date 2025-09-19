@@ -23,6 +23,7 @@ interface PackageSelectionProps {
   isCustomListing?: boolean;
   isEditingAd?: boolean;
   customAddress?: string | null;
+  addressName?:string | null;
   updateAdInfo?: (data: AdData) => void
 }
 
@@ -40,6 +41,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   isEditingAd,
   isCustomListing,
   customAddress,
+  addressName,
   updateAdInfo
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
@@ -63,7 +65,9 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
 
-  const [hasValidListingId, setHasValidListingId] = useState('')
+  const [hasValidListingId, setHasValidListingId] = useState('');
+
+  const [initialAdCopy, setInitialAdCopy] = useState('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!')
   
   // Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -83,6 +87,10 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   useEffect(() => {
     setHasValidListingId(selectedAddressId)
   }, [selectedAddressId])
+
+  useEffect(() => {
+    setInitialAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+  }, [addressName])
 
   // Development fallback - use a sample listing ID if none available
   const getEffectiveListingId = () => {
@@ -627,15 +635,14 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
       {/* Ad Preview Section */}
       <AdPreview
         key={selectedAddressId}
+        addressName={addressName}
         isCustomListing={isCustomListing}
         previewPicture={previewPicture}
         isEditingAd={isEditingAd}
         selectedAddressId={selectedAddressId}
         initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
         initialHeadline="Don't miss out on this new listing"
-        initialAdCopy="✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡
-
-🗓️ Schedule a private viewing today."
+        initialAdCopy={initialAdCopy}
         onAdUpdate={(data) => {
           updateAdInfo({
             imageUrl: data.image
