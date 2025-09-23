@@ -18,6 +18,7 @@ import PurchaseNotification from "@/components/PurchaseNotification";
 import { CongratulationsModal } from "@/components/CongratulationsModal";
 import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 import { trackFBEvent } from "@/lib/utils";
+import { autoRecordJumpClick } from "@/utils/recordJumpClick";
 
 const Index = ({ page }: { page?: "listing" }) => {
   const isMobile = useIsMobile();
@@ -63,7 +64,6 @@ const Index = ({ page }: { page?: "listing" }) => {
   }, [isZoomModalOpen]);
   const searchParams = new URLSearchParams(window.location.search);
   const listingId = searchParams.get("assetKey");
-  const param = searchParams.get("param");
 
   // Initialize selectedAddressId with URL listingId on first load
   React.useEffect(() => {
@@ -170,35 +170,10 @@ const Index = ({ page }: { page?: "listing" }) => {
   }, []);
 
 
-  // Call promotion/record-jump-click API when page loads with param
+  // Call promotion/record-jump-click API when page loads
   useEffect(() => {
-    const recordJumpClick = async () => {
-      if (param) {
-        try {
-          const response = await fetch(`/api-blast/promotion/record-jump-click?param=${param}`, {
-            method: "GET",
-          });
-
-          if (response.ok) {
-            console.log("Jump click recorded successfully for param:", param);
-          } else {
-            console.debug("Jump click API returned non-OK status:", response.status);
-          }
-        } catch (error) {
-          console.debug("Jump click API not available:", error instanceof Error ? error.message : String(error));
-        }
-      }
-    };
-
-    // Wrap in try-catch to prevent any unhandled promise rejections
-    try {
-      recordJumpClick().catch((error) => {
-        console.debug("Unhandled error in recordJumpClick:", error instanceof Error ? error.message : String(error));
-      });
-    } catch (error) {
-      console.debug("Error calling recordJumpClick:", error instanceof Error ? error.message : String(error));
-    }
-  }, [param]);
+    autoRecordJumpClick();
+  }, []);
 
    // 监听滚动事件，当main模块距离页面顶部小于100px时触发trackFBEvent
   useEffect(() => {
