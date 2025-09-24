@@ -11,10 +11,9 @@ interface HeroProps {
   onAddressSelect?: (addressData: any) => void;
   onScrollToAdPreview?:() => void;
   onCityUpdate?: (city: string | null) => void;
-  onScrollToAddress?:() => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, onCityUpdate, onScrollToAdPreview, onScrollToAddress}) => {
+export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, onCityUpdate, onScrollToAdPreview}) => {
   const isMobile = useIsMobile();
 
   return (
@@ -101,20 +100,6 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
                       <span className="block text-[20px] font-bold leading-5 mb-[10px]">24 Hours</span>
                       <span className="block text-sm font-normal" style={{opacity: 0.5, lineHeight: '14px'}}>Go Live</span>
                     </span>
-                  </div>
-                </div>
-
-                <div 
-                  className="flex" 
-                  style={{ width: 800, height: 70, background: '#ffffff', borderRadius: '100px', padding: '15px', justifyContent: 'space-between', cursor: 'pointer', marginBottom: '20px', marginTop: '0', marginLeft: 'auto', marginRight: 'auto'}}
-                  onClick={onScrollToAddress}
-                >
-                  <div className="flex items-center">
-                    <Search className="text-white" style={{ color: '#C6C8D1', width: '18px', height: '18px', marginRight: '10px'}} />
-                    <span className="text-base font-medium " style={{color: '#C6C8D1', lineHeight: '20px'}}>Enter the property address</span>
-                  </div>
-                  <div className="text-white text-sm flex items-center justify-center" style={{background: 'linear-gradient(90deg, #242FFC 0%, #8A54FF 100%)', width: '100px', height: '40px', borderRadius: '100px'}}>
-                    Search
                   </div>
                 </div>
 

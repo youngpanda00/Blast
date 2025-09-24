@@ -1158,7 +1158,6 @@ const Index = ({ page }: { page?: "listing" }) => {
         onAddressSelect={handleAddressSelect}
         onScrollToAdPreview={scrollToAdPreview}
         onCityUpdate={handleCityUpdate}
-        onScrollToAddress={childMethods?.scrollToForm}
       />
 
       <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[20px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl">
