@@ -19,6 +19,10 @@ import { saveStepWithRetry, showErrorNotification, getUserFriendlyErrorMessage }
 interface PackageSelectionProps {
   previewPicture?: string | null
   selectedAddressId?: string | null;
+  promoEmail?: string;
+  promoCode?: string;
+  discountRate?: number;
+  promoActive?: boolean;
   onOpenCongratulationsModal: (email: string) => void;
 }
 
@@ -32,6 +36,10 @@ interface AdData {
 export const PackageSelection: React.FC<PackageSelectionProps> = ({
   previewPicture,
   selectedAddressId,
+  promoEmail,
+  promoCode,
+  discountRate: discountRateProp,
+  promoActive: promoActiveProp,
   onOpenCongratulationsModal,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
@@ -167,10 +175,10 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             addressInput.style.transition = 'all 0.5s ease';
             addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
 
-            // 添加轻微的晃���动画
+            // 添加轻微的晃������画
             addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
 
-            // 创建晃动动画的CSS keyframes（如果不存在）
+            // 创建晃动动��的CSS keyframes（如果不存在）
             if (!document.querySelector('#gentle-shake-style')) {
               const style = document.createElement('style');
               style.id = 'gentle-shake-style';
@@ -283,7 +291,10 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     const packageInfo = {
       currentListingId,
       duration,
-      paymentMode
+      paymentMode,
+      email: promoEmail || '',
+      promoCode: promoCode || '',
+      discountRate: discountRate,
     }
     console.log('checkoutPop ===>>>', adPreviewData, packageInfo)
 
@@ -459,8 +470,15 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       }
 
       if (typeof (window as any).checkoutPop === "function") {
+        const packageInfo = {
+          currentListingId,
+          duration: mobileConfiguration.duration,
+          paymentMode,
+          email: promoEmail || '',
+          promoCode: promoCode || ''
+        };
         (window as any)
-          .checkoutPop()
+          .checkoutPop(adPreviewData, packageInfo)
           .then(async (res) => {
             setIsLoading(false);
             console.log("res", res);
@@ -496,227 +514,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     } catch (error) {
       setIsLoading(false);
       console.error("Error during checkout:", error);
-      const userMessage = getUserFriendlyErrorMessage(error as Error);
-      showErrorNotification(userMessage, "Checkout Error");
-    }
-  };
-
-  const handleCheckoutOriginal = async () => {
-    // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
-    const currentListingId = getEffectiveListingId();
-    if (!currentListingId) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn("Checkout attempted without listing ID:", {
-          selectedAddressId,
-          listingId,
-          urlParams: Object.fromEntries(searchParams.entries())
-        });
-      }
-
-      // 如果没有选房�����滚动到PropertySetup模���并对输入框添加突出动画
-      const propertySetupSection = document.querySelector('[data-section="property-setup"]');
-
-      if (propertySetupSection) {
-        // 平滑滚���到PropertySetup模块
-        propertySetupSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-
-        // ���迟动画，等待滚动完���
-        setTimeout(() => {
-          // 查找地址输入框 - 优先使用ID，备用placeholder��位
-          const addressInput = (document.querySelector('#address-search-input') ||
-                               document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-          // 查找包含输入框的容器（���渐变背景的div��
-          const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
-
-          if (addressInput && addressContainer) {
-            // 聚焦到输入框
-            addressInput.focus();
-
-            // 对容器添加突出动画效果
-            const originalTransform = addressContainer.style.transform;
-            const originalBoxShadow = addressContainer.style.boxShadow;
-            const originalTransition = addressContainer.style.transition;
-
-            // 应用突出效果
-            addressContainer.style.transition = 'all 0.5s ease';
-            addressContainer.style.transform = 'scale(1.08)';
-            addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
-            addressContainer.style.zIndex = '50';
-
-            // ��输入框添加脉������果
-            addressInput.style.transition = 'all 0.5s ease';
-            addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
-
-            // 添���轻微的晃动动画
-            addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
-
-            // 创建晃动��画的CSS keyframes（如果不��在）
-            if (!document.querySelector('#gentle-shake-style')) {
-              const style = document.createElement('style');
-              style.id = 'gentle-shake-style';
-              style.textContent = `
-                @keyframes gentle-shake {
-                  0%, 100% { transform: scale(1.08) translateX(0); }
-                  25% { transform: scale(1.08) translateX(-2px); }
-                  75% { transform: scale(1.08) translateX(2px); }
-                }
-              `;
-              document.head.appendChild(style);
-            }
-
-            // 3.5秒后恢复��状
-            setTimeout(() => {
-              addressContainer.style.transform = originalTransform || '';
-              addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
-              addressContainer.style.transition = originalTransition || '';
-              addressContainer.style.zIndex = '';
-              addressContainer.style.animation = '';
-
-              addressInput.style.boxShadow = '';
-              addressInput.style.transition = '';
-            }, 3500);
-          }
-        }, 900); // 稍微延长等待时间确保滚动完成
-      }
-
-      // Show toast notification for missing address
-      const showToastNotification = () => {
-        // Remove any existing notifications
-        const existingToast = document.querySelector('#address-required-toast');
-        if (existingToast) {
-          existingToast.remove();
-        }
-
-        // Create toast notification
-        const toast = document.createElement('div');
-        toast.id = 'address-required-toast';
-        toast.innerHTML = `
-          <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #f87171;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 9999;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 300px;
-            animation: slideIn 0.3s ease-out;
-          ">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-            </svg>
-            Please select a property address first
-          </div>
-          <style>
-            @keyframes slideIn {
-              from { transform: translateX(100%); opacity: 0; }
-              to { transform: translateX(0); opacity: 1; }
-            }
-          </style>
-        `;
-
-        document.body.appendChild(toast);
-
-        // Auto remove after 4 seconds
-        setTimeout(() => {
-          if (toast && toast.parentNode) {
-            toast.style.animation = 'slideIn 0.3s ease-out reverse';
-            setTimeout(() => toast.remove(), 300);
-          }
-        }, 4000);
-      };
-
-      showToastNotification();
-
-      console.error(
-        "No listing ID available (neither from address selection nor URL)",
-      );
-      return;
-    }
-
-    window.trackBlastNow?.();
-    trackFBEvent('Blast Now CTA')
-
-    window.alert(`selectedPackage: ${selectedPackage}`);
-    const duration = packageToDuration[selectedPackage];
-
-    const paymentMode =
-      selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
-
-    setIsLoading(true);
-
-    try {
-      // Save step data with improved error handling
-      const saveResult = await saveStepWithRetry({
-        stepName: "ORDER",
-        data: {
-          dataList: [
-            {
-              data: currentListingId,
-              packageType: "LISTING",
-            },
-          ],
-          duration: duration,
-          paymentMode: paymentMode,
-        },
-      });
-
-      if (!saveResult.success) {
-        throw new Error(saveResult.error || "Failed to save step data");
-      }
-
-      // Call the external checkoutPop function
-      if (typeof (window as any).checkoutPop === "function") {
-        (window as any)
-          .checkoutPop()
-          .then(async (res) => {
-            setIsLoading(false);
-            console.log("res", res);
-            const email = res?.email || "";
-
-            // Call /api-blast/task/start before opening CongratulationsModal
-            try {
-              const startResponse = await fetch("/api-blast/task/start", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-
-              if (startResponse.ok) {
-                console.log("Task started successfully");
-              } else {
-                console.error("Failed to start task");
-              }
-            } catch (error) {
-              console.error("Error starting task:", error);
-            }
-
-            onOpenCongratulationsModal(email);
-          })
-          .catch(() => {
-            setIsLoading(false);
-            console.log("error");
-          });
-      } else {
-        setIsLoading(false);
-        console.error("checkoutPop function not available");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error during checkout:", error);
-
-      // Show user-friendly error message
       const userMessage = getUserFriendlyErrorMessage(error as Error);
       showErrorNotification(userMessage, "Checkout Error");
     }
@@ -757,13 +554,17 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const paymentText = selectedPlan === "one-time" ? "Pay one-time" : "Monthly";
 
-  // Package data
+  // Promo visibility and discount (passed from parent)
+  const promoActive = Boolean(promoActiveProp);
+  const discountRate = Number(discountRateProp ?? 0);
+  const formatMoney = (n:number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+
+  // Package data (base/original prices before promo)
   const packages = [
     {
       id: "starter",
       name: "Starter Pack",
-      originalPrice: "$109",
-      price: "$79",
+      basePrice: 79,
       duration: "1 Week",
       isPopular: false,
       estimatedViews: (2000 * packageToDuration.starter).toLocaleString(),
@@ -772,7 +573,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     {
       id: "boost",
       name: "Boost Pack",
-      price: "$158",
+      basePrice: 158,
       duration: "2 Weeks",
       isPopular: true,
       estimatedViews: (2000 * packageToDuration.boost).toLocaleString(),
@@ -781,7 +582,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     {
       id: "growth",
       name: "Growth Pack",
-      price: "$237",
+      basePrice: 237,
       duration: "3 Weeks",
       isPopular: false,
       estimatedViews: (2000 * packageToDuration.growth).toLocaleString(),
@@ -790,7 +591,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     {
       id: "mastery",
       name: "Mastery Pack",
-      price: "$316",
+      basePrice: 316,
       duration: "4 Weeks",
       isPopular: false,
       estimatedViews: (2000 * packageToDuration.mastery).toLocaleString(),
@@ -859,7 +660,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       <div
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
-        className={`relative rounded-[24px] p-4 md:p-6 h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
+        className={`relative rounded-[24px] p-4 md:p-6 max-md:px-[10px] h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
           selectedPackage === pkg.id
             ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
             : "bg-white"
@@ -933,20 +734,32 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
           {/* Price section for mobile */}
           <div className={`border-t pt-3 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span
-                className={`text-xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
-              >
-                {pkg.price}
-              </span>
+            <div className="space-y-1">
+              {promoActive && (
+                <div className={`${selectedPackage === pkg.id ? "text-white/80" : "text-gray-400"} line-through text-sm`}>
+                  {formatMoney(pkg.basePrice)}
+                </div>
+              )}
+              <div className="flex items-baseline gap-2 flex-nowrap">
+                <span
+                  className={`text-[18px] font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
+                >
+                  {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
+                </span>
+                {promoActive && (
+                  <span className={`${selectedPackage === pkg.id ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-[11px] px-2 py-0.5 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
+                )}
+              </div>
             </div>
-            <div className="mt-1">
-              <span
-                className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
-              >
-                {paymentText}
-              </span>
-            </div>
+            {!promoActive && (
+              <div className="mt-1">
+                <span
+                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                >
+                  {paymentText}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1008,20 +821,32 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           <div
             className={`border-t pt-3 md:pt-4 flex-shrink-0 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}
           >
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span
-                className={`text-2xl md:text-3xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
-              >
-                {pkg.price}
-              </span>
+            <div className="space-y-1">
+              {promoActive && (
+                <div className={`${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"} line-through text-base`}>
+                  {formatMoney(pkg.basePrice)}
+                </div>
+              )}
+              <div className="flex items-baseline gap-2 flex-nowrap">
+                <span
+                  className={`text-2xl md:text-3xl font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
+                >
+                  {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
+                </span>
+                {promoActive && (
+                  <span className={`${selectedPackage === pkg.id ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-xs px-2.5 py-1 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
+                )}
+              </div>
             </div>
-            <div className="mt-1">
-              <span
-                className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
-              >
-                {paymentText}
-              </span>
-            </div>
+            {!promoActive && (
+              <div className="mt-1">
+                <span
+                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                >
+                  {paymentText}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

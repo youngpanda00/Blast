@@ -20,7 +20,7 @@ import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 import { trackFBEvent } from "@/lib/utils";
 import { autoRecordJumpClick } from "@/utils/recordJumpClick";
 
-const Index = ({ page }: { page?: "listing" }) => {
+const Index = ({ page, promoEmail, promoCode, discountRate, promoActive }: { page?: "listing"; promoEmail?: string; promoCode?: string; discountRate?: number; promoActive?: boolean }) => {
   const isMobile = useIsMobile();
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
@@ -1310,6 +1310,10 @@ const Index = ({ page }: { page?: "listing" }) => {
           key={selectedAddressId}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
+          promoEmail={promoEmail}
+          promoCode={promoCode}
+          discountRate={discountRate}
+          promoActive={promoActive}
           onOpenCongratulationsModal={(email) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
