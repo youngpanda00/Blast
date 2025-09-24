@@ -6,6 +6,7 @@ import { Separator } from "./ui/separator";
 import { Bed, Bath, Square, CheckCircle, Search } from "lucide-react";
 import { useListingInfo } from "@/hooks/use-listing-info";
 import { useIsMobile } from "../hooks/use-mobile";
+import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 interface PropertySetupProps {
   listingId?: string | null;
   onAddressSelect?: (addressData: any) => void;
@@ -150,6 +151,13 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   };
 
   const confirmListing = (data?: PropertyData) => {
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "confirm property address",
+      click_action: "property"
+    });
+    trackFBEvent('confirm property address')
     setTargetId(data.id);
     setIsCustom(false);
     externalOnAddressSelect?.({ ...data, addressName: data?.fullAddress });
