@@ -32,7 +32,7 @@ export const usePromoCode = () => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         const data = json?.data ?? {};
-        const isValid = Boolean(data.isValid ?? data.isVaild);
+        const isValid = Boolean(data.valid);
         const discountRate = Number(data.discountRate ?? 0);
         // expirationTime might be seconds; convert to ms if looks like seconds
         let exp = Number(data.expirationTime ?? 0);

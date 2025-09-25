@@ -6,8 +6,8 @@ import { componentTagger } from "lovable-tagger";
 
 const PORT = 8086;
 const IP = "0.0.0.0";
-const SITEDEVURL = "https://site6.lofty.com";
-const TARGETURL = "https://test.loftyblast.com";
+const SITEDEVURL = "https://env3-1.chime.me";
+const TARGETURL = "https://prerelease.loftyblast.com";
 // 将 /lovable-uploads 重写为 /${version}/lovable-uploads 的插件
 function lovableUploadsVersioner(version: string): Plugin {
   const safeVersion = version || "listingblast";
