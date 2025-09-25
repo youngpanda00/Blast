@@ -77,7 +77,7 @@ export const ContactFooter: React.FC = () => {
           alt="Partner Logo 12"
         />
       </div>
-      <div className="flex w-[905px] max-w-full flex-col items-center max-md:text-left max-md:justify-center max-md:items-start">
+      <div id="contact-us" className="flex w-[905px] max-w-full flex-col items-center max-md:text-left max-md:justify-center max-md:items-start">
         <h2 className="text-[34px] leading-none text-center font-medium max-md:text-2xl max-md:text-left">
           Contact Us
         </h2>

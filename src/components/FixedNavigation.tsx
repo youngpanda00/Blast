@@ -46,6 +46,15 @@ export const FixedNavigation: React.FC = () => {
       feature_name: "ListingBlast",
       click_item: mixPanelItem || ''
     });
+    if (mixPanelItem === 'NavContact') {
+      const contactUsDom = document.getElementById('contact-us');
+      if (contactUsDom) {
+        contactUsDom.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        })
+      }
+    }
   };
 
   const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://lofty.com/?fromblast=2&utm_source=${encodeURIComponent(utmSource)}` : 'https://lofty.com/?fromblast=2';
@@ -70,14 +79,13 @@ export const FixedNavigation: React.FC = () => {
 
         {/* Navigation Menu - next to logo on left */}
         <div className="nav-container items-center h-full hidden md:flex">
-          <a
-            href="/home?anchor=Contact"
-            target="_blank"
+          <div
             onClick={(e) => { handleNavClick(e, 'NavContact') }}
             className={`relative font-medium text-sm h-full flex items-center group ${
               isAtTop ? 'text-white' : 'text-[#515666]'
             }`}
             style={{
+              cursor: 'pointer',
               transition: 'background-color 0.5s ease 0s, color 0.5s ease 0s, border-color 0.5s ease 0s'
             }}
           >
@@ -90,7 +98,7 @@ export const FixedNavigation: React.FC = () => {
                 transition: 'opacity 0.5s ease 0s'
               }}
             ></span>
-          </a>
+          </div>
         </div>
 
         {/* Mobile menu button */}
@@ -117,8 +125,7 @@ export const FixedNavigation: React.FC = () => {
       {isMobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-lg">
           <div className="px-4 py-2 space-y-1" style={{paddingBottom: 0}}>
-            <a
-              href="/home?anchor=Contact"
+            <div
               onClick={(e) => {
                 handleNavClick(e, 'NavContact');
                 setIsMobileMenuOpen(false);
@@ -126,7 +133,7 @@ export const FixedNavigation: React.FC = () => {
               className="block px-3 py-2 text-sm font-medium text-[#515666] hover:bg-gray-50 rounded-md"
             >
               Contact
-            </a>
+            </div>
           </div>
         </div>
       )}
