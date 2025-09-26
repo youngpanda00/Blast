@@ -5,35 +5,42 @@ import { ChevronUp, Zap } from 'lucide-react';
 
 interface StickyCTAProps {
   onCtaClick: () => void;
-  selectedPackage?: string;
+  selectedPackage?: 'starter' | 'boost' | 'growth' | 'mastery';
   selectedPlan?: string;
   isVisible?: boolean;
+  promoActive?: boolean;
+  discountRate?: number; // 0-1
 }
 
 export const StickyCTA: React.FC<StickyCTAProps> = ({
   onCtaClick,
   selectedPackage = 'starter',
   selectedPlan = 'monthly',
-  isVisible = true
+  isVisible = true,
+  promoActive = false,
+  discountRate = 0,
 }) => {
-  const { scrollY, scrollDirection } = useScroll();
+  const { scrollY } = useScroll();
   const isMobile = useIsMobile();
   const [shouldShow, setShouldShow] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showHighlight, setShowHighlight] = useState(false);
 
-  // Package pricing data
-  const packagePricing = {
-    starter: { price: '$79', originalPrice: '$109' },
-    boost: { price: '$158' },
-    growth: { price: '$237' },
-    mastery: { price: '$316' }
+  const basePriceMap: Record<'starter' | 'boost' | 'growth' | 'mastery', number> = {
+    starter: 79,
+    boost: 158,
+    growth: 237,
+    mastery: 316,
   };
 
-  const currentPackage = packagePricing[selectedPackage as keyof typeof packagePricing];
+  const formatMoney = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+
+  const base = basePriceMap[selectedPackage];
+  const dr = Math.max(0, Math.min(1, Number(discountRate || 0)));
+  const finalPrice = promoActive ? Math.max(0, base * (1 - dr)) : base;
+  const formattedPrice = formatMoney(finalPrice);
 
   useEffect(() => {
-    // Show sticky CTA after scrolling past 600px (roughly past hero section)
     const showThreshold = 600;
     const hideThreshold = 300;
 
@@ -42,11 +49,9 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
         setIsAnimating(true);
         setShouldShow(true);
 
-        // Trigger highlight effect after show animation
         setTimeout(() => {
           setIsAnimating(false);
           setShowHighlight(true);
-          // Remove highlight after 2 seconds
           setTimeout(() => setShowHighlight(false), 2000);
         }, 300);
       }
@@ -72,17 +77,16 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
   return (
     <div
       className={`fixed z-50 transition-all duration-300 ease-out ${
-        shouldShow 
-          ? 'translate-y-0 opacity-100' 
+        shouldShow
+          ? 'translate-y-0 opacity-100'
           : 'translate-y-full opacity-0'
       } ${
-        isMobile 
-          ? 'bottom-0 left-0 right-0' 
+        isMobile
+          ? 'bottom-0 left-0 right-0'
           : 'bottom-6 right-6'
       }`}
     >
       {isMobile ? (
-        // Mobile: Full-width bottom bar
         <div className="bg-white border-t border-gray-200 shadow-lg">
           <div className="flex items-center justify-between p-4">
             <div className="flex-1">
@@ -110,9 +114,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
           </div>
         </div>
       ) : (
-        // Desktop: Floating button with package info
         <div className="flex flex-col gap-3">
-          {/* Scroll to top button */}
           <button
             onClick={scrollToTop}
             className="bg-white/90 backdrop-blur-sm border border-gray-200 text-gray-600 w-12 h-12 rounded-full shadow-lg hover:bg-white hover:shadow-xl transition-all duration-200 flex items-center justify-center ml-auto"
@@ -121,7 +123,6 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
             <ChevronUp className="w-5 h-5" />
           </button>
 
-          {/* Main CTA */}
           <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-4 min-w-[280px]">
             <div className="flex items-center justify-between mb-3">
               <div>
@@ -131,7 +132,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-xl font-bold text-gray-900">
-                    {currentPackage?.price}
+                    {formattedPrice}
                   </span>
                 </div>
                 <div className="text-xs text-gray-500">
@@ -139,7 +140,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
                 </div>
               </div>
             </div>
-            
+
             <button
               onClick={() => {
                 window.trackBlastNow?.("ListingBlastSP_checkout_bottom_popup");

@@ -11,19 +11,8 @@ import React from "react";
 const queryClient = new QueryClient();
 
 const App = ({ page }: { page?: "listing" }) => {
-  const { promo, modalOpen, setModalOpen, percent, timeLeft, dismiss, submittedEmail, submitEmail } = usePromoCode();
-  const visible = Boolean(promo?.valid) && !timeLeft.expired;
-
-  React.useEffect(() => {
-    if (visible) {
-      const el = document.getElementById('promo-banner');
-      if (el) {
-        document.documentElement.style.setProperty('--promo-banner-space', `76px`);
-        return;
-      }
-    }
-    document.documentElement.style.setProperty('--promo-banner-space', '0px');
-  }, [visible]);
+  const { promo, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail } = usePromoCode();
+  const bannerVisible = Boolean(promo?.valid);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -33,17 +22,16 @@ const App = ({ page }: { page?: "listing" }) => {
         {promo && (
           <>
             <PromoModal
-              open={modalOpen && visible}
+              open={modalOpen && bannerVisible}
               onOpenChange={(v) => (v ? setModalOpen(true) : dismiss())}
               percent={percent}
               expiresAt={promo.expiresAt}
               onSubmitEmail={submitEmail}
             />
             <PromoBanner
-              visible={visible}
+              visible={bannerVisible}
               percent={percent}
-              mins={timeLeft.mins}
-              secs={timeLeft.secs}
+              expiresAt={promo.expiresAt}
             />
           </>
         )}
@@ -52,7 +40,7 @@ const App = ({ page }: { page?: "listing" }) => {
           promoEmail={submittedEmail || ''}
           promoCode={promo?.code || ''}
           discountRate={promo?.discountRate ?? 0}
-          promoActive={Boolean(promo?.valid) && !timeLeft.expired}
+          promoActive={!!promo}
         />
       </TooltipProvider>
     </QueryClientProvider>

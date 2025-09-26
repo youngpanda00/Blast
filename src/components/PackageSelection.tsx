@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PricingCard } from "./PricingCard";
 import { AdPreview } from "./AdPreview";
 import { MobileAdConfiguration } from "./MobileAdConfiguration";
-import { Info, Diamond, ChevronLeft, ChevronRight } from "lucide-react";
+import { Info, Diamond, ChevronLeft, ChevronRight, Gift } from "lucide-react";
 import useEmblaCarousel from 'embla-carousel-react';
 import {
   Tooltip,
@@ -476,7 +476,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           duration: mobileConfiguration.duration,
           paymentMode,
           email: promoEmail || '',
-          promoCode: promoCode || ''
+          promoCode: promoCode || '',
+          discountRate: discountRate,
         };
         (window as any)
           .checkoutPop(adPreviewData, packageInfo)
@@ -661,7 +662,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       <div
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
-        className={`relative rounded-[24px] p-4 md:p-6 max-md:px-[10px] h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
+        className={`relative rounded-[24px] p-4 md:p-[20px] max-md:px-[10px] h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
           selectedPackage === pkg.id
             ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
             : "bg-white"
@@ -828,7 +829,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                   {formatMoney(pkg.basePrice)}
                 </div>
               )}
-              <div className="flex items-baseline gap-2 flex-nowrap">
+              <div className="flex items-baseline gap-2 flex-nowrap justify-between">
                 <span
                   className={`text-2xl md:text-3xl font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
                 >
@@ -883,8 +884,15 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6 max-md:justify-center max-md:items-center">
           <div className="flex flex-col">
             <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
+              {promoActive ? <>
+                <span>Step 3 - Special Discounted Plans</span>
+                <div className="promo-tip" style={{color:'#797E8B', fontSize: 16, fontWeight: 'normal'}}>
+                  Limited time offer - <span className="text-[#3B5CDE]" style={{fontWeight: 'bold'}}>{Math.round((discountRate ?? 0) * 100)}% OFF</span> on all advertising plan</div>
+              </>
+              :<>
               <span className="max-md:hidden">Step 3 - Select Your Package & Luanch Ad</span>
               <span className="hidden max-md:block">Step 3 - Publish Your Ad Now</span>
+              </>}
             </h2>
             {!hasValidListingId && process.env.NODE_ENV === 'production' && (
               <p className="text-sm text-orange-600 mt-1">
@@ -973,6 +981,17 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
+        {promoActive && (
+          <div className="w-full max-w-[1140px] mt-3 px-4 md:px-0">
+            <div className="flex items-center gap-2 md:gap-3 text-white text-xs md:text-sm rounded-md px-3 py-2 shadow bg-gradient-to-r from-[#547AF2] via-[#7A5AF8] to-[#9B5CF6]">
+              <img className="h-[24px]" src="https://cdn.lofty.com/image/fs/servicetool/2025925/12/original_e09de188a7614349.png" />
+              <span className="font-semibold">Special Promotion:</span>
+              <span className="opacity-90">You're accessing our exclusive discounted plans.</span>
+              <span className="hidden md:inline opacity-90">This offer is available for a limited time only.</span>
+            </div>
+          </div>
+        )}
+
         {/* Package cards layout - 2x2 Grid for mobile, 1x4 for web */}
         <div className="w-full max-w-[1140px] mt-5 px-4 md:px-0">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-[800px] md:max-w-full mx-auto">
@@ -1000,6 +1019,8 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         selectedPackage={selectedPackage}
         selectedPlan={selectedPlan}
         isVisible={!isLoading}
+        promoActive={promoActive}
+        discountRate={discountRate}
       />
     </>
   );

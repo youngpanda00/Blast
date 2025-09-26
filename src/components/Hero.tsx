@@ -35,7 +35,7 @@ export const Hero: React.FC<HeroProps> = ({ page, onGetStarted, listingId, onAdd
           </div>}
 
           {/* Centered content layout */}
-          <div className="flex w-full max-w-[900px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
+          <div className="flex w-full max-w-[900px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col" style={{marginTop:'var(--promo-banner-space)'}}>
             {/* Main Content - Centered */}
             <div className="w-full text-center max-md:text-center">
               {/* Mobile: Restructured typography */}

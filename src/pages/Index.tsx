@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -202,7 +202,7 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive }: { pag
     };
   }, [hasTrackedViewContent]);
 
-  const adSets = [
+  const adSets = useMemo(()=>[
     {
       platform: "Facebook",
       platformIcon:
@@ -239,7 +239,7 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive }: { pag
       mobileImage: "/lovable-uploads/instagram-post-mobile.png",
       isCustom: true,
     },
-  ];
+  ],[]);
 
   const FacebookAdComponent = () => {
     if (viewMode === "mobile") {
@@ -1077,13 +1077,13 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive }: { pag
     );
   };
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     setCurrentSetIndex((prev) => (prev === 0 ? adSets.length - 1 : prev - 1));
-  };
+  }, [adSets]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentSetIndex((prev) => (prev === adSets.length - 1 ? 0 : prev + 1));
-  };
+  },[adSets]);
 
   const currentSet = adSets[currentSetIndex];
 
