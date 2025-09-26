@@ -457,6 +457,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
               packageType: "LISTING",
             },
           ],
+          promoCode: promoCode,
           duration: mobileConfiguration.duration,
           paymentMode: paymentMode,
           customPrice: mobileConfiguration.price,
