@@ -18,6 +18,28 @@ export const usePromoCode = () => {
   const [submittedEmail, setSubmittedEmail] = useState<string | null>(null);
   const initialized = useRef(false);
 
+  const loadPromo = useCallback(async (code:string, popup: boolean)=>{
+    const res = await fetch(`/api-blast/promo-code/validate?code=${encodeURIComponent(code)}`, { method: 'GET' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    const data = json?.data ?? {};
+    const isValid = Boolean(data.valid);
+    const discountRate = Number(data.discountRate ?? 0) / 100;
+    // expirationTime might be seconds; convert to ms if looks like seconds
+    let exp = Number(data.expirationTime ?? 0);
+    if (exp && exp < 10_000_000_000) exp = exp * 1000; // seconds -> ms
+
+    const now = Date.now();
+    const valid = isValid && discountRate > 0 && exp > now;
+    if (valid) {
+      const state: PromoState = { valid, discountRate, expiresAt: exp, code, popup };
+      setPromo(state);
+    } else {
+      setPromo(null)
+    }
+    return valid
+  }, [])
+
   useEffect(() => {
     if (initialized.current) return;
     initialized.current = true;
@@ -30,22 +52,8 @@ export const usePromoCode = () => {
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`/api-blast/promo-code/validate?code=${encodeURIComponent(code)}`, { method: 'GET' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        const data = json?.data ?? {};
-        const isValid = Boolean(data.valid);
-        const discountRate = Number(data.discountRate ?? 0) / 100;
-        // expirationTime might be seconds; convert to ms if looks like seconds
-        let exp = Number(data.expirationTime ?? 0);
-        if (exp && exp < 10_000_000_000) exp = exp * 1000; // seconds -> ms
-
-        const now = Date.now();
-        const valid = isValid && discountRate > 0 && exp > now;
-        if (valid) {
-          const state: PromoState = { valid, discountRate, expiresAt: exp, code, popup };
-          setPromo(state);
-        } else if (code) {
+        const valid = await loadPromo(code, popup)
+        if (!valid && code) {
           toast({
             variant: "destructive",
             title: "Invalid Promo Code",
@@ -65,7 +73,7 @@ export const usePromoCode = () => {
     };
 
     run().catch(() => {});
-  }, [dismissed]);
+  }, [dismissed, loadPromo]);
 
   const percent = useMemo(() => Math.round(((promo?.discountRate ?? 0) * 100)), [promo?.discountRate]);
 
@@ -84,5 +92,11 @@ export const usePromoCode = () => {
     setPromo(null)
   }, [])
 
-  return { promo, clearPromo, loading, error, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail };
+  const reloadPromo = useCallback(()=>{
+    if (promo) {
+      loadPromo(promo.code, false)
+    }
+  }, [loadPromo, promo])
+
+  return { promo, clearPromo, reloadPromo,  loading, error, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail };
 };

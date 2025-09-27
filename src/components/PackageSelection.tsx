@@ -825,7 +825,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           >
             <div className="space-y-1">
               {promoActive && (
-                <div className={`${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"} line-through text-base text-[24px] mb-[10px]`}>
+                <div className={`${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"} line-through text-[24px] mb-[10px]`}>
                   {formatMoney(pkg.basePrice)}
                 </div>
               )}

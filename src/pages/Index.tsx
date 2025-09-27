@@ -20,7 +20,7 @@ import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 import { trackFBEvent } from "@/lib/utils";
 import { autoRecordJumpClick } from "@/utils/recordJumpClick";
 
-const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, clearPromo }: { page?: "listing"; promoEmail?: string; promoCode?: string; discountRate?: number; promoActive?: boolean, clearPromo?:()=>void }) => {
+const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadPromo }: { page?: "listing"; promoEmail?: string; promoCode?: string; discountRate?: number; promoActive?: boolean, reloadPromo:()=>void }) => {
   const isMobile = useIsMobile();
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
@@ -1317,7 +1317,7 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, clearPr
           onOpenCongratulationsModal={(email) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
-            clearPromo()
+            reloadPromo()
           }}
         />
       </main>

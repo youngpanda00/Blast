@@ -32,7 +32,7 @@ export const PromoModal: React.FC<Props> = ({ open, onOpenChange, percent, expir
 
   const deadline = new Date(expiresAt);
   const dayCount = Math.max(1, Math.round((expiresAt - Date.now())/86400000))
-  const rangeText = !isNaN(deadline.getTime()) ? `valid for ${dayCount} ${dayCount <= 1 ? 'day' : 'days'}!` : '';
+  const rangeText = !isNaN(deadline.getTime()) ? `valid for ${dayCount} ${dayCount <= 1 ? 'day' : 'days'} only!` : '';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -93,6 +93,10 @@ const FormSection: React.FC<{ onSubmitEmail:(email:string)=>void; onClose:()=>vo
   const [error, setError] = React.useState<string | null>(null);
 
   const handleSubmit = async () => {
+    if (!email) {
+      onClose()
+      return
+    }
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
       return;
@@ -123,7 +127,7 @@ const FormSection: React.FC<{ onSubmitEmail:(email:string)=>void; onClose:()=>vo
         className="w-full border rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
       />
       {error && (<div className="mt-2 text-red-600 text-sm">{error}</div>)}
-      <button onClick={handleSubmit} className="mt-5 mb-5 w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-[#547AF2] to-[#8B5CF6] hover:opacity-90">
+      <button onClick={handleSubmit} className="text-[16px] mt-5 mb-5 w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-[#547AF2] to-[#8B5CF6] hover:opacity-90">
         Redeem My Discount
       </button>
     </div>

@@ -11,7 +11,7 @@ import React from "react";
 const queryClient = new QueryClient();
 
 const App = ({ page }: { page?: "listing" }) => {
-  const { promo, clearPromo, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail } = usePromoCode();
+  const { promo, clearPromo, reloadPromo, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail } = usePromoCode();
   const bannerVisible = Boolean(promo?.valid);
 
   return (
@@ -42,7 +42,7 @@ const App = ({ page }: { page?: "listing" }) => {
           promoCode={promo?.code || ''}
           discountRate={promo?.discountRate ?? 0}
           promoActive={!!promo}
-          clearPromo={clearPromo}
+          reloadPromo={reloadPromo}
         />
       </TooltipProvider>
     </QueryClientProvider>
