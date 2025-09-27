@@ -23,7 +23,7 @@ interface PackageSelectionProps {
   promoCode?: string;
   discountRate?: number;
   promoActive?: boolean;
-  onOpenCongratulationsModal: (email: string) => void;
+  onOpenCongratulationsModal: (email: string, promise?: Promise<void>) => void;
 }
 
 interface AdData {
@@ -305,7 +305,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
         .then(async (res) => {
           console.log("res", res);
           const email = res?.email || "";
-          onOpenCongratulationsModal(email);
+          onOpenCongratulationsModal(email, res.promise);
         })
         .catch(() => {
           console.log("error");

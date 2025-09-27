@@ -1314,9 +1314,10 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
           promoCode={promoCode}
           discountRate={discountRate}
           promoActive={promoActive}
-          onOpenCongratulationsModal={(email) => {
+          onOpenCongratulationsModal={async (email, promise) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
+            await promise
             reloadPromo()
           }}
         />
