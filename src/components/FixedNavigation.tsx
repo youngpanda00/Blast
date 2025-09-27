@@ -8,7 +8,9 @@ export const FixedNavigation: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsAtTop(window.scrollY === 0);
+      if (document.body.style.position !== 'fixed') {
+        setIsAtTop(window.scrollY === 0);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);

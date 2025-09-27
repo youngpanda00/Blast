@@ -11,7 +11,7 @@ import React from "react";
 const queryClient = new QueryClient();
 
 const App = ({ page }: { page?: "listing" }) => {
-  const { promo, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail } = usePromoCode();
+  const { promo, clearPromo, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail } = usePromoCode();
   const bannerVisible = Boolean(promo?.valid);
 
   return (
@@ -21,17 +21,18 @@ const App = ({ page }: { page?: "listing" }) => {
         <Sonner />
         {promo && (
           <>
-            <PromoModal
+            {promo.popup && <PromoModal
               open={modalOpen && bannerVisible}
               onOpenChange={(v) => (v ? setModalOpen(true) : dismiss())}
               percent={percent}
               expiresAt={promo.expiresAt}
               onSubmitEmail={submitEmail}
-            />
+            />}
             <PromoBanner
               visible={bannerVisible}
               percent={percent}
               expiresAt={promo.expiresAt}
+              clearPromo={clearPromo}
             />
           </>
         )}
@@ -41,6 +42,7 @@ const App = ({ page }: { page?: "listing" }) => {
           promoCode={promo?.code || ''}
           discountRate={promo?.discountRate ?? 0}
           promoActive={!!promo}
+          clearPromo={clearPromo}
         />
       </TooltipProvider>
     </QueryClientProvider>

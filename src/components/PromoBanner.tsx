@@ -6,6 +6,7 @@ interface Props {
   expiresAt: number; // ms epoch
   onRedeem?: () => void;
   onClose?: () => void; // kept for compatibility, but not rendered
+  clearPromo: ()=>void
 }
 
 function splitDigits(value: number | string, minLen = 2) {
@@ -27,12 +28,12 @@ function TimeBlock({ label, value, minLen = 2 }: { label: string; value: number;
           </span>
         ))}
       </div>
-      <div className="mt-1.5 text-[10px] leading-none opacity-90">{label}</div>
+      <div className="mt-1.5 text-[10px] leading-none opacity-90" style={{color:'rgba(255, 255, 255, 0.5)'}}>{label}</div>
     </div>
   );
 }
 
-function usePromoCountdown(expiresAt?: number) {
+function usePromoCountdown(expiresAt?: number, clearPromo?: ()=>void) {
   const [now, setNow] = React.useState<number>(() => Date.now());
 
   React.useEffect(() => {
@@ -44,16 +45,19 @@ function usePromoCountdown(expiresAt?: number) {
   return React.useMemo(() => {
     if (!expiresAt) return { ms: 0, mins: '00', secs: '00', expired: true } as const;
     const ms = Math.max(0, expiresAt - now);
+    if (ms <= 0) {
+      clearPromo()
+    }
     const totalSeconds = Math.floor(ms / 1000);
     const mins = Math.floor(totalSeconds / 60);
     const secs = totalSeconds % 60;
     const pad = (n:number) => String(n).padStart(2, '0');
     return { ms, mins: pad(mins), secs: pad(secs), expired: ms === 0 } as const;
-  }, [expiresAt, now]);
+  }, [expiresAt, now, clearPromo]);
 }
 
-export const PromoBanner: React.FC<Props> = ({ visible, percent, expiresAt }) => {
-  const timeLeft = usePromoCountdown(expiresAt);
+export const PromoBanner: React.FC<Props> = ({ visible, percent, expiresAt, clearPromo }) => {
+  const timeLeft = usePromoCountdown(expiresAt, clearPromo);
   const actuallyVisible = visible && !timeLeft.expired;
 
   React.useEffect(() => {
@@ -81,10 +85,10 @@ export const PromoBanner: React.FC<Props> = ({ visible, percent, expiresAt }) =>
 
   return (
     <div id="promo-banner" data-promo-banner className="fixed left-0 right-0 top-[50px] md:top-[60px] z-40 shadow-lg bg-gradient-to-r from-[#547AF2] via-[#7A5AF8] to-[#9B5CF6] ">
-      <div className="w-full max-w-[1210px] mx-auto text-white py-2 md:py-3 flex items-center gap-3">
-        <span className="uppercase tracking-wide text-sm">Special Offer:</span>
+      <div className="w-full max-w-[1210px] max-md:px-4 mx-auto text-white py-2 md:py-3 flex items-center gap-3">
+        <span className="uppercase tracking-wide text-sm font-bold">Special Offer:</span>
         <span className="bg-[#F59E0B] text-white text-xs font-bold px-2 py-0.5 rounded-md">{percent}% OFF</span>
-        <span className="hidden md:inline text-sm">on all plans · Offer expires in:</span>
+        <span className="hidden md:inline text-sm font-bold">on all plans - Offer expires in:</span>
 
         <div className="flex items-center gap-2 md:gap-3">
           {showPair === 'day-hour' && (

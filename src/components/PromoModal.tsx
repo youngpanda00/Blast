@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
@@ -31,7 +31,8 @@ export const PromoModal: React.FC<Props> = ({ open, onOpenChange, percent, expir
   }, [open]);
 
   const deadline = new Date(expiresAt);
-  const rangeText = !isNaN(deadline.getTime()) ? `valid for ${Math.max(1, Math.round((expiresAt - Date.now())/86400000))} day(s)!` : '';
+  const dayCount = Math.max(1, Math.round((expiresAt - Date.now())/86400000))
+  const rangeText = !isNaN(deadline.getTime()) ? `valid for ${dayCount} ${dayCount <= 1 ? 'day' : 'days'}!` : '';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -107,12 +108,17 @@ const FormSection: React.FC<{ onSubmitEmail:(email:string)=>void; onClose:()=>vo
     onClose();
   };
 
+  const onChange = useCallback((e)=>{
+    setEmail(e.target.value)
+    setError(null)
+  }, [])
+
   return (
     <div className="mt-[44px]">
       <input
         type="email"
         value={email}
-        onChange={(e)=>setEmail(e.target.value)}
+        onChange={onChange}
         placeholder="Your email address"
         className="w-full border rounded-lg px-4 py-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
       />

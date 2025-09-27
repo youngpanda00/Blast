@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 
 export interface PromoState {
@@ -6,6 +6,7 @@ export interface PromoState {
   discountRate: number; // 0-1
   expiresAt: number; // ms epoch
   code: string | null;
+  popup: boolean
 }
 
 export const usePromoCode = () => {
@@ -23,7 +24,7 @@ export const usePromoCode = () => {
     const params = new URLSearchParams(window.location.search);
     const code = params.get("promo_code");
     if (!code) return;
-
+    const popup = params.get('isPopup') === '1'
 
     const run = async () => {
       try {
@@ -42,7 +43,7 @@ export const usePromoCode = () => {
         const now = Date.now();
         const valid = isValid && discountRate > 0 && exp > now;
         if (valid) {
-          const state: PromoState = { valid, discountRate, expiresAt: exp, code };
+          const state: PromoState = { valid, discountRate, expiresAt: exp, code, popup };
           setPromo(state);
         } else if (code) {
           toast({
@@ -79,5 +80,9 @@ export const usePromoCode = () => {
     setDismissed(true);
   };
 
-  return { promo, loading, error, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail };
+  const clearPromo = useCallback(()=>{
+    setPromo(null)
+  }, [])
+
+  return { promo, clearPromo, loading, error, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail };
 };

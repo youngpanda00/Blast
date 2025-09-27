@@ -825,13 +825,13 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           >
             <div className="space-y-1">
               {promoActive && (
-                <div className={`${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"} line-through text-base`}>
+                <div className={`${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"} line-through text-base text-[24px] mb-[10px]`}>
                   {formatMoney(pkg.basePrice)}
                 </div>
               )}
               <div className="flex items-baseline gap-2 flex-nowrap justify-between">
                 <span
-                  className={`text-2xl md:text-3xl font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
+                  className={`text-2xl ${promoActive?"md:text-[34px]":"md:text-3xl"} font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
                 >
                   {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
                 </span>
@@ -985,9 +985,11 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
           <div className="w-full max-w-[1140px] mt-3 px-4 md:px-0">
             <div className="flex items-center gap-2 md:gap-3 text-white text-xs md:text-sm rounded-md px-3 py-2 shadow bg-gradient-to-r from-[#547AF2] via-[#7A5AF8] to-[#9B5CF6]">
               <img className="h-[24px]" src="https://cdn.lofty.com/image/fs/servicetool/2025925/12/original_e09de188a7614349.png" />
+              <div>
               <span className="font-semibold">Special Promotion:</span>
-              <span className="opacity-90">You're accessing our exclusive discounted plans.</span>
-              <span className="hidden md:inline opacity-90">This offer is available for a limited time only.</span>
+              <span className="opacity-90"> You're accessing our exclusive discounted plans.</span>
+              <span className="hidden md:inline opacity-90"> This offer is available for a limited time only.</span>
+              </div>
             </div>
           </div>
         )}
