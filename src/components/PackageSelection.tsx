@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { PricingCard } from "./PricingCard";
 import AdPreview from "./AdPreview";
 import { MobileAdConfiguration } from "./MobileAdConfiguration";
-import { Info, Diamond, ChevronLeft, ChevronRight } from "lucide-react";
+import { Info, Diamond, ChevronLeft, ChevronRight, Gift } from "lucide-react";
 import useEmblaCarousel from 'embla-carousel-react';
 import {
   Tooltip,
@@ -19,12 +19,16 @@ import { saveStepWithRetry, showErrorNotification, getUserFriendlyErrorMessage }
 interface PackageSelectionProps {
   previewPicture?: string | null;
   selectedAddressId?: string | null;
-  onOpenCongratulationsModal: (email: string) => void;
   isCustomListing?: boolean;
   isEditingAd?: boolean;
   customAddress?: string | null;
   addressName?:string | null;
   updateAdInfo?: (data: AdData) => void
+  promoEmail?: string;
+  promoCode?: string;
+  discountRate?: number;
+  promoActive?: boolean;
+  onOpenCongratulationsModal: (email: string, promise?: Promise<void>) => void;
 }
 
 interface AdData {
@@ -42,7 +46,11 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   isCustomListing,
   customAddress,
   addressName,
-  updateAdInfo
+  updateAdInfo,
+  promoEmail,
+  promoCode,
+  discountRate: discountRateProp,
+  promoActive: promoActiveProp,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
@@ -297,7 +305,10 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
       currentListingId,
       duration,
       paymentMode,
-      isCustomListing
+      isCustomListing,
+      email: promoEmail || '',
+      promoCode: promoCode || '',
+      discountRate: discountRate,
     }
     console.log('checkoutPop ===>>>', adPreviewData, packageInfo)
 
@@ -308,7 +319,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         .then(async (res) => {
           console.log("res", res);
           const email = res?.email || "";
-          onOpenCongratulationsModal(email);
+          onOpenCongratulationsModal(email, res.promise);
         })
         .catch(() => {
           console.log("error");
@@ -357,13 +368,18 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const paymentText = selectedPlan === "one-time" ? "Pay one-time" : "Monthly";
 
+  // Promo visibility and discount (passed from parent)
+  const promoActive = Boolean(promoActiveProp);
+  const discountRate = Number(discountRateProp ?? 0);
+  const formatMoney = (n:number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+
   // Package data
   const packages = [
     {
       id: "starter",
       name: "Starter Pack",
       originalPrice: "$109",
-      price: "$79",
+      basePrice: 79,
       duration: "1 Week",
       isPopular: false,
       estimatedViews: (2000 * packageToDuration.starter).toLocaleString(),
@@ -372,7 +388,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     {
       id: "boost",
       name: "Boost Pack",
-      price: "$158",
+      basePrice: 158,
       duration: "2 Weeks",
       isPopular: true,
       estimatedViews: (2000 * packageToDuration.boost).toLocaleString(),
@@ -381,7 +397,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     {
       id: "growth",
       name: "Growth Pack",
-      price: "$237",
+      basePrice: 237,
       duration: "3 Weeks",
       isPopular: false,
       estimatedViews: (2000 * packageToDuration.growth).toLocaleString(),
@@ -390,7 +406,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     {
       id: "mastery",
       name: "Mastery Pack",
-      price: "$316",
+      basePrice: 316,
       duration: "4 Weeks",
       isPopular: false,
       estimatedViews: (2000 * packageToDuration.mastery).toLocaleString(),
@@ -459,7 +475,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
       <div
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
-        className={`relative rounded-[24px] p-4 md:p-6 h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
+        className={`relative rounded-[24px] p-4 md:p-[20px] max-md:px-[10px] h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
           selectedPackage === pkg.id
             ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
             : "bg-white"
@@ -533,19 +549,31 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
           {/* Price section for mobile */}
           <div className={`border-t pt-3 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span
-                className={`text-xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
-              >
-                {pkg.price}
-              </span>
-            </div>
-            <div className="mt-1">
-              <span
-                className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
-              >
-                {paymentText}
-              </span>
+            <div className="space-y-1">
+              {promoActive && (
+                <div className={`${selectedPackage === pkg.id ? "text-white/80" : "text-gray-400"} line-through text-sm`}>
+                  {formatMoney(pkg.basePrice)}
+                </div>
+              )}
+              <div className="flex items-baseline gap-2 flex-nowrap">
+                <span
+                  className={`text-[18px] font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
+                >
+                  {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
+                </span>
+                {promoActive && (
+                  <span className={`${selectedPackage === pkg.id ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-[11px] px-2 py-0.5 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
+                )}
+              </div>
+              {!promoActive && (
+              <div className="mt-1">
+                <span
+                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                >
+                  {paymentText}
+                </span>
+              </div>
+            )}
             </div>
           </div>
         </div>
@@ -608,20 +636,32 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
           <div
             className={`border-t pt-3 md:pt-4 flex-shrink-0 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}
           >
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span
-                className={`text-2xl md:text-3xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
-              >
-                {pkg.price}
-              </span>
+            <div className="space-y-1">
+              {promoActive && (
+                <div className={`${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"} line-through text-[24px] mb-[10px]`}>
+                  {formatMoney(pkg.basePrice)}
+                </div>
+              )}
+              <div className="flex items-baseline gap-2 flex-nowrap justify-between">
+                <span
+                  className={`text-2xl ${promoActive?"md:text-[34px]":"md:text-3xl"} font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
+                >
+                  {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
+                </span>
+                {promoActive && (
+                  <span className={`${selectedPackage === pkg.id ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-xs px-2.5 py-1 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
+                )}
+              </div>
             </div>
-            <div className="mt-1">
-              <span
-                className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
-              >
-                {paymentText}
-              </span>
-            </div>
+            {!promoActive && (
+              <div className="mt-1">
+                <span
+                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                >
+                  {paymentText}
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -663,8 +703,15 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6 max-md:justify-center max-md:items-center">
           <div className="flex flex-col">
             <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
+              {promoActive ? <>
+                <span>Step 3 - Special Discounted Plans</span>
+                <div className="promo-tip" style={{color:'#797E8B', fontSize: 16, fontWeight: 'normal'}}>
+                  Limited time offer - <span className="text-[#3B5CDE]" style={{fontWeight: 'bold'}}>{Math.round((discountRate ?? 0) * 100)}% OFF</span> on all advertising plan</div>
+              </>
+              :<>
               <span className="max-md:hidden">Step 3 - Select Your Package & Luanch Ad</span>
               <span className="hidden max-md:block">Step 3 - Publish Your Ad Now</span>
+              </>}
             </h2>
             {!hasValidListingId && (
               <p className="text-sm text-orange-600 mt-1">
@@ -753,6 +800,18 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
+        {promoActive && (
+          <div className="w-full max-w-[1140px] mt-3 px-4 md:px-0">
+            <div className="flex items-center gap-2 md:gap-3 text-white text-xs md:text-sm rounded-md px-3 py-2 shadow bg-gradient-to-r from-[#547AF2] via-[#7A5AF8] to-[#9B5CF6]">
+              <img className="h-[24px]" src="https://cdn.lofty.com/image/fs/servicetool/2025925/12/original_e09de188a7614349.png" />
+              <div>
+              <span className="font-semibold">Special Promotion:</span>
+              <span className="opacity-90"> You're accessing our exclusive discounted plans.</span>
+              <span className="hidden md:inline opacity-90"> This offer is available for a limited time only.</span>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Package cards layout - 2x2 Grid for mobile, 1x4 for web */}
         <div className="w-full max-w-[1140px] mt-5 px-4 md:px-0">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-[800px] md:max-w-full mx-auto">
@@ -780,6 +839,8 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         selectedPackage={selectedPackage}
         selectedPlan={selectedPlan}
         isVisible={!isLoading}
+        promoActive={promoActive}
+        discountRate={discountRate}
       />
     </>
   );

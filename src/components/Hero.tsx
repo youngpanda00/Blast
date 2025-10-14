@@ -36,7 +36,7 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
           </div>}
 
           {/* Centered content layout */}
-          <div className="flex w-full max-w-[900px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col">
+          <div className="flex w-full max-w-[900px] mx-auto max-md:max-w-full flex-1 justify-center items-center max-md:flex-col" style={{marginTop:'var(--promo-banner-space)'}}>
             <div className="hidden max-md:block bg-[#4C6EF5] text-white py-2 px-4 inline-block self-start md:self-auto" style={{ borderRadius: '40px', marginBottom: '30px' }}>
               <span className="text-sm font-medium">AI-Powered Blast</span>
             </div>

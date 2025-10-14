@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -20,7 +20,7 @@ import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 import { trackFBEvent } from "@/lib/utils";
 import { autoRecordJumpClick } from "@/utils/recordJumpClick";
 
-const Index = ({ page }: { page?: "listing" }) => {
+const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadPromo }: { page?: "listing"; promoEmail?: string; promoCode?: string; discountRate?: number; promoActive?: boolean, reloadPromo:()=>void }) => {
   const isMobile = useIsMobile();
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
@@ -239,7 +239,7 @@ const Index = ({ page }: { page?: "listing" }) => {
     }
   }
 
-  const adSets = [
+  const adSets = useMemo(()=>[
     {
       platform: "Facebook",
       platformIcon:
@@ -276,7 +276,7 @@ const Index = ({ page }: { page?: "listing" }) => {
       mobileImage: "/lovable-uploads/instagram-post-mobile.png",
       isCustom: true,
     },
-  ];
+  ], []);
 
   const FacebookAdComponent = () => {
     if (viewMode === "mobile") {
@@ -1283,10 +1283,16 @@ const Index = ({ page }: { page?: "listing" }) => {
           addressName={addressName}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
-          onOpenCongratulationsModal={(email) => {
+          promoEmail={promoEmail}
+          promoCode={promoCode}
+          discountRate={discountRate}
+          promoActive={promoActive}
+          onOpenCongratulationsModal={async (email, promise) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
             refreshWithKey();
+            await promise
+            reloadPromo()
           }}
           updateAdInfo={(data) => {
             setSelectedPreviewPicture(data?.imageUrl)

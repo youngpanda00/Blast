@@ -5,32 +5,41 @@ import { ChevronUp, Zap } from 'lucide-react';
 
 interface StickyCTAProps {
   onCtaClick: () => void;
-  selectedPackage?: string;
+  selectedPackage?: 'starter' | 'boost' | 'growth' | 'mastery';
   selectedPlan?: string;
   isVisible?: boolean;
+  promoActive?: boolean;
+  discountRate?: number; // 0-1
 }
 
 export const StickyCTA: React.FC<StickyCTAProps> = ({
   onCtaClick,
   selectedPackage = 'starter',
   selectedPlan = 'monthly',
-  isVisible = true
+  isVisible = true,
+  promoActive = false,
+  discountRate = 0,
 }) => {
-  const { scrollY, scrollDirection } = useScroll();
+  const { scrollY } = useScroll();
   const isMobile = useIsMobile();
   const [shouldShow, setShouldShow] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showHighlight, setShowHighlight] = useState(false);
 
   // Package pricing data
-  const packagePricing = {
-    starter: { price: '$79', originalPrice: '$109' },
-    boost: { price: '$158' },
-    growth: { price: '$237' },
-    mastery: { price: '$316' }
+  const basePriceMap: Record<'starter' | 'boost' | 'growth' | 'mastery', number> = {
+    starter: 79,
+    boost: 158,
+    growth: 237,
+    mastery: 316,
   };
 
-  const currentPackage = packagePricing[selectedPackage as keyof typeof packagePricing];
+  const formatMoney = (n: number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+
+  const base = basePriceMap[selectedPackage];
+  const dr = Math.max(0, Math.min(1, Number(discountRate || 0)));
+  const finalPrice = promoActive ? Math.max(0, base * (1 - dr)) : base;
+  const formattedPrice = formatMoney(finalPrice);
 
   useEffect(() => {
     // Show sticky CTA after scrolling past 600px (roughly past hero section)
@@ -131,7 +140,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                   <span className="text-xl font-bold text-gray-900">
-                    {currentPackage?.price}
+                    {formattedPrice}
                   </span>
                 </div>
                 <div className="text-xs text-gray-500">
