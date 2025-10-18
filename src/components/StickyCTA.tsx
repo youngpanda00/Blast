@@ -39,6 +39,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
   const dr = Math.max(0, Math.min(1, Number(discountRate || 0)));
   const finalPrice = promoActive ? Math.max(0, base * (1 - dr)) : base;
   const formattedPrice = formatMoney(finalPrice);
+  const savedPrice = formatMoney(base - finalPrice);
 
   useEffect(() => {
     const showThreshold = 600;
@@ -124,16 +125,19 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
           </button>
 
           <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-4 min-w-[280px]">
-            <div className="flex items-center justify-between mb-3">
+            <div className="mb-3">
               <div>
                 <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                   {selectedPackage.charAt(0).toUpperCase() + selectedPackage.slice(1)} Pack Selected
                 </div>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center space-between gap-2 mt-1" style={{justifyContent: 'space-between'}}>
                   <span className="text-xl font-bold text-gray-900">
                     {formattedPrice}
                   </span>
+                  {promoActive && (
+                    <span className="bg-[#E7F8ED] text-[#16A34A] whitespace-nowrap text-xs px-2.5 py-1 rounded-full">Save {savedPrice}</span>
+                  )}
                 </div>
                 <div className="text-xs text-gray-500">
                   {selectedPlan === 'monthly' ? 'Monthly billing' : 'One-time payment'}
