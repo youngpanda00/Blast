@@ -23,6 +23,8 @@ interface PackageSelectionProps {
   isEditingAd?: boolean;
   customAddress?: string | null;
   addressName?:string | null;
+  onScrollToAdPreview?:() => void;
+  updateIsEditingAd?:(status:boolean) => void;
   updateAdInfo?: (data: AdData) => void
   promoEmail?: string;
   promoCode?: string;
@@ -47,6 +49,8 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   isCustomListing,
   customAddress,
   addressName,
+  onScrollToAdPreview,
+  updateIsEditingAd,
   updateAdInfo,
   promoEmail,
   promoCode,
@@ -283,7 +287,9 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     window.trackBlastNow?.();
 
     if (!adPreviewData || !adPreviewData?.file) {
-      return window?.common?.utils?.toast?.({content: 'Please Upload and Save your Ad Image ', time: 3000})
+      onScrollToAdPreview();
+      updateIsEditingAd(true);
+      return window?.common?.utils?.toast?.({content: 'Please Upload and Save your Ad Image ', width: '300px', time: 3000})
     }
 
     const duration = packageToDuration[packageType];
