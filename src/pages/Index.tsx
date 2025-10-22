@@ -1295,6 +1295,7 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
             reloadPromo()
           }}
           updateAdInfo={(data) => {
+            setIsEditingAd(!data.done);
             setSelectedPreviewPicture(data?.imageUrl)
           }}
         />
