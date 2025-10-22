@@ -35,7 +35,8 @@ interface AdData {
   imageUrl?: string | null;
   headline?: string | null;
   mainText?: string | null;
-  file?: object
+  file?: object,
+  done?:boolean
 }
 
 const PackageSelection: React.FC<PackageSelectionProps> = ({
@@ -685,7 +686,8 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         initialAdCopy={initialAdCopy}
         onAdUpdate={(data) => {
           updateAdInfo({
-            imageUrl: data.image
+            imageUrl: data.image,
+            done: data.done
           })
           setAdPreviewData({
             imageUrl: data.image,

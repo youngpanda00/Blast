@@ -31,7 +31,7 @@ interface AdPreviewProps {
   initialAdCopy?: string;
   previewPicture?: string;
   selectedAddressId?: string;
-  onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object }) => void;
+  onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object, done: boolean }) => void;
 }
 
 
@@ -136,7 +136,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setHeadline(tempHeadline);
     setAdCopy(tempAdCopy);
     setIsEditing(false);
-    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
+    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile, done: true });
     return true
   }
 
@@ -156,7 +156,8 @@ const AdPreview: React.FC<AdPreviewProps> = ({
         image: pic,
         headline: "Don't miss out on this new listing",
         adCopy: `✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`,
-        selectedFile: null
+        selectedFile: null,
+        done: true
       }
     )
   }, []);
@@ -169,7 +170,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
       const url = URL.createObjectURL(file);
       setImage(url);
       setUploadImage(url);
-      onAdUpdate?.({ image: url, headline, adCopy, selectedFile });
+      onAdUpdate?.({ image: url, headline, adCopy, selectedFile, done: false });
     }
   };
 
@@ -189,7 +190,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     }
     setHeadline(tempHeadline);
     setAdCopy(tempAdCopy);
-    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
+    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile, done: true });
     setIsMobileEditModalOpen(false);
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
@@ -213,10 +214,10 @@ const AdPreview: React.FC<AdPreviewProps> = ({
   const saveInlineEdit = () => {
     if (isEditingInline === 'headline') {
       setHeadline(tempHeadline);
-      onAdUpdate?.({ image, headline: tempHeadline, adCopy, selectedFile });
+      onAdUpdate?.({ image, headline: tempHeadline, adCopy, selectedFile, done: false });
     } else if (isEditingInline === 'adCopy') {
       setAdCopy(tempAdCopy);
-      onAdUpdate?.({ image, headline, adCopy: tempAdCopy, selectedFile });
+      onAdUpdate?.({ image, headline, adCopy: tempAdCopy, selectedFile, done: false });
     }
     setIsEditingInline(null);
     setHighlightedArea(null);
@@ -241,7 +242,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
           setTempAdCopy(template.copy);
           setAdCopy(template.copy);
         }
-        onAdUpdate?.({ image, headline, adCopy: template.copy, selectedFile });
+        onAdUpdate?.({ image, headline, adCopy: template.copy, selectedFile, done: false });
       }
     }
     setShowTemplateDropdown(false);
