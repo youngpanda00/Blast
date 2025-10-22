@@ -130,7 +130,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
   const handleSave = () => {
     if (!uploadImage) {
-      window?.common?.utils?.toast?.({content: 'Please Upload and Save your Ad Image ', width: '300px', time: 3000})
+      window?.common?.utils?.toast?.({content: 'Please Upload Your Listing Image', width: '300px', time: 3000})
       setHighlightedAreaError('image');
       return false
     }
@@ -185,7 +185,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
   const handleSaveInMobile = () => {
     if (!uploadImage) {
-      window?.common?.utils?.toast?.({content: 'Please Upload and Save your Ad Image ', width: '300px', time: 3000})
+      window?.common?.utils?.toast?.({content: 'Please Upload Your Listing Image', width: '300px', time: 3000})
       console.log('please upload image')
       setHighlightedAreaError('image');
       return false

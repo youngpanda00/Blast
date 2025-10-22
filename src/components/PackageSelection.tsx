@@ -289,7 +289,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     if (!adPreviewData || !adPreviewData?.file) {
       onScrollToAdPreview();
       updateIsEditingAd(true);
-      return window?.common?.utils?.toast?.({content: 'Please Upload and Save your Ad Image ', width: '300px', time: 3000})
+      return window?.common?.utils?.toast?.({content: 'Please Upload Your Listing Image', width: '300px', time: 3000})
     }
 
     const duration = packageToDuration[packageType];
