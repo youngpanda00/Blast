@@ -182,7 +182,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
   }, [tempAdCopy, addressName, headline])
 
   const handleSaveInMobile = () => {
-    if (isCustomListing && !uploadImage) {
+    if (!uploadImage) {
       console.log('please upload image')
       setHighlightedAreaError('image');
       return false
@@ -561,11 +561,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                         <Label className="text-sm font-medium">Property Image</Label>
                         <div className="mt-2 flex items-center gap-3">
                           {
-                            !isCustomListing ? (
-                              <div className="w-16 h-16 rounded-lg overflow-hidden border">
-                                <img src={image} alt="Current" className="w-full h-full object-cover" />
-                              </div>
-                            ):(
+                            (
                               uploadImage && <div className="w-16 h-16 rounded-lg overflow-hidden border">
                                 <img src={uploadImage} alt="Current" className="w-full h-full object-cover" />
                               </div>

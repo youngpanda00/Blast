@@ -98,12 +98,11 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
     setAddressName(addressData?.addressName);
 
     setIsCustomListing(!!addressData?.isCustomListing);
-    // if (addressData?.isCustomListing && addressData?.fullAddress) {
-    //   setIsEditingAd(true);
-    // } else {
-    //   setIsEditingAd(false);
-    // }
-    setIsEditingAd(true);
+    if (addressData?.fullAddress) {
+      setIsEditingAd(true);
+    } else {
+      setIsEditingAd(false);
+    }
 
     if (addressData?.previewPicture) {
       // Handle multiple images separated by "|", take the first one
