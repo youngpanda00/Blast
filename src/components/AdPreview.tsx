@@ -230,6 +230,23 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setTempAdCopy(adCopy);
   };
 
+  const handleAdsImagePc = () => {
+    if (!isEditing) {
+      setIsEditing(true);
+    }
+    setTimeout(() => {
+      document.getElementById('file-input-pc')?.click();
+    }, 0)
+  }
+
+  const handleAdsImageMobile = () => {
+    setIsMobileEditModalOpen(true);
+    handleEditMobile();
+    setTimeout(() => {
+      document.getElementById('file-input-mobile')?.click();
+    })
+  }
+
   const handleTemplateChange = (templateId: string) => {
     setSelectedTemplate(templateId);
     if (templateId !== "custom") {
@@ -381,12 +398,12 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                 </div>
 
                 {/* Ad image - with mobile upload */}
-                <div className={`transition-all duration-300 relative group ${
+                <div onClick={handleAdsImageMobile} className={`transition-all duration-300 relative group ${
                   highlightedArea === 'image'
                     ? 'ring-4 ring-green-300 shadow-lg'
                     : ''
                 }`}>
-                  <div className="relative px-4 overflow-hidden">
+                  <div className="relative px-4 overflow-hidden" style={{ cursor: 'pointer'}} onClick={handleAdsImagePc}>
                     <img
                       src={image}
                       alt="Property"
@@ -568,20 +585,33 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                               </div>
                             )
                           }
-                          <label className="cursor-pointer" style={{position: 'relative'}}>
+                          {( uploadImage && <label className="cursor-pointer" style={{position: 'relative'}}>
                             <input
+                              id="file-input-mobile"
                               type="file"
                               accept="image/*"
                               onChange={handleImageUpload}
                               className="hidden"
                             />
                             <Button variant="outline" size="sm" asChild>
-                              <span className={`${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': ''}`}> { isCustomListing && !uploadImage ? 'Upload Image' : 'Change Image' }</span>
+                              <span className={`${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': ''}`}> { !uploadImage ? 'Upload Your Listing Image' : 'Change Your Listing Image' }</span>
                             </Button>
                             {
                               highlightedAreaError === 'image' && <div className="xs red-400" style={{color: '#f87171'}}>please upload image</div>
                             }
-                          </label>
+                          </label>)}
+                          {(!uploadImage && <div>
+                            <label htmlFor="file-input-mobile" style={{ position: 'relative', cursor: 'pointer'}}>
+                              <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251022/10/original_5e3dd8f90a5b4d17.png" alt="" />
+                            </label>
+                            <input
+                                id="file-input-mobile"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                className="hidden"
+                              />
+                          </div>)}
                         </div>
                       </div>
 
@@ -715,8 +745,8 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                 <div className="space-y-3">
                   <Label htmlFor="image" className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <span className="w-3 h-3 bg-green-400 rounded-full"></span>
-                    Ad Image
-                    <span className="text-xs text-muted-foreground font-normal">(main visual content)</span>
+                    <span style={{ color: !uploadImage ? 'red' : '#000000' }}>Upload Your Listing Image</span>
+                    <span className="text-xs text-muted-foreground font-normal">(Turn Your Listing into Local Ads)</span>
                   </Label>
                   <div
                     className="flex items-center gap-4"
@@ -735,23 +765,42 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                         />
                       )
                     }
-                    <div className="flex-1 space-y-2">
-                      <Input
-                        id="image"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className={`text-sm bg-background transition-all duration-300
-                          ${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': 'border-border'}
-                          ${highlightedArea === 'image' && highlightedAreaError !== 'image'
-                            ? 'border-green-400 ring-2 ring-green-200'
-                            : 'border-border'}
-                        `}
-                      />
+                    {(uploadImage && <div className="flex-1 space-y-2">
+                      <label className="cursor-pointer" style={{position: 'relative'}}>
+                          <input
+                            id="file-input-pc"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                          />
+                          <Button variant="outline" size="sm" asChild>
+                            <span className={`${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': ''}`}> { !uploadImage ? 'Upload Your Listing Image' : 'Change Your Listing Image' }</span>
+                          </Button>
+                          {
+                            highlightedAreaError === 'image' && <div className="xs red-400" style={{color: '#f87171'}}>please upload image</div>
+                          }
+                      </label>
                       <p className="text-xs text-muted-foreground">
                         <span>Recommended Aspect Ratio: 1:1 or 4:5</span>
                       </p>
-                    </div>
+                    </div>)}
+
+                    {(!uploadImage && <div>
+                      <label htmlFor="file-input-pc" style={{ position: 'relative', cursor: 'pointer'}}>
+                        <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251022/10/original_5e3dd8f90a5b4d17.png" alt="" />
+                      </label>
+                      <input
+                          id="file-input-pc"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                        <p className="text-xs text-muted-foreground" style={{display: 'block', marginTop: '5px'}}>
+                          <span>Recommended Aspect Ratio: 1:1 or 4:5</span>
+                        </p>
+                    </div>)}
                   </div>
                 </div>
 
