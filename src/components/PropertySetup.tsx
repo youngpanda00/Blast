@@ -129,7 +129,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
         const resultList = propertyData.slice(0, 2).map(it => {
           return {
             ...it,
-            previewPicture: 'https://static.chimeroi.com/image/house_default.png'
+            previewPicture: 'https://cdn.lofty.com/image/fs/servicetool/20251022/10/original_5e3dd8f90a5b4d17.png'
           }
         });
         setProperties(resultList);
@@ -279,7 +279,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     const bedrooms = property.bedrooms || 1;
     const bathrooms = property.bathrooms || property.baths || 1;
     const sqft = property.sqft || 1;
-    const image = property.previewPicture || 'https://static.chimeroi.com/image/house_default.png';
+    const image = 'https://static.chimeroi.com/image/house_default.png';
     const agentName = property.agentName || ''
 
     return (
@@ -318,7 +318,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     const bedrooms = property.bedrooms || 1;
     const bathrooms = property.bathrooms || property.baths || 1;
     const sqft = property.sqft || 1;
-    const image = property.previewPicture || 'https://static.chimeroi.com/image/house_default.png';
+    const image = 'https://static.chimeroi.com/image/house_default.png';
     const agentName = property.agentName || ''
 
     return (
