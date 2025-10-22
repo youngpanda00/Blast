@@ -126,7 +126,12 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
         // Handle both single property and array of properties
         const propertyData = Array.isArray(result.data) ? result.data : [result.data];
         // Show maximum of 2 properties
-        const resultList = propertyData.slice(0, 2);
+        const resultList = propertyData.slice(0, 2).map(it => {
+          return {
+            ...it,
+            previewPicture: 'https://static.chimeroi.com/image/house_default.png'
+          }
+        });
         setProperties(resultList);
         setShowListingsRes(true);
         if (resultList.length === 1) {
@@ -274,7 +279,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     const bedrooms = property.bedrooms || 1;
     const bathrooms = property.bathrooms || property.baths || 1;
     const sqft = property.sqft || 1;
-    const image = property.previewPicture || property.imageUrl || "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg";
+    const image = property.previewPicture || 'https://static.chimeroi.com/image/house_default.png';
     const agentName = property.agentName || ''
 
     return (
@@ -313,7 +318,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     const bedrooms = property.bedrooms || 1;
     const bathrooms = property.bathrooms || property.baths || 1;
     const sqft = property.sqft || 1;
-    const image = property.previewPicture || property.imageUrl || "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg";
+    const image = property.previewPicture || 'https://static.chimeroi.com/image/house_default.png';
     const agentName = property.agentName || ''
 
     return (

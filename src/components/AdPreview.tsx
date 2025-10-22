@@ -129,7 +129,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
   };
 
   const handleSave = () => {
-    if (isCustomListing && !uploadImage) {
+    if (!uploadImage) {
       setHighlightedAreaError('image');
       return false
     }
@@ -142,7 +142,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
   const handleCancel = useCallback(() => {
     const pic = isCustomListing ? 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800' : previewPicture
-    const uploadImg = isCustomListing ? '' : previewPicture
+    const uploadImg = ''
     setImage(pic);
     setUploadImage(uploadImg);
     setHeadline("Don't miss out on this new listing");
@@ -727,17 +727,6 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                     onMouseLeave={() => setHighlightedArea(null)}
                   >
                     {
-                      !isCustomListing ? (
-                        <img
-                          src={image}
-                          alt="Current ad image"
-                          className={`w-20 h-20 object-cover rounded-lg border-2 shadow-sm transition-all duration-300 ${
-                            highlightedArea === 'image'
-                              ? 'border-green-400 shadow-lg ring-2 ring-green-200 scale-105'
-                              : 'border-border'
-                          }`}
-                        />
-                      ) :
                       (uploadImage && <img
                           src={uploadImage}
                           alt="Current ad image"
