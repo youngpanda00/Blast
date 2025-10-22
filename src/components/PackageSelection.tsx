@@ -282,7 +282,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
     window.trackBlastNow?.();
 
-    if (isCustomListing && (!adPreviewData || !adPreviewData?.file)) {
+    if (!adPreviewData || !adPreviewData?.file) {
       return window?.common?.utils?.toast?.({content: 'Please Upload and Save your Ad Image ', time: 3000})
     }
 
