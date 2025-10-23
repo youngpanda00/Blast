@@ -125,11 +125,11 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       if (result.data) {
         // Handle both single property and array of properties
         const propertyData = Array.isArray(result.data) ? result.data : [result.data];
-        // Show maximum of 2 properties
-        const resultList = propertyData.slice(0, 2).map(it => {
+        // Show maximum of 1 properties
+        const resultList = propertyData.slice(0, 1).map(it => {
           return {
             ...it,
-            previewPicture: 'https://cdn.lofty.com/image/fs/servicetool/20251022/10/original_5e3dd8f90a5b4d17.png'
+            previewPicture: 'https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_9e66df796bbf490e.png'
           }
         });
         setProperties(resultList);
@@ -249,7 +249,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const renderLoadingCard = () => {
     return (
       <div style={{minHeight: isMobile? '' : '400px'}}>
-        <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
+        <div className="text-sm" style={{color: 'white', marginTop: '20px', marginBottom: '20px', textAlign: 'center', fontWeight: '500', lineHeight: '1.5'}}>Confirm Your Property</div>
         <div className="flex items-center justify-center" style={{ textAlign: 'center', padding: '0 40px', height: isMobile ? '120px' : '100px', border: '1px dashed rgba(255, 255, 255, 0.4)', borderRadius: '6px' }}>
             <img style={{ width: '36px', height: '36px', marginRight: '10px', animation: 'logo-spin 1.5s linear infinite' }} src="https://cdn.lofty.com/image/fs/servicetool/2025917/5/original_e5f917c66f2342cd.png" alt="" />
             <span style={{ fontSize: '20px', color: '#C6C8D1' }}>Loading</span>
@@ -275,80 +275,47 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
   const renderTargetCardInfo = (property: PropertyData) => {
     const address = property.fullAddress || property.address || "";
-    const price = property.price || "";
+    const price = property.price || 0;
     const bedrooms = property.bedrooms || 1;
     const bathrooms = property.bathrooms || property.baths || 1;
     const sqft = property.sqft || 1;
-    const image = 'https://static.chimeroi.com/image/house_default.png';
     const agentName = property.agentName || ''
 
+    const addressArr = address.split(',').map(it => it.trim())
+    const addressPrefix = addressArr.slice(0, -2).join(', ')
+    const addressSuffix = [addressArr[addressArr.length - 2], addressArr[addressArr.length - 1]].join(', ')
+
     return (
-      <div key={property.id} className="flex" style={{ flexDirection: 'column', padding: isMobile ? '10px 10px 15px' : '15px 15px 18px', background: '#ffffff', borderRadius: '6px'}}>
-        <img src={image} alt={`Property at ${address}`} style={{width: '100%', height: isMobile ? '118px' : '180px', objectFit: 'cover', marginBottom: isMobile ? '15px': '30px', borderRadius: '6px'}} />
-        <div style={{ padding: isMobile ? '0 13px' : '0 33px'}}>
-          <div className="text-sm font-medium" style={{ color: '#202437', fontSize: isMobile ? '14px':'20px', textAlign: 'center', lineClamp: 2, overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
-          <div className="text-xs" style={{color: '#A0A3AF', fontSize: isMobile ? '12px': '15px', lineHeight: isMobile ? '12px': '20px', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: 'center', marginTop: isMobile ? '5px': '10px'}}>Listed by: {agentName || '--'}</div>
-          <div className="flex items-center justify-center gap-6 text-gray-400" style={{ marginTop: isMobile ? '15px' : '25px'}}>
-            <div className="flex items-center gap-2">
-              <Bed className="w-4 h-4" />
-              <span className={isMobile ? 'text-xs' : 'text-sm'}>{bedrooms > -1 ? bedrooms : '--'} BD{ bedrooms > 1 ? 's' : ''}</span>
+      <div key={property.id} className="flex" style={{ flexDirection: 'column', padding: isMobile ? '15px' : '30px', background: 'rgba(0, 0, 0, 0.4)', borderRadius: '12px', height: isMobile ? 'auto': '300px', justifyContent: hideConfirm ? 'center' : 'flex-start'}}>
+        <div>
+          <div style={{ color: '#ffffff', fontSize: isMobile ? '14px':'28px', fontWeight: '700', marginBottom: '10px', lineHeight: isMobile ? '1' : '24px', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{addressPrefix}</div>
+          <div style={{ color: '#ffffff', fontSize: isMobile ? '14px':'20px', fontWeight: '600', marginBottom: '10px', lineHeight: isMobile ? '1' : '24px', textAlign: 'left' }}>{addressSuffix}</div>
+          <div style={{ color: '#ffffff', fontSize: isMobile ? '12px':'16px', marginBottom: '10px', textAlign: 'left'  }}>${ price ? new Intl.NumberFormat('en-US').format(Number(price)) : '--'}</div>
+          <div className="flex items-center" style={{color: '#ffffff', marginBottom: '10px'}}>
+            <div className="flex items-center">
+              <img style={{ width: '12px', height: '12px', marginRight: '6px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_c27ed42e0b534834.png" alt="bedroom" />
+              <span className={isMobile ? 'text-xs' : 'text-sm'}>{bedrooms > -1 ? bedrooms : '--'} bd{ bedrooms > 1 ? 's' : ''}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Bath className="w-4 h-4" />
-              <span className={isMobile ? 'text-xs' : 'text-sm'}>{bathrooms > -1 ? bathrooms : '--'} BA{bathrooms > 1 ? 's' : ''}</span>
+            <div style={{width: '1px', height: '10px', borderRight: '1px solid rgba(255, 255, 255, 0.2)', margin: '0 10px'}}></div>
+            <div className="flex items-center">
+              <img style={{ width: '12px', height: '12px', marginRight: '6px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_f55e328d4ec8495d.png" alt="bathroom" />
+              <span className={isMobile ? 'text-xs' : 'text-sm'}>{bathrooms > -1 ? bathrooms : '--'} bth{bathrooms > 1 ? 's' : ''}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Square className="w-4 h-4" />
-              <span className={isMobile ? 'text-xs' : 'text-sm'}>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</span>
+            <div style={{width: '1px', height: '10px', borderRight: '1px solid rgba(255, 255, 255, 0.2)', margin: '0 10px'}}></div>
+            <div className="flex items-center">
+              {/* <Square className="w-4 h-4" /> */}
+              <img style={{ width: '12px', height: '12px', marginRight: '6px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_6737d9cceea949ce.png" alt="sqft" />
+              <span className={isMobile ? 'text-xs' : 'text-sm'}>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} sqft</span>
             </div>
           </div>
-          { !hideConfirm && <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
-            <span className="flex justify-center items-center" onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer', fontSize: '14px' }}>Back</span>
-            <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer', fontSize: '14px'}}>Confirm Address</span>
-          </div> }
+          <div style={{ display: 'flex', color: '#ffffff', fontSize: isMobile ? '12px': '16px', lineHeight: isMobile ? '14px': '24px', width: '100%', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: 'left'}}>Listing Agent: <span style={{ marginLeft: '14px'}}>{agentName || '--'}</span></div>
         </div>
+        { !hideConfirm && <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
+          <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '100%', height: '50px', background: 'linear-gradient(180deg, #FFA600 -43.75%, #F0454C 123.75%)', color: '#ffffff', borderRadius: '6px', cursor: 'pointer', fontSize: '16px', fontWeight: '700'}}>Confirm Address</span>
+        </div> }
       </div>
     )
-
   }
-
-  const renderPropertyCard = (property: PropertyData, index: number) => {
-    const address = property.fullAddress || property.address || "";
-    const price = property.price || "";
-    const bedrooms = property.bedrooms || 1;
-    const bathrooms = property.bathrooms || property.baths || 1;
-    const sqft = property.sqft || 1;
-    const image = 'https://static.chimeroi.com/image/house_default.png';
-    const agentName = property.agentName || ''
-
-    return (
-        <div key={property.id} 
-          className="flex" style={{position: 'relative', padding: isMobile ? '10px': '0', borderRadius: '6px', overflow: 'hidden', background: 'white', marginBottom: '15px', cursor: 'pointer' }}
-          onClick={() => handleListingCard(property)}
-        >
-          { targteId == property.id && (
-            <div style={{position: 'absolute', top: 0, right: 0, zIndex: 10 }}>
-              <img src="https://cdn.lofty.com/image/fs/servicetool/2025824/13/original_03d678ea004049a5.png" style={{width: '36px', height: '36px'}} alt="" />
-            </div>
-          )}
-          <img src={image} alt={`Property at ${address}`} style={{ width: isMobile ? 100 : 133, minHeight: 100, maxHeight: isMobile ? 100 : 120, minWidth: isMobile ? 100 : 133, objectFit: 'cover'}} />
-          <div style={{ padding: isMobile ? '0 0 0 10px' : '15px 20px 15px 15px', width: isMobile ? 'calc(100% - 95px)' : 'calc(100% - 125px)'}}>
-            <div className="text-sm font-medium" style={{ color: '#515666', lineHeight: isMobile ? '1.2':'20px', textAlign: 'left', display: '-webkit-box', WebkitLineClamp: '2', WebkitBoxOrient: 'vertical', overflow: 'hidden',  textOverflow: 'ellipsis', whiteSpace: 'normal'}}>{address}</div>
-            <div className="flex text-xs" style={{lineHeight: isMobile ? '12px' : '20px', color:'#797E8B', marginTop: isMobile ? '5px': 0}}>
-              <div>{bedrooms > -1 ? bedrooms : '--'} BD{ bedrooms > 1 ? 's' : ''}</div>
-              <div className="text-gray-400" style={{margin: isMobile ? '0 3px' : '0 5px'}}>•</div>
-              <div>{bathrooms > -1 ? bathrooms : '--'} BA{bathrooms > 1 ? 's' : ''}</div>
-              <div className="text-gray-400" style={{margin: isMobile ? '0 3px' : '0 5px'}}>•</div>
-              <div>{sqft > -1 ? new Intl.NumberFormat('en-US').format(sqft) : '--'} SqFt</div>
-            </div>
-            <div className="flex text-sm" style={{ marginTop: isMobile ? '14px' : '10px', flexDirection: isMobile ? 'column' : 'row', justifyContent: isMobile ? '' :'space-between', alignItems: isMobile ? 'self-start' : 'center'}}>
-              <div className="text-sm" style={{ fontWeight: '700', color: '#202437'}}>${new Intl.NumberFormat('en-US').format(+price)}</div>
-              <div className="text-xs" style={{color: '#A0A3AF', width: isMobile ? '100%': 'calc(100% - 100px)', whiteSpace: 'nowrap', overflow: 'hidden',  textOverflow: 'ellipsis', textAlign: isMobile ? 'left':'right'}}>Listed by: {agentName || '--'}</div>
-            </div>
-          </div>
-        </div>
-    );
-  };
 
   return (
     <section className="w-6/12 max-md:w-full max-md:ml-0 px-4 max-md:px-0" data-section="property-setup">
@@ -359,16 +326,18 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
         <div className="space-y-4">
           {/* Mobile-first address search section */}
           <div className="max-md:order-first max-md:mb-6">
-            <div className="p-4 rounded-xl border-0 max-md:p-4 max-md:pb-4 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 transition-all ease-in-out duration-500">
+            <div className="p-4 rounded-xl border-0 max-md:p-4 max-md:pb-4 shadow-lg bg-gradient-to-r from-blue-500 to-purple-600 transition-all ease-in-out duration-500" style={{background: 'linear-gradient(176.42deg, #2A7CFD -1.61%, #853CE2 103.23%)', padding: '30px 20px', maxHeight: '511px'}}>
               <Label
                 className="text-xl font-bold mb-3 block text-white max-md:text-base max-md:font-medium"
                 style={{
                   fontSize: "20px",
                   fontWeight: "700",
                   lineHeight: "28px",
+                  marginBottom: '20px',
+                  textAlign: 'center'
                 }}
               >
-                <strong className="max-md:text-base">
+                <strong className="max-md:text-base" style={{fontSize: '20px', lineHeight: '1', fontWeight: '900', marginTop: '30px' }}>
                   Step 1 - Find Your Listing
                 </strong>
               </Label>
@@ -397,12 +366,10 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
                 {isLoading && renderLoadingCard()}
                 {showListingsRes && addressInput && !isLoading ? (
                   <div style={{minHeight: isMobile? '' : '400px'}}>
-                    <div className="text-sm" style={{color: 'white', marginTop: '17px', marginBottom: '10px'}}>Select Your property</div>
+                    <div className="text-sm" style={{color: 'white', marginTop: '20px', marginBottom: '20px', textAlign: 'center', fontWeight: '500', lineHeight: '1.5'}}>Confirm Your Property</div>
                     { !properties.length && renderEmptyCardInfo()}
                     { !!properties.length && <div className="flex" style={{ flexDirection: 'column' }}>
-                      {/* Property Cards - Show based on API response */}
-                      { !isShowTargetCard && properties.map((property, index) => renderPropertyCard(property, index)) }
-                      { isShowTargetCard && renderTargetCardInfo(targetPropertyInfo) }
+                    { isShowTargetCard && renderTargetCardInfo(targetPropertyInfo) }
                     </div>}
                     { !isShowTargetCard && !!properties.length && <div 
                       className="flex" style={{border: '1px dashed rgba(255,255,255, 0.4)', borderRadius: '6px', padding: isMobile ? '22px 15px':'12px 20px', flexDirection: 'column', alignItems: 'center'}}

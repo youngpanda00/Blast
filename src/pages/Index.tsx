@@ -103,12 +103,8 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
     } else {
       setIsEditingAd(false);
     }
-
-    if (addressData?.previewPicture) {
-      // Handle multiple images separated by "|", take the first one
-      const firstImage = addressData.previewPicture.split("|")[0].trim();
-      setSelectedPreviewPicture(firstImage);
-    }
+    setSelectedPreviewPicture('https://cdn.lofty.com/image/fs/servicetool/20251023/8/original_2ee7e2945d934c69.png');
+    
     // Store the selected address ID to replace listingId when blast now is clicked
     if (addressData?.id) {
       console.log("Setting selectedAddressId to:", addressData.id);
@@ -1298,7 +1294,6 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
           }}
           updateAdInfo={(data) => {
             setIsEditingAd(!data.done);
-            setSelectedPreviewPicture(data?.imageUrl)
           }}
         />
       </main>

@@ -138,6 +138,13 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setAdCopy(tempAdCopy);
     setIsEditing(false);
     onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile, done: true });
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "Save Ad Edit",
+      click_action: "save"
+    });
+    trackFBEvent('Save Ad Edit');
     return true
   }
 
@@ -167,6 +174,13 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     const file = e.target.files?.[0];
     setSelectedFile(file);
     setHighlightedAreaError(null);
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "upload image",
+      click_action: "edit ad"
+    });
+    trackFBEvent('upload image')
     if (file) {
       const url = URL.createObjectURL(file);
       setImage(url);
@@ -498,7 +512,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
               </CardContent>
             </Card>
             {isMobile && (
-              <div className="flex justify-center mt-3 max-md:w-full">
+              <div className="flex justify-center mt-3 max-md:w-full" style={{width: '100%', height: '100%'}}>
                 <Dialog open={isMobileEditModalOpen} onOpenChange={setIsMobileEditModalOpen}>
                   <DialogTrigger asChild>
                     <Button
@@ -605,7 +619,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                           </label>)}
                           {(!uploadImage && <div>
                             <label htmlFor="file-input-mobile" style={{ position: 'relative', cursor: 'pointer'}}>
-                              <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251022/10/original_5e3dd8f90a5b4d17.png" alt="" />
+                              <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_9e66df796bbf490e.png" alt="" />
                             </label>
                             <input
                                 id="file-input-mobile"
@@ -791,7 +805,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
 
                     {(!uploadImage && <div>
                       <label htmlFor="file-input-pc" style={{ position: 'relative', cursor: 'pointer'}}>
-                        <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251022/10/original_5e3dd8f90a5b4d17.png" alt="" />
+                        <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_9e66df796bbf490e.png" alt="" />
                       </label>
                       <input
                           id="file-input-pc"
