@@ -189,6 +189,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   }
 
   const handleAddressSelect = (address) => {
+    if (address === addressPlace) {
+      return;
+    }
     setAddressPlace(address);
     setTargetId('');
     setTargetPropertyInfo({});
@@ -288,8 +291,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     return (
       <div key={property.id} className="flex" style={{ flexDirection: 'column', padding: isMobile ? '15px' : '30px', background: 'rgba(0, 0, 0, 0.4)', borderRadius: '12px', height: isMobile ? 'auto': '300px', justifyContent: hideConfirm ? 'center' : 'flex-start'}}>
         <div>
-          <div style={{ color: '#ffffff', fontSize: isMobile ? '14px':'28px', fontWeight: '700', marginBottom: '10px', lineHeight: isMobile ? '1' : '24px', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{addressPrefix}</div>
-          <div style={{ color: '#ffffff', fontSize: isMobile ? '14px':'20px', fontWeight: '600', marginBottom: '10px', lineHeight: isMobile ? '1' : '24px', textAlign: 'left' }}>{addressSuffix}</div>
+          <div style={{ color: '#ffffff', fontSize: isMobile ? '14px':'28px', fontWeight: '700', marginBottom: '10px', lineHeight: isMobile ? '1' : '1.1', width: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textAlign: 'left' }}>{addressPrefix}</div>
+          <div style={{ color: '#ffffff', fontSize: isMobile ? '14px':'20px', fontWeight: '600', marginBottom: '10px', lineHeight: isMobile ? '1' : '1.1', textAlign: 'left' }}>{addressSuffix}</div>
           <div style={{ color: '#ffffff', fontSize: isMobile ? '12px':'16px', marginBottom: '10px', textAlign: 'left'  }}>${ price ? new Intl.NumberFormat('en-US').format(Number(price)) : '--'}</div>
           <div className="flex items-center" style={{color: '#ffffff', marginBottom: '10px'}}>
             <div className="flex items-center">

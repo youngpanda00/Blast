@@ -527,11 +527,11 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                       Edit Your Ad
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="w-[95vw] max-w-md mx-auto">
+                  <DialogContent className="w-[95vw] max-w-md mx-auto" style={{width: '100%', height: '100%'}}>
                     <DialogHeader>
                       <DialogTitle>Edit Your Facebook Ad</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-6 py-4">
+                    <div className="space-y-6 py-4" style={{marginTop: uploadImage ? '-205px' : '-120px'}}>
                       {/* Ad Copy Section */}
                       <div>
                         <Label htmlFor="edit-adcopy" className="text-sm font-medium">
