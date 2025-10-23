@@ -253,6 +253,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     setTimeout(() => {
       document.getElementById('file-input-pc')?.click();
     }, 0)
+    setHighlightedArea('image')
   }
 
   const handleAdsImageMobile = () => {
@@ -260,6 +261,8 @@ const AdPreview: React.FC<AdPreviewProps> = ({
     handleEditMobile();
     setTimeout(() => {
       document.getElementById('file-input-mobile')?.click();
+      document.getElementById('file-input-mobile')?.scrollIntoView();
+      document.getElementById('edit-adcopy')?.blur();
     })
   }
 
