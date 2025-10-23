@@ -20,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose
 } from "./ui/dialog";
 
 interface AdPreviewProps {
@@ -531,7 +532,8 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                     <DialogHeader>
                       <DialogTitle>Edit Your Facebook Ad</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-6 py-4" style={{marginTop: uploadImage ? '-205px' : '-120px'}}>
+                    <DialogClose className="hidden"></DialogClose>
+                    <div className="space-y-6 py-4" style={{marginTop: uploadImage ? '-175px' : '-90px'}}>
                       {/* Ad Copy Section */}
                       <div>
                         <Label htmlFor="edit-adcopy" className="text-sm font-medium">

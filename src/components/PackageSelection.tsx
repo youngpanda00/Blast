@@ -99,6 +99,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   useEffect(() => {
     setHasValidListingId(selectedAddressId)
+    setAdPreviewData(null)
   }, [selectedAddressId])
 
   useEffect(() => {
