@@ -184,6 +184,9 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   }
 
   const handleAddressSelect = (address) => {
+    if (address === addressPlace) {
+      return;
+    }
     setAddressPlace(address);
     setTargetId('');
     setTargetPropertyInfo({});
