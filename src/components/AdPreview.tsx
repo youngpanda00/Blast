@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Card, CardContent } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
@@ -20,20 +20,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose
 } from "./ui/dialog";
 
 interface AdPreviewProps {
+  isCustomListing?: boolean;
+  addressName?: string;
+  isEditingAd?: boolean;
   initialImage?: string;
   initialHeadline?: string;
   initialAdCopy?: string;
-  onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object }) => void;
+  previewPicture?: string;
+  selectedAddressId?: string;
+  onAdUpdate?: (data: { image: string; headline: string; adCopy: string, selectedFile: object, done: boolean }) => void;
 }
+
 
 const adCopyTemplates = [
   {
     id: "default",
     name: "Default",
-    copy: "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today."
+    copy: "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!"
   },
   {
     id: "family",
@@ -47,36 +54,53 @@ const adCopyTemplates = [
   }
 ];
 
-export const AdPreview: React.FC<AdPreviewProps> = ({
+const AdPreview: React.FC<AdPreviewProps> = ({
+  isEditingAd,
+  addressName,
+  selectedAddressId,
+  isCustomListing,
+  previewPicture,
   initialImage = "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800",
   initialHeadline = "Don't miss out on this new listing",
-  initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.",
-  onAdUpdate,
+  initialAdCopy = "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!",
+  onAdUpdate
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [headline, setHeadline] = useState(initialHeadline);
   const [adCopy, setAdCopy] = useState(initialAdCopy);
   const [image, setImage] = useState(initialImage);
+  const [uploadImage, setUploadImage] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [tempHeadline, setTempHeadline] = useState(headline);
   const [tempAdCopy, setTempAdCopy] = useState(adCopy);
   const [selectedTemplate, setSelectedTemplate] = useState<string>("default");
   const [highlightedArea, setHighlightedArea] = useState<'headline' | 'adCopy' | 'image' | null>(null);
+  const [ highlightedAreaError, setHighlightedAreaError] = useState<'headline' | 'adCopy' | 'image' | null>(null);
   const [isEditingInline, setIsEditingInline] = useState<'headline' | 'adCopy' | null>(null);
   const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
   const [isMobileEditModalOpen, setIsMobileEditModalOpen] = useState(false);
   const isMobile = useIsMobile();
-  const adPreviewRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(()=>{
     setImage(initialImage)
-  }, [initialImage])
+  }, [initialImage]);
 
-  const handleEdit = () => {
-    setTempHeadline(headline);
-    setTempAdCopy(adCopy);
-    setSelectedTemplate("custom");
+  useEffect(() => {
+    setAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+    setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+  }, [addressName])
+
+  const handleEdit = useCallback(() => {
+    if (isEditing) {
+      return false
+    }
     setIsEditing(true);
+    console.log('tempAdCopy ===>>>', tempAdCopy)
+    if (!tempAdCopy) {
+      setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+    }
+    setTempHeadline(headline);
+    setSelectedTemplate("custom");
     trackMixPanel("click", {
       page_name: "ListingBlastSP",
       feature_name: "ListingBlast",
@@ -84,52 +108,115 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
       click_action: "edit"
     });
     trackFBEvent('Edit Ad')
-  };
+  }, [tempAdCopy, headline, isEditing, addressName]);
+
+
+  useEffect(() => {
+    setUploadImage('');
+  }, [isCustomListing])
 
   const handleTemplateSelect = (templateId: string) => {
     setSelectedTemplate(templateId);
     if (templateId !== "custom") {
       const template = adCopyTemplates.find(t => t.id === templateId);
       if (template) {
-        setTempAdCopy(template.copy);
+        if (template.id === 'default') {
+          setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+        } else {
+          setTempAdCopy(template.copy);
+        }
       }
     }
   };
 
   const handleSave = () => {
+    if (!uploadImage) {
+      window?.common?.utils?.toast?.({content: 'Please Upload Your Listing Image', width: '340px', time: 3000})
+      setHighlightedAreaError('image');
+      return false
+    }
     setHeadline(tempHeadline);
     setAdCopy(tempAdCopy);
     setIsEditing(false);
-    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
-  };
+    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile, done: true });
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "Save Ad Edit",
+      click_action: "save"
+    });
+    trackFBEvent('Save Ad Edit');
+    return true
+  }
 
-  const handleCancel = () => {
-    setImage('https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800')
+  const handleCancel = useCallback(() => {
+    const pic = isCustomListing ? 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800' : previewPicture
+    const uploadImg = ''
+    setImage(pic);
+    setUploadImage(uploadImg);
     setHeadline("Don't miss out on this new listing");
-    setAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
+    setAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
     setTempHeadline("Don't miss out on this new listing");
-    setTempAdCopy('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.');
+    setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
     setIsEditing(false);
     setIsMobileEditModalOpen(false);
     onAdUpdate?.(
       {
-        image: 'https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800',
+        image: pic,
         headline: "Don't miss out on this new listing",
-        adCopy: '✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today.',
-        selectedFile: null
+        adCopy: `✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`,
+        selectedFile: null,
+        done: true
       }
     )
-  };
+  }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     setSelectedFile(file);
+    setHighlightedAreaError(null);
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "upload image",
+      click_action: "edit ad"
+    });
+    trackFBEvent('upload image')
     if (file) {
       const url = URL.createObjectURL(file);
       setImage(url);
-      onAdUpdate?.({ image: url, headline, adCopy, selectedFile });
+      setUploadImage(url);
+      onAdUpdate?.({ image: url, headline, adCopy, selectedFile, done: false });
     }
   };
+
+  const handleEditMobile = useCallback(() => {
+    setTempHeadline(headline);
+    if (!tempAdCopy) {
+      setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+    }
+    setSelectedTemplate("custom");
+  }, [tempAdCopy, addressName, headline])
+
+  const handleSaveInMobile = () => {
+    if (!uploadImage) {
+      window?.common?.utils?.toast?.({content: 'Please Upload Your Listing Image', width: '340px', time: 3000})
+      console.log('please upload image')
+      setHighlightedAreaError('image');
+      return false
+    }
+    setHeadline(tempHeadline);
+    setAdCopy(tempAdCopy);
+    onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile, done: true });
+    setIsMobileEditModalOpen(false);
+    trackMixPanel("click", {
+      page_name: "ListingBlastSP",
+      feature_name: "ListingBlast",
+      click_item: "Save Ad Edit",
+      click_action: "save"
+    });
+    trackFBEvent('Save Ad Edit');
+  }
 
   const handleInlineEdit = (type: 'headline' | 'adCopy') => {
     setIsEditingInline(type);
@@ -144,10 +231,10 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
   const saveInlineEdit = () => {
     if (isEditingInline === 'headline') {
       setHeadline(tempHeadline);
-      onAdUpdate?.({ image, headline: tempHeadline, adCopy, selectedFile });
+      onAdUpdate?.({ image, headline: tempHeadline, adCopy, selectedFile, done: false });
     } else if (isEditingInline === 'adCopy') {
       setAdCopy(tempAdCopy);
-      onAdUpdate?.({ image, headline, adCopy: tempAdCopy, selectedFile });
+      onAdUpdate?.({ image, headline, adCopy: tempAdCopy, selectedFile, done: false });
     }
     setIsEditingInline(null);
     setHighlightedArea(null);
@@ -160,22 +247,58 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     setTempAdCopy(adCopy);
   };
 
+  const handleAdsImagePc = () => {
+    if (!isEditing) {
+      setIsEditing(true);
+    }
+    setTimeout(() => {
+      document.getElementById('file-input-pc')?.click();
+    }, 0)
+    setHighlightedArea('image')
+  }
+
+  const handleAdsImageMobile = () => {
+    setIsMobileEditModalOpen(true);
+    handleEditMobile();
+    setTimeout(() => {
+      document.getElementById('file-input-mobile')?.click();
+      document.getElementById('file-input-mobile')?.scrollIntoView();
+      document.getElementById('edit-adcopy')?.blur();
+    })
+  }
+
   const handleTemplateChange = (templateId: string) => {
     setSelectedTemplate(templateId);
     if (templateId !== "custom") {
       const template = adCopyTemplates.find(t => t.id === templateId);
       if (template) {
-        setTempAdCopy(template.copy);
-        setAdCopy(template.copy);
-        onAdUpdate?.({ image, headline, adCopy: template.copy, selectedFile });
+        if (template.id === 'default') {
+          setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+          setAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`);
+        } else {
+          setTempAdCopy(template.copy);
+          setAdCopy(template.copy);
+        }
+        onAdUpdate?.({ image, headline, adCopy: template.copy, selectedFile, done: false });
       }
     }
     setShowTemplateDropdown(false);
   };
 
+  useEffect(() => {
+    if (isEditingAd) {
+      if (isMobile) {
+        setIsMobileEditModalOpen(true);
+        handleEditMobile();
+      } else {
+        handleEdit();
+      }
+    }
+  }, [isEditingAd, isMobile, handleEditMobile, handleEdit])
+
 
   return (
-    <section ref={adPreviewRef} tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white focus:outline-none">
+    <section id="ad-preview" tabIndex={-1} className="w-full flex flex-col items-center bg-background max-md:bg-white focus:outline-none">
       <div className="w-full max-w-[1140px] mt-12 max-md:my-[30px] max-md:px-4 px-4">
 
         {/* PC Header with title and button */}
@@ -192,7 +315,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
               )}
             </div>
             <Button
-              onClick={isEditing ? undefined : handleEdit}
+              onClick={handleEdit}
               variant="outline"
               className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200"
               disabled={isEditing}
@@ -288,44 +411,31 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         {(highlightedArea === 'adCopy' || isEditingInline === 'adCopy') && (
                           <div className="absolute -left-2 top-0 w-1 h-full bg-blue-400 rounded-full"></div>
                         )}
-                        {adCopy === "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today." ? (
-                          <>
-                            ✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡 <br />
-                            &nbsp;🗓️ Schedule a private viewing today.
-                          </>
-                        ) : adCopy}
+                        {adCopy}
                       </div>
-                      {false && isMobile && (
-                        <button
-                          onClick={() => handleInlineEdit('adCopy')}
-                          className="absolute top-2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
-                          aria-label="Edit text"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                      )}
                     </div>
                   )}
                 </div>
 
                 {/* Ad image - with mobile upload */}
-                <div className={`transition-all duration-300 relative group ${
+                <div onClick={handleAdsImageMobile} className={`transition-all duration-300 relative group ${
                   highlightedArea === 'image'
                     ? 'ring-4 ring-green-300 shadow-lg'
                     : ''
                 }`}>
-                  <div className="relative px-4 overflow-hidden">
+                  <div className="relative px-4 overflow-hidden" style={{ cursor: 'pointer'}} onClick={handleAdsImagePc}>
                     <img
                       src={image}
                       alt="Property"
                       className={`w-full h-52 max-md:h-[150px] object-cover ${
                         isMobile ? '' : 'rounded-t-lg'
                       } ${
-                        !isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
+                        !isMobile && image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
                       }`}
+                      style={{borderRadius: '5px'}}
                     />
                     {/* Blur overlay for PC fallback image */}
-                    {!isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
+                    {!isMobile && image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                       <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                         <div className="text-white text-center">
                           <div className="text-sm font-medium">Sample Property Image</div>
@@ -334,29 +444,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                     )}
                   </div>
                   {/* Blurred overlay for mobile fallback image */}
-                  {isMobile && image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
+                  {isMobile && image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                     <div className="absolute inset-0 mx-4 bg-black/20 backdrop-blur-sm flex items-center justify-center">
                       <div className="text-white text-center">
                         <div className="text-sm font-medium">Sample Property Image</div>
                       </div>
-                    </div>
-                  )}
-                  {false && isMobile && (
-                    <div className="absolute bottom-2 right-2">
-                      <label className="cursor-pointer w-11 h-11 bg-black/30 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150">
-                        <Pencil className="w-4 h-4" />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            handleImageUpload(e);
-                            setHighlightedArea('image');
-                            setTimeout(() => setHighlightedArea(null), 2000);
-                          }}
-                          className="hidden"
-                          aria-label="Edit image"
-                        />
-                      </label>
                     </div>
                   )}
                 </div>
@@ -399,15 +491,6 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       <span className="absolute -left-2 top-0 w-1 h-full bg-yellow-400 rounded-full"></span>
                     )}
                     {headline}
-                    {false && isMobile && (
-                      <button
-                        onClick={() => handleInlineEdit('headline')}
-                        className="absolute top-1/2 -translate-y-1/2 right-2 w-11 h-11 bg-black/20 backdrop-blur-sm text-white rounded-full shadow-lg flex items-center justify-center active:scale-95 active:opacity-75 transition-all duration-150"
-                        aria-label="Edit title"
-                      >
-                        <Pencil className="w-4 h-4" />
-                      </button>
-                    )}
                   </h4>
                 )}
 
@@ -433,26 +516,23 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
               </CardContent>
             </Card>
             {isMobile && (
-              <div className="flex justify-center mt-3 max-md:w-full">
+              <div className="flex justify-center mt-3 max-md:w-full" style={{width: '100%', height: '100%'}}>
                 <Dialog open={isMobileEditModalOpen} onOpenChange={setIsMobileEditModalOpen}>
                   <DialogTrigger asChild>
                     <Button
                       variant="outline"
                       size="sm"
                       className="border-blue-500 text-blue-500 hover:bg-blue-50 max-md:w-[90%] max-md:rounded-[26px] max-md:overflow-hidden max-md:border-[#3b5cde] max-md:text-[#3b5cde] max-md:h-[40px]"
-                      onClick={() => {
-                        setTempHeadline(headline);
-                        setTempAdCopy(adCopy);
-                        setSelectedTemplate("custom");
-                      }}
+                      onClick={handleEditMobile}
                     >
                       Edit Your Ad
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="w-[95vw] max-w-md mx-auto">
+                  <DialogContent className="w-[95vw] max-w-md mx-auto" style={{width: '100%', height: '100%'}}>
                     <DialogHeader>
                       <DialogTitle>Edit Your Facebook Ad</DialogTitle>
                     </DialogHeader>
+                    <DialogClose className="hidden"></DialogClose>
                     <div className="space-y-6 py-4">
                       {/* Ad Copy Section */}
                       <div>
@@ -478,7 +558,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                             if (value !== "custom") {
                               const template = adCopyTemplates.find(t => t.id === value);
                               if (template) {
-                                setTempAdCopy(template.copy);
+                                if (template.id === 'default') {
+                                  setTempAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+                                } else {
+                                  setTempAdCopy(template.copy);
+                                }
                               }
                             }
                           }}
@@ -516,39 +600,47 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                       <div>
                         <Label className="text-sm font-medium">Property Image</Label>
                         <div className="mt-2 flex items-center gap-3">
-                          <div className="w-16 h-16 rounded-lg overflow-hidden border">
-                            <img src={image} alt="Current" className="w-full h-full object-cover" />
-                          </div>
-                          <label className="cursor-pointer">
+                          {
+                            (
+                              uploadImage && <div className="w-16 h-16 rounded-lg overflow-hidden border">
+                                <img src={uploadImage} alt="Current" className="w-full h-full object-cover" />
+                              </div>
+                            )
+                          }
+                          {( uploadImage && <label className="cursor-pointer" style={{position: 'relative'}}>
                             <input
+                              id="file-input-mobile"
                               type="file"
                               accept="image/*"
                               onChange={handleImageUpload}
                               className="hidden"
                             />
                             <Button variant="outline" size="sm" asChild>
-                              <span>Change Image</span>
+                              <span className={`${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': ''}`}> { !uploadImage ? 'Upload Your Listing Image' : 'Change Your Listing Image' }</span>
                             </Button>
-                          </label>
+                            {
+                              highlightedAreaError === 'image' && <div className="xs red-400" style={{color: '#f87171'}}>please upload image</div>
+                            }
+                          </label>)}
+                          {(!uploadImage && <div>
+                            <label htmlFor="file-input-mobile" style={{ position: 'relative', cursor: 'pointer'}}>
+                              <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_9e66df796bbf490e.png" alt="" />
+                            </label>
+                            <input
+                                id="file-input-mobile"
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                className="hidden"
+                              />
+                          </div>)}
                         </div>
                       </div>
 
                       {/* Action Buttons */}
                       <div className="flex gap-3 pt-4">
                         <Button
-                          onClick={() => {
-                            setHeadline(tempHeadline);
-                            setAdCopy(tempAdCopy);
-                            onAdUpdate?.({ image, headline: tempHeadline, adCopy: tempAdCopy, selectedFile });
-                            setIsMobileEditModalOpen(false);
-                            trackMixPanel("click", {
-                              page_name: "ListingBlastSP",
-                              feature_name: "ListingBlast",
-                              click_item: "Save Ad Edit",
-                              click_action: "save"
-                            });
-                            trackFBEvent('Save Ad Edit');
-                          }}
+                          onClick={handleSaveInMobile}
                           className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
                         >
                           Save Changes
@@ -675,39 +767,62 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                 <div className="space-y-3">
                   <Label htmlFor="image" className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <span className="w-3 h-3 bg-green-400 rounded-full"></span>
-                    Ad Image
-                    <span className="text-xs text-muted-foreground font-normal">(main visual content)</span>
+                    <span style={{ color: !uploadImage ? 'red' : '#000000' }}>Upload Your Listing Image</span>
+                    <span className="text-xs text-muted-foreground font-normal">(Turn Your Listing into Local Ads)</span>
                   </Label>
                   <div
                     className="flex items-center gap-4"
                     onMouseEnter={() => setHighlightedArea('image')}
                     onMouseLeave={() => setHighlightedArea(null)}
                   >
-                    <img
-                      src={image}
-                      alt="Current ad image"
-                      className={`w-20 h-20 object-cover rounded-lg border-2 shadow-sm transition-all duration-300 ${
-                        highlightedArea === 'image'
-                          ? 'border-green-400 shadow-lg ring-2 ring-green-200 scale-105'
-                          : 'border-border'
-                      }`}
-                    />
-                    <div className="flex-1 space-y-2">
-                      <Input
-                        id="image"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className={`text-sm bg-background transition-all duration-300 ${
-                          highlightedArea === 'image'
-                            ? 'border-green-400 ring-2 ring-green-200'
-                            : 'border-border'
-                        }`}
-                      />
+                    {
+                      (uploadImage && <img
+                          src={uploadImage}
+                          alt="Current ad image"
+                          className={`w-20 h-20 object-cover rounded-lg border-2 shadow-sm transition-all duration-300 ${
+                            highlightedArea === 'image'
+                              ? 'border-green-400 shadow-lg ring-2 ring-green-200 scale-105'
+                              : 'border-border'
+                          }`}
+                        />
+                      )
+                    }
+                    {(uploadImage && <div className="flex-1 space-y-2">
+                      <label className="cursor-pointer" style={{position: 'relative'}}>
+                          <input
+                            id="file-input-pc"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                          />
+                          <Button variant="outline" size="sm" asChild>
+                            <span className={`${highlightedAreaError === 'image' ? 'border-red-400 ring-2 ring-red-400': ''}`}> { !uploadImage ? 'Upload Your Listing Image' : 'Change Your Listing Image' }</span>
+                          </Button>
+                          {
+                            highlightedAreaError === 'image' && <div className="xs red-400" style={{color: '#f87171'}}>please upload image</div>
+                          }
+                      </label>
                       <p className="text-xs text-muted-foreground">
                         <span>Recommended Aspect Ratio: 1:1 or 4:5</span>
                       </p>
-                    </div>
+                    </div>)}
+
+                    {(!uploadImage && <div>
+                      <label htmlFor="file-input-pc" style={{ position: 'relative', cursor: 'pointer'}}>
+                        <img style={{borderRadius: '5px', height: '150px'}} src="https://cdn.lofty.com/image/fs/servicetool/20251023/7/original_9e66df796bbf490e.png" alt="" />
+                      </label>
+                      <input
+                          id="file-input-pc"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                        <p className="text-xs text-muted-foreground" style={{display: 'block', marginTop: '5px'}}>
+                          <span>Recommended Aspect Ratio: 1:1 or 4:5</span>
+                        </p>
+                    </div>)}
                   </div>
                 </div>
 
@@ -757,12 +872,7 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                         <div className="flex-1">
                           <div className="text-sm font-semibold text-gray-600 mb-1">Ad Copy</div>
                           <div className="text-gray-800 leading-relaxed group-hover:text-blue-800 transition-colors line-clamp-3">
-                            {adCopy === "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡\n\n🗓️ Schedule a private viewing today." ? (
-                              <>
-                                "✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡 <br />
-                                &nbsp;🗓️ Schedule a private viewing today."
-                              </>
-                            ) : `"${adCopy}"`}
+                            {adCopy}
                           </div>
                         </div>
                       </div>
@@ -779,11 +889,11 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
                               src={image}
                               alt="Current ad image"
                               className={`w-full h-24 object-cover border border-gray-200 group-hover:scale-[1.02] transition-transform duration-300 ${
-                                image.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
+                                image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") ? 'filter blur-[2px]' : ''
                               }`}
                             />
                             {/* Blur overlay for fallback image */}
-                            {image.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
+                            {image?.includes("fd9b86fe9ff04d7b96f4de286f95e680") && (
                               <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
                                 <div className="text-white text-center">
                                   <div className="text-xs font-medium">Sample Image</div>
@@ -810,3 +920,5 @@ export const AdPreview: React.FC<AdPreviewProps> = ({
     </section>
   );
 };
+
+export default AdPreview;

@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Hero } from "@/components/Hero";
-import { PropertySetup } from "@/components/PropertySetup";
-import { PackageSelection } from "@/components/PackageSelection";
+import PropertySetup, { ChildMethods } from "@/components/PropertySetup";
+import PackageSelection from "@/components/PackageSelection";
 import { ClientTestimonials } from "@/components/ClientTestimonials";
 import { FrequentlyAskedQuestions } from "@/components/FrequentlyAskedQuestions";
 import { ContactFooter } from "@/components/ContactFooter";
@@ -41,6 +41,23 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
     useState(false);
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
+  const [isCustomListing, setIsCustomListing] = useState(false);
+  const [ addressName, setAddressName] = useState('');
+
+  const [childMethods, setChildMethods] = useState<ChildMethods | null>(null)
+
+  const [isEditingAd, setIsEditingAd] = useState(false)
+
+  const [refreshKey, setRefreshKey] = useState(0)
+
+  const refreshWithKey = () => {
+    setRefreshKey(prevKey => prevKey + 1);
+    setCurrentListingData(null);
+    setSelectedAddressId('');
+    setSelectedPreviewPicture('');
+    setIsCustomListing(true);
+    setIsEditingAd(false);
+  }
 
   // Track ViewContent event state
   const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
@@ -75,28 +92,36 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
   }, [listingId, selectedAddressId]);
 
   // Callback function to handle address selection from PropertySetup
-  const handleAddressSelect = React.useCallback((addressData) => {
-    console.log("Address selected:", addressData);
+  const handleAddressSelect = useCallback((addressData) => {
+    // console.log("Address selected:", addressData);
 
-    if (addressData?.data?.previewPicture) {
-      // Handle multiple images separated by "|", take the first one
-      const firstImage = addressData.data.previewPicture.split("|")[0].trim();
-      setSelectedPreviewPicture(firstImage);
-    }
-    // Store the selected address ID to replace listingId when blast now is clicked
-    if (addressData?.data?.id) {
-      console.log("Setting selectedAddressId to:", addressData.data.id);
-      setSelectedAddressId(addressData.data.id);
+    setAddressName(addressData?.addressName);
+
+    setIsCustomListing(!!addressData?.isCustomListing);
+    if (addressData?.fullAddress) {
+      setIsEditingAd(true);
     } else {
-      console.warn("No address ID found in addressData:", addressData);
+      setIsEditingAd(false);
+    }
+    setSelectedPreviewPicture('https://cdn.lofty.com/image/fs/servicetool/20251023/8/original_2ee7e2945d934c69.png');
+    
+    // Store the selected address ID to replace listingId when blast now is clicked
+    if (addressData?.id) {
+      console.log("Setting selectedAddressId to:", addressData.id);
+      setSelectedAddressId(addressData.id);
+    } else if (addressData?.isCustomListing) {
+      setSelectedAddressId(addressData.fullAddress);
+    } else {
+      setSelectedAddressId('');
+      console.warn("No Select property");
     }
     // Store listing data for ad display
-    if (addressData?.data) {
+    if (addressData) {
       setCurrentListingData({
-        beds: addressData.data.bedrooms || addressData.data.beds,
-        baths: addressData.data.bathrooms || addressData.data.baths,
-        address: addressData.data.fullAddress,
-        previewPicture: addressData.data.previewPicture,
+        beds: addressData.bedrooms || addressData.beds,
+        baths: addressData.bathrooms || addressData.baths,
+        address: addressData.fullAddress,
+        previewPicture: addressData.previewPicture,
       });
     }
   }, []);
@@ -124,6 +149,7 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
   const handleCityUpdate = React.useCallback((city: string | null) => {
     setListingCity(city);
   }, []);
+
 
   // Generate dynamic ad text based on current listing data
   const getAdText = () => {
@@ -202,6 +228,13 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
     };
   }, [hasTrackedViewContent]);
 
+  const scrollToAdPreview = () => {
+    const adPreviewElement = document.getElementById('ad-preview');
+    if (adPreviewElement) {
+      adPreviewElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
   const adSets = useMemo(()=>[
     {
       platform: "Facebook",
@@ -239,7 +272,7 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
       mobileImage: "/lovable-uploads/instagram-post-mobile.png",
       isCustom: true,
     },
-  ],[]);
+  ], []);
 
   const FacebookAdComponent = () => {
     if (viewMode === "mobile") {
@@ -355,10 +388,10 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
                 }
                 alt=""
                 className={`w-full h-full object-cover ${
-                  !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                  (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
                 }`}
               />
-              {!selectedPreviewPicture && (
+              {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
                 <div className="absolute inset-0 bg-black bg-opacity-20 rounded-t-[5.903px]"></div>
               )}
             </div>
@@ -525,10 +558,10 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
               }
               alt="Modern white house with pool"
               className={`w-full h-full object-cover ${
-                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
               }`}
             />
-            {!selectedPreviewPicture && (
+            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20 rounded"></div>
             )}
           </div>
@@ -749,10 +782,10 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
-                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
               }`}
             />
-            {!selectedPreviewPicture && (
+            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             )}
           </div>
@@ -995,10 +1028,10 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
-                !selectedPreviewPicture ? 'filter blur-[2px]' : ''
+                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
               }`}
             />
-            {!selectedPreviewPicture && (
+            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             )}
           </div>
@@ -1088,83 +1121,14 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
   const currentSet = adSets[currentSetIndex];
 
   return (
-    <div className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20">
+    <div key={refreshKey} className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20">
       <PurchaseNotification listingCity={listingCity} />
       <Hero
         page={page}
         listingId={listingId}
         onAddressSelect={handleAddressSelect}
+        onScrollToAdPreview={scrollToAdPreview}
         onCityUpdate={handleCityUpdate}
-        onGetStarted={() => {
-          trackFBEvent('Start Promoting')
-          const propertySetupSection = document.querySelector('[data-section="property-setup"]');
-
-          if (propertySetupSection) {
-            // Smooth scroll to PropertySetup section
-            propertySetupSection.scrollIntoView({
-              behavior: 'smooth',
-              block: 'center'
-            });
-
-            // Add highlighting animation after scrolling
-            setTimeout(() => {
-              // Find address input - use both ID and placeholder selectors
-              const addressInput = (document.querySelector('#address-search-input') ||
-                                   document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-              // Find containing gradient container
-              const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
-
-              if (addressInput && addressContainer) {
-                // Focus on input
-                addressInput.focus();
-
-                // Apply highlight effect
-                const originalTransform = addressContainer.style.transform;
-                const originalBoxShadow = addressContainer.style.boxShadow;
-                const originalTransition = addressContainer.style.transition;
-
-                // Apply highlighting effects
-                addressContainer.style.transition = 'all 0.5s ease';
-                addressContainer.style.transform = 'scale(1.08)';
-                addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
-                addressContainer.style.zIndex = '50';
-
-                // Add input focus ring
-                addressInput.style.transition = 'all 0.5s ease';
-                addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
-
-                // Add gentle shake animation
-                addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
-
-                // Create shake animation keyframes if not exists
-                if (!document.querySelector('#gentle-shake-style')) {
-                  const style = document.createElement('style');
-                  style.id = 'gentle-shake-style';
-                  style.textContent = `
-                    @keyframes gentle-shake {
-                      0%, 100% { transform: scale(1.08) translateX(0); }
-                      25% { transform: scale(1.08) translateX(-2px); }
-                      75% { transform: scale(1.08) translateX(2px); }
-                    }
-                  `;
-                  document.head.appendChild(style);
-                }
-
-                // Restore original styles after 3.5 seconds
-                setTimeout(() => {
-                  addressContainer.style.transform = originalTransform || '';
-                  addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
-                  addressContainer.style.transition = originalTransition || '';
-                  addressContainer.style.zIndex = '';
-                  addressContainer.style.animation = '';
-
-                  addressInput.style.boxShadow = '';
-                  addressInput.style.transition = '';
-                }, 3500);
-              }
-            }, 900); // Wait for scroll to complete
-          }
-        }}
       />
 
       <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[20px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl">
@@ -1174,7 +1138,9 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
               <PropertySetup
                 listingId={listingId}
                 onAddressSelect={handleAddressSelect}
+                onScrollToAdPreview={scrollToAdPreview}
                 onCityUpdate={handleCityUpdate}
+                onMethodsReady={setChildMethods}
               />
             )}
 
@@ -1278,7 +1244,7 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
                         "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                       }
                       viewMode={viewMode}
-                      isSelectedProperty={!!selectedPreviewPicture}
+                      isSelectedProperty={!!selectedPreviewPicture && selectedPreviewPicture.indexOf('cdn.builder.io') === -1}
                     />
                   ) : (
                     <img
@@ -1307,18 +1273,27 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
         </div>
 
         <PackageSelection
-          key={selectedAddressId}
+          isEditingAd={isEditingAd}
+          isCustomListing={isCustomListing}
+          customAddress={currentListingData?.address}
+          addressName={addressName}
           previewPicture={currentListingData?.previewPicture}
           selectedAddressId={selectedAddressId}
           promoEmail={promoEmail}
           promoCode={promoCode}
           discountRate={discountRate}
           promoActive={promoActive}
+          onScrollToAdPreview={scrollToAdPreview}
+          updateIsEditingAd={setIsEditingAd}
           onOpenCongratulationsModal={async (email, promise) => {
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
+            refreshWithKey();
             await promise
             reloadPromo()
+          }}
+          updateAdInfo={(data) => {
+            setIsEditingAd(!data.done);
           }}
         />
       </main>

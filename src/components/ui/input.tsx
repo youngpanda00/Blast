@@ -11,6 +11,7 @@ interface InputProps extends React.ComponentProps<"input"> {
   isAddressSearch?: boolean;
   onAddressSelect?: AddressSearchSelectProps["onAddressSelect"];
   maxFileSize?: number; // File size limit in bytes, default 20MB
+  autoOpen?:boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -51,6 +52,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           onAddressSelect={onAddressSelect}
           placeholder={props.placeholder}
           disabled={props.disabled}
+          autoOpen={props.autoOpen}
         />
       );
     }

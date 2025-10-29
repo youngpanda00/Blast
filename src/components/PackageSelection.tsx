@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PricingCard } from "./PricingCard";
-import { AdPreview } from "./AdPreview";
+import AdPreview from "./AdPreview";
 import { MobileAdConfiguration } from "./MobileAdConfiguration";
 import { Info, Diamond, ChevronLeft, ChevronRight, Gift } from "lucide-react";
 import useEmblaCarousel from 'embla-carousel-react';
@@ -17,8 +17,15 @@ import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 import { saveStepWithRetry, showErrorNotification, getUserFriendlyErrorMessage } from "@/utils/checkoutApi";
 
 interface PackageSelectionProps {
-  previewPicture?: string | null
+  previewPicture?: string | null;
   selectedAddressId?: string | null;
+  isCustomListing?: boolean;
+  isEditingAd?: boolean;
+  customAddress?: string | null;
+  addressName?:string | null;
+  onScrollToAdPreview?:() => void;
+  updateIsEditingAd?:(status:boolean) => void;
+  updateAdInfo?: (data: AdData) => void
   promoEmail?: string;
   promoCode?: string;
   discountRate?: number;
@@ -27,20 +34,28 @@ interface PackageSelectionProps {
 }
 
 interface AdData {
-    imageUrl?: string | null,
-    headline?: string | null,
-    mainText? : string | null,
-    file?: object
+  imageUrl?: string | null;
+  headline?: string | null;
+  mainText?: string | null;
+  file?: object,
+  done?:boolean
 }
 
-export const PackageSelection: React.FC<PackageSelectionProps> = ({
+const PackageSelection: React.FC<PackageSelectionProps> = ({
   previewPicture,
   selectedAddressId,
+  onOpenCongratulationsModal,
+  isEditingAd,
+  isCustomListing,
+  customAddress,
+  addressName,
+  onScrollToAdPreview,
+  updateIsEditingAd,
+  updateAdInfo,
   promoEmail,
   promoCode,
   discountRate: discountRateProp,
   promoActive: promoActiveProp,
-  onOpenCongratulationsModal,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
@@ -62,6 +77,10 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const isMobile = useIsMobile();
 
   const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
+
+  const [hasValidListingId, setHasValidListingId] = useState('');
+
+  const [initialAdCopy, setInitialAdCopy] = useState('✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home!')
   
   // Embla Carousel
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -78,18 +97,14 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   // Get listingId from URL
   const listingId = searchParams.get("assetKey");
 
-  // Debug logging (only in development)
-  if (process.env.NODE_ENV === 'development') {
-    console.log("PackageSelection Debug:", {
-      selectedAddressId,
-      listingId,
-      urlParams: Object.fromEntries(searchParams.entries()),
-      currentUrl: window.location.href
-    });
-  }
+  useEffect(() => {
+    setHasValidListingId(selectedAddressId)
+    setAdPreviewData(null)
+  }, [selectedAddressId])
 
-  // Check if we have a valid listing ID from either source
-  const hasValidListingId = selectedAddressId || listingId;
+  useEffect(() => {
+    setInitialAdCopy(`✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home! ${addressName}`)
+  }, [addressName])
 
   // Development fallback - use a sample listing ID if none available
   const getEffectiveListingId = () => {
@@ -130,6 +145,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
     // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
     const currentListingId = getEffectiveListingId();
+    // console.log('checkout adPreviewData ===>>>', adPreviewData, currentListingId)
     if (!currentListingId) {
       console.warn("Checkout attempted without listing ID:", {
         selectedAddressId,
@@ -271,13 +287,18 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
     window.trackBlastNow?.();
 
+    if (!adPreviewData || !adPreviewData?.file) {
+      onScrollToAdPreview();
+      updateIsEditingAd(true);
+      return window?.common?.utils?.toast?.({content: 'Please Upload Your Listing Image', width: '340px', time: 3000})
+    }
 
     const duration = packageToDuration[packageType];
     const paymentMode =
       selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
 
     const startParams = new URLSearchParams();
-    const taskType = 'ADS_EMAIL_GUIDE'
+    const taskType = isCustomListing ? 'NORMAL' : 'ADS_EMAIL_GUIDE'
     startParams.append("taskType", taskType);
 
     await fetch("/api-blast/task/start", {
@@ -292,6 +313,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
       currentListingId,
       duration,
       paymentMode,
+      isCustomListing,
       email: promoEmail || '',
       promoCode: promoCode || '',
       discountRate: discountRate,
@@ -317,208 +339,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   const handleCheckout = async () => {
     await handleCheckoutWithPackage(selectedPackage, adPreviewData);
-  };
-
-  const handleCheckoutWithMobileConfig = async () => {
-    if (!mobileConfiguration) return;
-
-    // Use selectedAddressId if available, otherwise fall back to URL listingId or dev fallback
-    const currentListingId = getEffectiveListingId();
-    if (!currentListingId) {
-      console.warn("Checkout attempted without listing ID:", {
-        selectedAddressId,
-        listingId,
-        urlParams: Object.fromEntries(searchParams.entries()),
-        currentUrl: window.location.href
-      });
-
-      // Show the same address selection animation as before
-      const propertySetupSection = document.querySelector('[data-section="property-setup"]');
-      if (propertySetupSection) {
-        propertySetupSection.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
-
-        setTimeout(() => {
-          const addressInput = (document.querySelector('#address-search-input') ||
-                               document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-          const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
-
-          if (addressInput && addressContainer) {
-            addressInput.focus();
-            const originalTransform = addressContainer.style.transform;
-            const originalBoxShadow = addressContainer.style.boxShadow;
-            const originalTransition = addressContainer.style.transition;
-
-            addressContainer.style.transition = 'all 0.5s ease';
-            addressContainer.style.transform = 'scale(1.08)';
-            addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
-            addressContainer.style.zIndex = '50';
-
-            addressInput.style.transition = 'all 0.5s ease';
-            addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
-            addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
-
-            if (!document.querySelector('#gentle-shake-style')) {
-              const style = document.createElement('style');
-              style.id = 'gentle-shake-style';
-              style.textContent = `
-                @keyframes gentle-shake {
-                  0%, 100% { transform: scale(1.08) translateX(0); }
-                  25% { transform: scale(1.08) translateX(-2px); }
-                  75% { transform: scale(1.08) translateX(2px); }
-                }
-              `;
-              document.head.appendChild(style);
-            }
-
-            setTimeout(() => {
-              addressContainer.style.transform = originalTransform || '';
-              addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
-              addressContainer.style.transition = originalTransition || '';
-              addressContainer.style.zIndex = '';
-              addressContainer.style.animation = '';
-              addressInput.style.boxShadow = '';
-              addressInput.style.transition = '';
-            }, 3500);
-          }
-        }, 900);
-      }
-
-      // Show toast notification
-      const showToastNotification = () => {
-        const existingToast = document.querySelector('#address-required-toast');
-        if (existingToast) {
-          existingToast.remove();
-        }
-
-        const toast = document.createElement('div');
-        toast.id = 'address-required-toast';
-        toast.innerHTML = `
-          <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #f87171;
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 9999;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            max-width: 300px;
-            animation: slideIn 0.3s ease-out;
-          ">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-            </svg>
-            Please select a property address first
-          </div>
-          <style>
-            @keyframes slideIn {
-              from { transform: translateX(100%); opacity: 0; }
-              to { transform: translateX(0); opacity: 1; }
-            }
-          </style>
-        `;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-          if (toast && toast.parentNode) {
-            toast.style.animation = 'slideIn 0.3s ease-out reverse';
-            setTimeout(() => toast.remove(), 300);
-          }
-        }, 4000);
-      };
-
-      showToastNotification();
-      console.error("No listing ID available (neither from address selection nor URL)");
-      return;
-    }
-
-    window.trackBlastNow?.();
-
-    const paymentMode = selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
-    setIsLoading(true);
-
-    try {
-      const saveResult = await saveStepWithRetry({
-        stepName: "ORDER",
-        data: {
-          dataList: [
-            {
-              data: currentListingId,
-              packageType: "LISTING",
-            },
-          ],
-          promoCode: promoCode,
-          duration: mobileConfiguration.duration,
-          paymentMode: paymentMode,
-          customPrice: mobileConfiguration.price,
-          estimatedViews: mobileConfiguration.estimatedViews,
-          estimatedLeads: mobileConfiguration.leads,
-        },
-      });
-
-      if (!saveResult.success) {
-        throw new Error(saveResult.error || "Failed to save step data");
-      }
-
-      if (typeof (window as any).checkoutPop === "function") {
-        const packageInfo = {
-          currentListingId,
-          duration: mobileConfiguration.duration,
-          paymentMode,
-          email: promoEmail || '',
-          promoCode: promoCode || '',
-          discountRate: discountRate,
-        };
-        (window as any)
-          .checkoutPop(adPreviewData, packageInfo)
-          .then(async (res) => {
-            setIsLoading(false);
-            console.log("res", res);
-            const email = res?.email || "";
-
-            try {
-              const startResponse = await fetch("/api-blast/task/start", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              });
-
-              if (startResponse.ok) {
-                console.log("Task started successfully");
-              } else {
-                console.error("Failed to start task");
-              }
-            } catch (error) {
-              console.error("Error starting task:", error);
-            }
-
-            onOpenCongratulationsModal(email);
-          })
-          .catch(() => {
-            setIsLoading(false);
-            console.log("error");
-          });
-      } else {
-        setIsLoading(false);
-        console.error("checkoutPop function not available");
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.error("Error during checkout:", error);
-      const userMessage = getUserFriendlyErrorMessage(error as Error);
-      showErrorNotification(userMessage, "Checkout Error");
-    }
   };
 
   const handlePackageSelect = async (
@@ -561,11 +381,12 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
   const discountRate = Number(discountRateProp ?? 0);
   const formatMoney = (n:number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 
-  // Package data (base/original prices before promo)
+  // Package data
   const packages = [
     {
       id: "starter",
       name: "Starter Pack",
+      originalPrice: "$109",
       basePrice: 79,
       duration: "1 Week",
       isPopular: false,
@@ -752,6 +573,15 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
                   <span className={`${selectedPackage === pkg.id ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-[11px] px-2 py-0.5 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
                 )}
               </div>
+              {!promoActive && (
+              <div className="mt-1">
+                <span
+                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                >
+                  {paymentText}
+                </span>
+              </div>
+            )}
             </div>
             {!promoActive && (
               <div className="mt-1">
@@ -857,17 +687,24 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
 
   return (
     <>
-      <LoadingOverlay isVisible={isLoading} />
+      {/* <LoadingOverlay isVisible={isLoading} /> */}
 
       {/* Ad Preview Section */}
       <AdPreview
+        key={selectedAddressId}
+        addressName={addressName}
+        isCustomListing={isCustomListing}
+        previewPicture={previewPicture}
+        isEditingAd={isEditingAd}
+        selectedAddressId={selectedAddressId}
         initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
         initialHeadline="Don't miss out on this new listing"
-        initialAdCopy="✨ NEW LISTING - NOW AVAILABLE! Be the first to check out your new dream home🏡
-
-🗓️ Schedule a private viewing today."
+        initialAdCopy={initialAdCopy}
         onAdUpdate={(data) => {
-          console.log("Ad updated:", data);
+          updateAdInfo({
+            imageUrl: data.image,
+            done: data.done
+          })
           setAdPreviewData({
             imageUrl: data.image,
             headline: data.headline,
@@ -894,7 +731,7 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
               <span className="hidden max-md:block">Step 3 - Publish Your Ad Now</span>
               </>}
             </h2>
-            {!hasValidListingId && process.env.NODE_ENV === 'production' && (
+            {!hasValidListingId && (
               <p className="text-sm text-orange-600 mt-1">
                 ⚠️ Please select a property address above to continue
               </p>
@@ -993,7 +830,6 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
             </div>
           </div>
         )}
-
         {/* Package cards layout - 2x2 Grid for mobile, 1x4 for web */}
         <div className="w-full max-w-[1140px] mt-5 px-4 md:px-0">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 max-w-[800px] md:max-w-full mx-auto">
@@ -1027,3 +863,5 @@ export const PackageSelection: React.FC<PackageSelectionProps> = ({
     </>
   );
 };
+
+export default PackageSelection;

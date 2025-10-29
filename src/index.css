@@ -192,3 +192,12 @@ All colors MUST be HSL.
         display: none!important;
     }
 }
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

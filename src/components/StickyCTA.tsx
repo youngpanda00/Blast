@@ -26,6 +26,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [showHighlight, setShowHighlight] = useState(false);
 
+  // Package pricing data
   const basePriceMap: Record<'starter' | 'boost' | 'growth' | 'mastery', number> = {
     starter: 79,
     boost: 158,
@@ -39,7 +40,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
   const dr = Math.max(0, Math.min(1, Number(discountRate || 0)));
   const finalPrice = promoActive ? Math.max(0, base * (1 - dr)) : base;
   const formattedPrice = formatMoney(finalPrice);
-  const savedPrice = formatMoney(base - finalPrice);
+  const savedPrice = formatMoney(base - finalPrice)
 
   useEffect(() => {
     const showThreshold = 600;
@@ -125,7 +126,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
           </button>
 
           <div className="bg-white/95 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-xl p-4 min-w-[280px]">
-            <div className="mb-3">
+            <div className="mb-3 ">
               <div>
                 <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                   <div className="w-2 h-2 bg-blue-500 rounded-full"></div>

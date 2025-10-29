@@ -26,6 +26,12 @@ interface AddressSearchSelectProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  autoOpen?:boolean;
+}
+
+interface suggestionItem {
+  address: string,
+  source: string
 }
 
 const AddressSearchSelect = React.forwardRef<
@@ -40,13 +46,14 @@ const AddressSearchSelect = React.forwardRef<
       onAddressSelect,
       placeholder = "搜索地址...",
       disabled,
+      autoOpen,
       ...props
     },
     ref,
   ) => {
     const [open, setOpen] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState("");
-    const [suggestions, setSuggestions] = React.useState<string[]>([]);
+    const [suggestions, setSuggestions] = React.useState<suggestionItem[]>([]);
     const [loading, setLoading] = React.useState(false);
     const [selectedValue, setSelectedValue] = React.useState(value || "");
     const isMobile = useIsMobile();
@@ -63,7 +70,7 @@ const AddressSearchSelect = React.forwardRef<
       setLoading(true);
       try {
         const response = await fetch(
-          `/listing-crm/listing/blast/suggestAddress?key=${encodeURIComponent(key)}`,
+          `/api-blast/listing/address-suggestions?keyword=${encodeURIComponent(key)}`,
           {
             method: "GET"
           },
@@ -71,8 +78,9 @@ const AddressSearchSelect = React.forwardRef<
 
         if (response.ok) {
           const { data } = await response.json();
-          console.log("suggestAddress", data);
-          setSuggestions(Array.isArray(data) ? data : []);
+          // console.log("suggestAddress", data);
+          const suggestions = data?.suggestions || []
+          setSuggestions(suggestions);
         } else {
           setSuggestions([]);
         }
@@ -107,23 +115,7 @@ const AddressSearchSelect = React.forwardRef<
         setSearchTerm("");
         setOpen(false);
         onValueChange?.(address);
-
-        // Call the searchByAddress API
-        try {
-          const response = await fetch(
-            `/listing-crm/listing/blast/searchByAddress?address=${encodeURIComponent(address)}`,
-            {
-              method: "GET"
-            },
-          );
-
-          if (response.ok) {
-            const data = await response.json();
-            onAddressSelect?.(data);
-          }
-        } catch (error) {
-          console.error("Failed to search by address:", error);
-        }
+        onAddressSelect?.(address);
       },
       [onValueChange, onAddressSelect],
     );
@@ -141,6 +133,10 @@ const AddressSearchSelect = React.forwardRef<
         }
       };
     }, []);
+
+    // React.useEffect(() => {
+    //   setOpen(autoOpen)
+    // }, [autoOpen])
 
     // Get displayed suggestions
     const displayedSuggestions = React.useMemo(() => {
@@ -234,22 +230,24 @@ const AddressSearchSelect = React.forwardRef<
                 )
               ) : (
                 <CommandGroup>
-                  {displayedSuggestions.map((address, index) => (
+                  {displayedSuggestions.map((item, index) => (
                     <CommandItem
                       key={index}
-                      value={address}
-                      onSelect={() => handleSelectAddress(address)}
+                      value={item.address}
+                      onSelect={() => handleSelectAddress(item.address)}
                       className="cursor-pointer"
                     >
                       <Check
                         className={cn(
                           "mr-2 h-4 w-4",
-                          selectedValue === address
+                          selectedValue === item.address
                             ? "opacity-100"
                             : "opacity-0",
                         )}
                       />
-                      <span className="truncate">{highlightText(address, searchTerm)}</span>
+                      <div style={{display: 'flex', position: 'relative', flex: 1}}>
+                        <span className="truncate" style={{width: isMobile ? '300px' : '100%'}}>{highlightText(item.address, searchTerm)}</span>
+                      </div>
                     </CommandItem>
                   ))}
                 </CommandGroup>
