@@ -59,7 +59,7 @@ export const FixedNavigation: React.FC = () => {
     }
   };
 
-  const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://lofty.com/?fromblast=1&utm_source=${encodeURIComponent(utmSource)}` : 'https://lofty.com/?fromblast=1';
+  const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://lofty.com/?fromblast=2&utm_source=${encodeURIComponent(utmSource)}` : 'https://lofty.com/?fromblast=2';
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 bg-white px-[22px] max-md:px-4 h-[60px] max-md:h-[50px] flex items-center border-b border-gray-100 transition-all duration-300 ${
