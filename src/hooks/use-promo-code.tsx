@@ -7,6 +7,12 @@ export interface PromoState {
   expiresAt: number; // ms epoch
   code: string | null;
   popup: boolean
+  type: 'ThansGiving' | 'Christmas' | 'Default'
+}
+
+const PromoTypes = {
+  THANKSGIVING20: 'ThansGiving',
+  CHRISTMAS20: 'Christmas'
 }
 
 export const usePromoCode = () => {
@@ -32,7 +38,7 @@ export const usePromoCode = () => {
     const now = Date.now();
     const valid = isValid && discountRate > 0 && exp > now;
     if (valid) {
-      const state: PromoState = { valid, discountRate, expiresAt: exp, code, popup };
+      const state: PromoState = { valid, discountRate, expiresAt: exp, code, popup, type: PromoTypes[code]??'Default' };
       setPromo(state);
     } else {
       setPromo(null)

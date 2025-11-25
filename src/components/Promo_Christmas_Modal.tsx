@@ -1,0 +1,87 @@
+import React, { useCallback, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+interface Props {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  percent: number; // e.g. 20
+}
+
+export const PromoModal: React.FC<Props> = ({
+  open,
+  onOpenChange,
+  percent,
+}) => {
+  useEffect(() => {
+    if (!open) return;
+    // disable background scroll while open
+    const original = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = original;
+    };
+  }, [open]);
+
+  const onClose = useCallback(() => {
+    onOpenChange(false);
+  }, [onOpenChange]);
+  
+  useEffect(()=>{
+    setTimeout(onClose, 5000)
+  }, [onClose])
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[560px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
+        <div className="relative bg-[#d94223]">
+          <div
+            className="w-full"
+            style={{
+              paddingTop: `${1000 / 56}%`,
+              backgroundSize: "cover",
+              backgroundImage:
+                "url(https://cdn.lofty.com/image/fs/servicetool/20251125/12/original_ccfc42c84cce44e1.png)",
+            }}
+          ></div>
+          <div className="flex items-center justify-center">
+            <img
+              className="h-[150px]"
+              src="https://cdn.lofty.com/image/fs/servicetool/20251125/11/original_ec8cdd8d80414510.png"
+            />
+          </div>
+
+          <h3 className="text-center text-white text-[28px] font-semibold tracking-wide">
+            HOT DEAL ALERT!
+          </h3>
+          <div className="text-center text-[36px] font-extrabold text-white leading-tight mt-1">
+            <span className="text-[#ffdc2a]">{percent}% OFF</span> YOUR TOTAL
+          </div>
+
+          <div className="flex items-center justify-center">
+            <button
+              onClick={onClose}
+              className="text-[16px] mt-8 mb-24 px-12 py-3 rounded-[100px] text-[#F0454C] font-semibold bg-white hover:opacity-90"
+            >
+              Redeem My Discount
+            </button>
+          </div>
+
+          <div
+            className="w-full absolute"
+            style={{
+              paddingTop: `${3300 / 56}%`,
+              bottom: 0,
+              pointerEvents: 'none',
+              backgroundSize: "cover",
+              backgroundImage:
+                "url(https://cdn.lofty.com/image/fs/servicetool/20251125/11/original_38a66dbb972c4183.png)",
+            }}
+          ></div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default PromoModal;

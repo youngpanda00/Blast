@@ -2,17 +2,37 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
 import { usePromoCode } from "@/hooks/use-promo-code";
-import PromoModal from "@/components/PromoModal";
+import PromoDefaultModal from "@/components/PromoModal";
+import Promo_ThanksGiving_Modal from "@/components/Promo_ThanksGiving_Modal";
+import Promo_Christmas_Modal from "@/components/Promo_Christmas_Modal";
 import PromoBanner from "@/components/PromoBanner";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import React from "react";
 
+const PromoModals = {
+  ThansGiving: Promo_ThanksGiving_Modal,
+  Christmas: Promo_Christmas_Modal,
+  Default: PromoDefaultModal,
+};
+
 const queryClient = new QueryClient();
 
 const App = ({ page }: { page?: "listing" }) => {
-  const { promo, clearPromo, reloadPromo, modalOpen, setModalOpen, percent, dismiss, submittedEmail, submitEmail } = usePromoCode();
+  const {
+    promo,
+    clearPromo,
+    reloadPromo,
+    modalOpen,
+    setModalOpen,
+    percent,
+    dismiss,
+    submittedEmail,
+    submitEmail,
+  } = usePromoCode();
   const bannerVisible = Boolean(promo?.valid);
+
+  const PromoModal = PromoModals[promo?.type]
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -21,13 +41,15 @@ const App = ({ page }: { page?: "listing" }) => {
         <Sonner />
         {promo && (
           <>
-            {promo.popup && <PromoModal
-              open={modalOpen && bannerVisible}
-              onOpenChange={(v) => (v ? setModalOpen(true) : dismiss())}
-              percent={percent}
-              expiresAt={promo.expiresAt}
-              onSubmitEmail={submitEmail}
-            />}
+            {promo.popup && (
+              <PromoModal
+                open={modalOpen && bannerVisible}
+                onOpenChange={(v) => (v ? setModalOpen(true) : dismiss())}
+                percent={percent}
+                expiresAt={promo.expiresAt}
+                onSubmitEmail={submitEmail}
+              />
+            )}
             <PromoBanner
               visible={bannerVisible}
               percent={percent}
@@ -38,8 +60,8 @@ const App = ({ page }: { page?: "listing" }) => {
         )}
         <Index
           page={page}
-          promoEmail={submittedEmail || ''}
-          promoCode={promo?.code || ''}
+          promoEmail={submittedEmail || ""}
+          promoCode={promo?.code || ""}
           discountRate={promo?.discountRate ?? 0}
           promoActive={!!promo}
           reloadPromo={reloadPromo}
