@@ -33,7 +33,7 @@ export const PromoModal: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[560px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
+      <DialogContent className="max-md:max-w-[340px] md:max-w-[616px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
         <div className="relative bg-[#d94223]">
           <div
             className="w-full"
@@ -62,6 +62,7 @@ export const PromoModal: React.FC<Props> = ({
             <button
               onClick={onClose}
               className="text-[16px] mt-8 mb-24 px-12 py-3 rounded-[100px] text-[#F0454C] font-semibold bg-white hover:opacity-90"
+              style={{outline: 'none'}}
             >
               Redeem My Discount
             </button>
