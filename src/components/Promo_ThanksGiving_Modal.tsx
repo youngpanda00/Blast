@@ -13,6 +13,14 @@ export const PromoModal: React.FC<Props> = ({
   onOpenChange,
   percent,
 }) => {
+  const pieces = useMemo(() => Array.from({ length: 60 }).map((_, i) => ({
+      left: Math.random() * 100,
+      delay: Math.random() * 1.2,
+      color: [
+        '#7C3AED', '#3B82F6', '#F59E0B', '#10B981', '#EF4444', '#F472B6'
+      ][i % 6]
+    })), []);
+    
   useEffect(() => {
     if (!open) return;
     // disable background scroll while open
@@ -33,6 +41,28 @@ export const PromoModal: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
+      {open && createPortal(
+        <>
+          <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
+            {pieces.map((p, i) => (
+              <span
+                key={i}
+                style={{ left: `${p.left}%`, animationDelay: `${p.delay}s`, backgroundColor: p.color }}
+                className="absolute -top-5 w-1.5 h-2 rounded-[2px] animate-confetti-screen"
+              />)
+            )}
+          </div>
+          <style>{`
+            @keyframes confetti-screen {
+              0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+              10% { opacity: 1; }
+              100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+            }
+            .animate-confetti-screen { animation: confetti-screen 2.4s ease-in forwards; }
+          `}</style>
+        </>,
+        document.body
+      )}
       <DialogContent className="max-md:max-w-[340px] md:max-w-[616px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
         <div className="relative bg-white">
           <div
