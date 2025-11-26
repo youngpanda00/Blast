@@ -62,7 +62,7 @@ export const PromoModal: React.FC<Props> = ({
             <button
               onClick={onClose}
               className="text-[16px] mt-8 mb-24 px-12 py-3 rounded-[100px] text-[#F0454C] font-semibold bg-white hover:opacity-90"
-              style={{outline: 'none'}}
+              style={{outline: 'none', width: '300px'}}
             >
               Redeem My Discount
             </button>
