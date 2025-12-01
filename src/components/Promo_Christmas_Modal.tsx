@@ -66,7 +66,7 @@ export const PromoModal: React.FC<Props> = ({
         </>,
         document.body
       )}
-      <DialogContent className="special-dialog p-0 overflow-hidden border-0 shadow-2xl rounded-2xl" style={{width: isMobile ? 'calc(100% - 30px)': '50%', minWidth: isMobile ? '320px': '560px'}}>
+      <DialogContent className="special-dialog p-0 overflow-hidden border-0 shadow-2xl rounded-2xl" style={{width: isMobile ? 'calc(100% - 30px)': '50%', height: isMobile ? 'auto' : '50%', minWidth: isMobile ? '320px': '560px'}}>
         <div className="relative bg-[#d94223]">
           <div
             className="w-full"
