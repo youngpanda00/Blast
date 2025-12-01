@@ -60,7 +60,7 @@ export const PromoModal: React.FC<Props> = ({ open, onOpenChange, percent, expir
         document.body
       )}
 
-      <DialogContent className="max-w-[560px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
+      <DialogContent className="max-md:max-w-[340px] md:max-w-[680px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
         <div className="relative p-8 bg-white">
           {/* Icon circle */}
           <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center mb-4">

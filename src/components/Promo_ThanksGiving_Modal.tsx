@@ -20,7 +20,7 @@ export const PromoModal: React.FC<Props> = ({
         '#7C3AED', '#3B82F6', '#F59E0B', '#10B981', '#EF4444', '#F472B6'
       ][i % 6]
     })), []);
-    
+
   useEffect(() => {
     if (!open) return;
     // disable background scroll while open
@@ -63,7 +63,7 @@ export const PromoModal: React.FC<Props> = ({
         </>,
         document.body
       )}
-      <DialogContent className="max-md:max-w-[340px] md:max-w-[616px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
+      <DialogContent className="max-md:max-w-[340px] md:max-w-[680px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
         <div className="relative bg-white">
           <div
             className="w-full"

@@ -63,7 +63,7 @@ export const PromoModal: React.FC<Props> = ({
         </>,
         document.body
       )}
-      <DialogContent className="max-md:max-w-[340px] md:max-w-[616px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
+      <DialogContent className="max-md:max-w-[340px] md:max-w-[680px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
         <div className="relative bg-[#d94223]">
           <div
             className="w-full"
