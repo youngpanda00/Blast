@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Props {
   open: boolean;
@@ -30,6 +31,8 @@ export const PromoModal: React.FC<Props> = ({
       document.body.style.overflow = original;
     };
   }, [open]);
+
+  const isMobile = useIsMobile();
 
   const onClose = useCallback(() => {
     onOpenChange(false);
@@ -63,7 +66,7 @@ export const PromoModal: React.FC<Props> = ({
         </>,
         document.body
       )}
-      <DialogContent className="max-md:max-w-[340px] md:max-w-[680px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
+      <DialogContent className="special-dialog p-0 overflow-hidden border-0 shadow-2xl rounded-2xl" style={{width: isMobile ? 'calc(100% - 30px)': '50%', minWidth: isMobile ? '320px': '560px'}}>
         <div className="relative bg-white">
           <div
             className="w-full"

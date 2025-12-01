@@ -201,3 +201,7 @@ All colors MUST be HSL.
     transform: rotate(360deg);
   }
 }
+
+.special-dialog.special-dialog{
+  max-width: none;
+}
