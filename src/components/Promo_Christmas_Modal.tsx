@@ -39,7 +39,7 @@ export const PromoModal: React.FC<Props> = ({
   }, [onOpenChange]);
   
   useEffect(()=>{
-    // setTimeout(onClose, 5000)
+    setTimeout(onClose, 5000)
   }, [onClose])
 
   return (
