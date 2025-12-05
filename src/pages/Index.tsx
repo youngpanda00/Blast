@@ -19,8 +19,9 @@ import { CongratulationsModal } from "@/components/CongratulationsModal";
 import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 import { trackFBEvent } from "@/lib/utils";
 import { autoRecordJumpClick } from "@/utils/recordJumpClick";
+import { HeroChristmas } from "@/components/HeroChristmas";
 
-const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadPromo }: { page?: "listing"; promoEmail?: string; promoCode?: string; discountRate?: number; promoActive?: boolean, reloadPromo:()=>void }) => {
+const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, reloadPromo }: { page?: "listing"; theme?: 'christmas'; promoEmail?: string; promoCode?: string; discountRate?: number; promoActive?: boolean, reloadPromo:()=>void }) => {
   const isMobile = useIsMobile();
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
@@ -1126,16 +1127,25 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
 
   return (
     <div key={refreshKey} className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20">
-      <PurchaseNotification listingCity={listingCity} />
-      <Hero
+      <PurchaseNotification listingCity={listingCity} theme={theme} />
+      {theme === 'christmas' ? <HeroChristmas /> : <Hero
         page={page}
         listingId={listingId}
         onAddressSelect={handleAddressSelect}
         onScrollToAdPreview={scrollToAdPreview}
         onCityUpdate={handleCityUpdate}
-      />
+      />}
 
-      <main id="main-content" className="border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center z-10 flex mt-[20px] w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl">
+      <main id="main-content" className={`relative border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center flex w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl ${theme === 'christmas' ? 'mt-[60px]' : 'mt-[20px]'}`}>
+        {theme === 'christmas' && <div className="max-md:hidden">
+          <img className="absolute" style={{left: -60, top: -60, height: 266.5 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_666250352b02442f.png" />
+          <img className="absolute" style={{right: -60, top: -60, height: 266.5 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_27e938e72a76426c.png" />
+          <img className="absolute" style={{left: '50%', top: -60, width: 322, marginLeft: -161 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_a4ee81d54db14a79.png" />
+          <img className="absolute" style={{left: '50%', top: 45, width: 60, marginLeft: -75 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_f32cf710146d4dae.png" />
+          <img className="absolute" style={{left: -50, top: 460, width: 87 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_d50042aefc834cac.png" />
+          <img className="absolute" style={{right: -60, top: 720, width: 105 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_5f907eeb8f744214.png" />
+          <img className="absolute" style={{left: -60, top: 1200, width: 112 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_bb8cc63f963e48d8.png" />
+        </div>}
         <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
           <div className="gap-5 flex max-md:flex-col items-stretch max-md:gap-8">
             {!isMobile && (
@@ -1300,12 +1310,19 @@ const Index = ({ page, promoEmail, promoCode, discountRate, promoActive, reloadP
             setIsEditingAd(!data.done);
             setSelectedPreviewPicture(data?.imageUrl)
           }}
+          theme={theme}
         />
       </main>
 
+      {theme === 'christmas' && <div className="relative pt-[30px] md:pt-[60px] z-2">
+        <img className="absolute w-[140px] bottom-[-30px] md:w-[275px] md:bottom-[-60px] left-[0px]" src="https://cdn.lofty.com/image/fs/servicetool/2025125/7/original_b342fc84cf354efb.png" />
+        <img className="absolute h-[136px] bottom-[-10px] md:h-[300px] md:bottom-[-20px] right-[0px]" src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_b16fd5d5246b46d8.png" />
+        <div className="christmas-bg relative z-[1] max-md:hidden h-[56px]" style={{backgroundImage: 'url(https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_403cb61744034f1f.png)'}}></div>
+        <div className="md:hidden relative z-[1] h-[28px] christmas-bg" style={{backgroundImage: `url(https://cdn.lofty.com/image/fs/servicetool/2025125/9/original_4d99efd856d346d6.png)`}}></div>
+      </div>}
       <ClientTestimonials />
       {page === 'listing' && <FrequentlyAskedQuestions />}
-      <ContactFooter />
+      <ContactFooter theme={theme} />
 
       {/* Zoom Modal */}
       {isZoomModalOpen && (

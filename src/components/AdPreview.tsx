@@ -23,6 +23,7 @@ import {
 } from "./ui/dialog";
 
 interface AdPreviewProps {
+  theme?: 'christmas'
   isCustomListing?: boolean;
   addressName?: string;
   isEditingAd?: boolean;
@@ -54,6 +55,7 @@ const adCopyTemplates = [
 ];
 
 const AdPreview: React.FC<AdPreviewProps> = ({
+  theme,
   isEditingAd,
   addressName,
   selectedAddressId,
@@ -785,7 +787,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                 <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-xl border-2 border-blue-100 shadow-lg">
                   {/* Header with icon */}
                   <div className="flex items-center gap-3 p-6 pb-4">
-                    <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                    <div className={`w-10 h-10 ${ theme === 'christmas' ? 'bg-[#c24b33]' : 'bg-blue-500'} rounded-full flex items-center justify-center`}>
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />

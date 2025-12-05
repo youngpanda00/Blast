@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 
 interface PurchaseNotificationProps {
   listingCity?: string; // City from listing data for 80% probability
+  theme?: 'christmas'
 }
 
 const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   listingCity,
+  theme,
 }) => {
   const names = [
     "Micha*l G.*",
@@ -198,7 +200,7 @@ const PurchaseNotification: React.FC<PurchaseNotificationProps> = ({
   }, [listingCity]);
 
   return (
-    <div className={`fixed top-16 right-4 z-40 max-w-[310px] sm:max-w-none hidden sm:block transition-all duration-300 ease-in-out transform top-[calc(var(--promo-banner-space,0px)+4rem)] ${
+    <div className={`fixed top-16 right-4 z-40 max-w-[310px] sm:max-w-none hidden sm:block transition-all duration-300 ease-in-out transform ${theme === 'christmas' ? 'top-[calc(var(--promo-banner-space,0px)+135px+4rem)]' : 'top-[calc(var(--promo-banner-space,0px)+4rem)]'} ${
       isVisible
         ? 'opacity-100 translate-y-0'
         : 'opacity-0 -translate-y-2'

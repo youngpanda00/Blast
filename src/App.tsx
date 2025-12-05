@@ -8,7 +8,7 @@ import Promo_Christmas_Modal from "@/components/Promo_Christmas_Modal";
 import PromoBanner from "@/components/PromoBanner";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import React from "react";
+import { useTheme } from "./hooks/use-theme";
 
 const PromoModals = {
   ThansGiving: Promo_ThanksGiving_Modal,
@@ -19,6 +19,7 @@ const PromoModals = {
 const queryClient = new QueryClient();
 
 const App = ({ page }: { page?: "listing" }) => {
+  const theme = useTheme()
   const {
     promo,
     clearPromo,
@@ -51,6 +52,7 @@ const App = ({ page }: { page?: "listing" }) => {
               />
             )}
             <PromoBanner
+              theme={theme}
               visible={bannerVisible}
               percent={percent}
               expiresAt={promo.expiresAt}
@@ -65,6 +67,7 @@ const App = ({ page }: { page?: "listing" }) => {
           discountRate={promo?.discountRate ?? 0}
           promoActive={!!promo}
           reloadPromo={reloadPromo}
+          theme={theme}
         />
       </TooltipProvider>
     </QueryClientProvider>

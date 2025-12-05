@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { trackMixPanel } from "@/lib/utils";
 
-export const FixedNavigation: React.FC = () => {
+export const FixedNavigation: React.FC<{ transparent?: boolean }> = ({ transparent = true }) => {
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [utmSource, setUtmSource] = useState<string | null>(null);
@@ -59,11 +59,13 @@ export const FixedNavigation: React.FC = () => {
     }
   };
 
+  const isTransparent = transparent && isAtTop
+
   const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://lofty.com/?fromblast=1&utm_source=${encodeURIComponent(utmSource)}` : 'https://lofty.com/?fromblast=1';
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 bg-white px-[22px] max-md:px-4 h-[60px] max-md:h-[50px] flex items-center border-b border-gray-100 transition-all duration-300 ${
-      isAtTop ? 'nav-transparent' : ''
+      isTransparent ? 'nav-transparent' : ''
     }`}>
       <div className="w-full max-w-[1210px] mx-auto flex items-center h-full max-md:justify-between">
         {/* Logo */}
@@ -72,7 +74,7 @@ export const FixedNavigation: React.FC = () => {
             <img
               src="https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2F0325b400e1904671b7c00a9f4f5084b6?format=webp&width=800"
               className={`h-8 transition-all duration-300 max-md:h-6 ${
-                isAtTop ? 'brightness-0 invert' : ''
+                isTransparent ? 'brightness-0 invert' : ''
               }`}
               alt="Lofty Blast Logo"
             />
@@ -84,7 +86,7 @@ export const FixedNavigation: React.FC = () => {
           <div
             onClick={(e) => { handleNavClick(e, 'NavContact') }}
             className={`relative font-medium text-sm h-full flex items-center group ${
-              isAtTop ? 'text-white' : 'text-[#515666]'
+              isTransparent ? 'text-white' : 'text-[#515666]'
             }`}
             style={{
               cursor: 'pointer',
@@ -94,7 +96,7 @@ export const FixedNavigation: React.FC = () => {
             Contact
             <span 
               className={`absolute bottom-0 left-0 w-full h-1 bg-[#3b5cde] opacity-0 rounded-t-[2px] ${
-                isAtTop ? '' : 'group-hover:opacity-100'
+                isTransparent ? '' : 'group-hover:opacity-100'
               }`}
               style={{
                 transition: 'opacity 0.5s ease 0s'
@@ -110,7 +112,7 @@ export const FixedNavigation: React.FC = () => {
             setIsMobileMenuOpen(!isMobileMenuOpen) 
           }}
           className={`md:hidden p-2 ml-auto ${
-            isAtTop ? 'text-white' : 'text-[#515666]'
+            isTransparent ? 'text-white' : 'text-[#515666]'
           }`}
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

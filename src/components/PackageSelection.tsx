@@ -31,6 +31,7 @@ interface PackageSelectionProps {
   discountRate?: number;
   promoActive?: boolean;
   onOpenCongratulationsModal: (email: string, promise?: Promise<void>) => void;
+  theme?: 'christmas'
 }
 
 interface AdData {
@@ -56,6 +57,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   promoCode,
   discountRate: discountRateProp,
   promoActive: promoActiveProp,
+  theme,
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
@@ -682,44 +684,82 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
       {/* Ad Preview Section */}
       <AdPreview
         key={selectedAddressId}
+        theme={theme}
         addressName={addressName}
         isCustomListing={isCustomListing}
         previewPicture={previewPicture}
         isEditingAd={isEditingAd}
         selectedAddressId={selectedAddressId}
-        initialImage={previewPicture??"https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"}
+        initialImage={
+          previewPicture ??
+          "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
+        }
         initialHeadline="Don't miss out on this new listing"
         initialAdCopy={initialAdCopy}
         onAdUpdate={(data) => {
           updateAdInfo({
             imageUrl: data.image,
-            done: data.done
-          })
+            done: data.done,
+          });
           setAdPreviewData({
             imageUrl: data.image,
             headline: data.headline,
             mainText: data.adCopy,
-            file: data.selectedFile
-          })
+            file: data.selectedFile,
+          });
           // Here you can handle the ad update, save to state, API, etc.
         }}
       />
 
-      <section className="w-full flex flex-col items-center max-md:bg-white" data-section="packages">
-        <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px] max-md:hidden" />
+      <section
+        className="w-full flex flex-col items-center max-md:bg-white"
+        data-section="packages"
+      >
+        {theme === 'christmas' ? (
+          <div className="flex justify-center items-center max-md:hidden">
+            <img
+              className="h-[81ox]"
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_a8832269fe774268.png"
+            />
+          </div>
+        ) : (
+          <div className="w-[1140px] shrink-0 max-w-full h-[1px] bg-[#EBECF1] mt-[29px] max-md:hidden" />
+        )}
 
         <div className="flex w-full max-w-[1140px] items-stretch gap-5 flex-wrap justify-between mt-10 max-md:max-w-full max-md:px-6 max-md:justify-center max-md:items-center">
           <div className="flex flex-col">
             <h2 className="text-black text-xl font-bold my-auto max-md:max-w-full max-md:flex max-md:flex-col max-md:justify-start max-md:items-center">
-              {promoActive ? <>
-                <span>Step 3 - Special Discounted Plans</span>
-                <div className="promo-tip" style={{color:'#797E8B', fontSize: 16, fontWeight: 'normal'}}>
-                  Limited time offer - <span className="text-[#3B5CDE]" style={{fontWeight: 'bold'}}>{Math.round((discountRate ?? 0) * 100)}% OFF</span> on all advertising plan</div>
-              </>
-              :<>
-              <span className="max-md:hidden">Step 3 - Select Your Package & Luanch Ad</span>
-              <span className="hidden max-md:block">Step 3 - Publish Your Ad Now</span>
-              </>}
+              {promoActive ? (
+                <>
+                  <span>Step 3 - Special Discounted Plans</span>
+                  <div
+                    className="promo-tip"
+                    style={{
+                      color: "#797E8B",
+                      fontSize: 16,
+                      fontWeight: "normal",
+                    }}
+                  >
+                    Limited time offer -{" "}
+                    <span
+                      className="text-[#3B5CDE]"
+                      style={{ fontWeight: "bold" }}
+                    >
+                      {Math.round((discountRate ?? 0) * 100)}% OFF
+                    </span>{" "}
+                    on all advertising plan
+                  </div>
+                </>
+              ) : (
+                <>
+                  <span className="max-md:hidden">
+                    Step 3 - Select Your Package & Luanch Ad
+                  </span>
+                  <span className="hidden max-md:block">
+                    Step 3 - Publish Your Ad Now
+                  </span>
+                </>
+              )}
             </h2>
             {!hasValidListingId && (
               <p className="text-sm text-orange-600 mt-1">
@@ -742,9 +782,9 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                       page_name: "ListingBlastSP",
                       feature_name: "ListingBlast",
                       click_item: "one-time",
-                      click_action: "charge"
+                      click_action: "charge",
                     });
-                    trackFBEvent('Change billing Type', { item: 'one-time' })
+                    trackFBEvent("Change billing Type", { item: "one-time" });
                   }}
                   className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] max-md:w-[115px] px-2.5 rounded-[15px] transition-all ${
                     selectedPlan === "one-time"
@@ -762,12 +802,12 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                       savePackageSelection(duration);
                     }
                     trackMixPanel("click", {
-                     page_name: "ListingBlastSP",
-                     feature_name: "ListingBlast",
-                     click_item: "monthly",
-                     click_action: "charge"
+                      page_name: "ListingBlastSP",
+                      feature_name: "ListingBlast",
+                      click_item: "monthly",
+                      click_action: "charge",
                     });
-                    trackFBEvent('Change billing Type', { item: 'monthly' })
+                    trackFBEvent("Change billing Type", { item: "monthly" });
                   }}
                   className={`flex min-h-[30px] items-center whitespace-nowrap justify-center w-[152px] max-md:w-[115px] px-2.5 rounded-[15px] transition-all ${
                     selectedPlan === "monthly"
@@ -790,7 +830,10 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                     <Info className="w-5 h-5 text-gray-400 hover:text-blue-600 transition-colors duration-200" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent className="max-w-xs p-3 max-md:mb-4" side={isMobile ? "bottom" : "top"}>
+                <TooltipContent
+                  className="max-w-xs p-3 max-md:mb-4"
+                  side={isMobile ? "bottom" : "top"}
+                >
                   <div className="space-y-2 text-sm">
                     <div>
                       <span className="font-semibold">One-time Charge:</span>{" "}
@@ -811,11 +854,20 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         {promoActive && (
           <div className="w-full max-w-[1140px] mt-3 px-4 md:px-0">
             <div className="flex items-center gap-2 md:gap-3 text-white text-xs md:text-sm rounded-md px-3 py-2 shadow bg-gradient-to-r from-[#547AF2] via-[#7A5AF8] to-[#9B5CF6]">
-              <img className="h-[24px]" src="https://cdn.lofty.com/image/fs/servicetool/2025925/12/original_e09de188a7614349.png" />
+              <img
+                className="h-[24px]"
+                src="https://cdn.lofty.com/image/fs/servicetool/2025925/12/original_e09de188a7614349.png"
+              />
               <div>
-              <span className="font-semibold">Special Promotion:</span>
-              <span className="opacity-90"> You're accessing our exclusive discounted plans.</span>
-              <span className="hidden md:inline opacity-90"> This offer is available for a limited time only.</span>
+                <span className="font-semibold">Special Promotion:</span>
+                <span className="opacity-90">
+                  {" "}
+                  You're accessing our exclusive discounted plans.
+                </span>
+                <span className="hidden md:inline opacity-90">
+                  {" "}
+                  This offer is available for a limited time only.
+                </span>
               </div>
             </div>
           </div>
@@ -827,17 +879,18 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
         </div>
 
-        <div className="flex w-[782px] max-md:w-full max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-[25px] max-md:mb-[35px] max-md:px-6">
+        <div className="relative flex w-[782px] max-md:w-full max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-[25px] max-md:mb-[35px] max-md:px-6">
           <button
             onClick={handleCheckout}
             id="btn-blast-now"
-            className="self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all px-5 py-4 rounded-[75px] max-md:px-5 max-md:pl-5 max-md:pb-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 animate-pulse-scale"
+            className={`self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all px-5 py-4 rounded-[75px] max-md:px-5 max-md:pl-5 max-md:pb-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 ${theme === 'christmas' ? '': 'animate-pulse-scale'}`}
             style={{
               fontWeight: 500,
             }}
           >
             <span>Blast Now!</span>
           </button>
+          {theme === 'christmas' && <img className="absolute" style={{ left: '50%', top: -25, width: 60, marginLeft: 120 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_f32cf710146d4dae.png" />}
         </div>
       </section>
 
@@ -849,6 +902,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         isVisible={!isLoading}
         promoActive={promoActive}
         discountRate={discountRate}
+        theme={theme}
       />
     </>
   );
