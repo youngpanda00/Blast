@@ -21,7 +21,23 @@ import { trackFBEvent } from "@/lib/utils";
 import { autoRecordJumpClick } from "@/utils/recordJumpClick";
 import { HeroChristmas } from "@/components/HeroChristmas";
 
-const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, reloadPromo }: { page?: "listing"; theme?: 'christmas'; promoEmail?: string; promoCode?: string; discountRate?: number; promoActive?: boolean, reloadPromo:()=>void }) => {
+const Index = ({
+  page,
+  theme,
+  promoEmail,
+  promoCode,
+  discountRate,
+  promoActive,
+  reloadPromo,
+}: {
+  page?: "listing";
+  theme?: "christmas";
+  promoEmail?: string;
+  promoCode?: string;
+  discountRate?: number;
+  promoActive?: boolean;
+  reloadPromo: () => void;
+}) => {
   const isMobile = useIsMobile();
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
@@ -43,22 +59,22 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
   const [congratulationsEmail, setCongratulationsEmail] = useState("");
   const [isZoomModalOpen, setIsZoomModalOpen] = useState(false);
   const [isCustomListing, setIsCustomListing] = useState(false);
-  const [ addressName, setAddressName] = useState('');
+  const [addressName, setAddressName] = useState("");
 
-  const [childMethods, setChildMethods] = useState<ChildMethods | null>(null)
+  const [childMethods, setChildMethods] = useState<ChildMethods | null>(null);
 
-  const [isEditingAd, setIsEditingAd] = useState(false)
+  const [isEditingAd, setIsEditingAd] = useState(false);
 
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const refreshWithKey = () => {
-    setRefreshKey(prevKey => prevKey + 1);
+    setRefreshKey((prevKey) => prevKey + 1);
     setCurrentListingData(null);
-    setSelectedAddressId('');
-    setSelectedPreviewPicture('');
+    setSelectedAddressId("");
+    setSelectedPreviewPicture("");
     setIsCustomListing(true);
     setIsEditingAd(false);
-  }
+  };
 
   // Track ViewContent event state
   const [hasTrackedViewContent, setHasTrackedViewContent] = useState(false);
@@ -85,7 +101,10 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
 
   // Initialize selectedAddressId with URL listingId on first load
   React.useEffect(() => {
-    console.log("Initializing with URL params:", { listingId, selectedAddressId });
+    console.log("Initializing with URL params:", {
+      listingId,
+      selectedAddressId,
+    });
     if (listingId && !selectedAddressId) {
       console.log("Setting initial selectedAddressId from URL:", listingId);
       setSelectedAddressId(listingId);
@@ -117,7 +136,7 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
     } else if (addressData?.isCustomListing) {
       setSelectedAddressId(addressData.fullAddress);
     } else {
-      setSelectedAddressId('');
+      setSelectedAddressId("");
       console.warn("No Select property");
     }
     // Store listing data for ad display
@@ -135,18 +154,26 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
   useEffect(() => {
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
       // Check if it's a fetch error related to our API calls
-      if (event.reason &&
-          (event.reason.message?.includes('Failed to fetch') ||
-           event.reason.toString?.().includes('api-blast'))) {
-        console.debug('Handled unhandled promise rejection for API call:', event.reason);
+      if (
+        event.reason &&
+        (event.reason.message?.includes("Failed to fetch") ||
+          event.reason.toString?.().includes("api-blast"))
+      ) {
+        console.debug(
+          "Handled unhandled promise rejection for API call:",
+          event.reason
+        );
         event.preventDefault(); // Prevent the error from bubbling up
       }
     };
 
-    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
 
     return () => {
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      window.removeEventListener(
+        "unhandledrejection",
+        handleUnhandledRejection
+      );
     };
   }, []);
 
@@ -154,7 +181,6 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
   const handleCityUpdate = React.useCallback((city: string | null) => {
     setListingCity(city);
   }, []);
-
 
   // Generate dynamic ad text based on current listing data
   const getAdText = () => {
@@ -182,102 +208,117 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
         if (startResponse.ok) {
           console.log("Task started successfully on page load");
         } else {
-          console.debug("Task start API returned non-OK status:", startResponse.status);
+          console.debug(
+            "Task start API returned non-OK status:",
+            startResponse.status
+          );
         }
       } catch (error) {
         // Silently handle the error - this API may not be available in dev
-        console.debug("Task start API not available:", error instanceof Error ? error.message : String(error));
+        console.debug(
+          "Task start API not available:",
+          error instanceof Error ? error.message : String(error)
+        );
       }
     };
 
     // Wrap in try-catch to prevent any unhandled promise rejections
     try {
       startTask().catch((error) => {
-        console.debug("Unhandled error in startTask:", error instanceof Error ? error.message : String(error));
+        console.debug(
+          "Unhandled error in startTask:",
+          error instanceof Error ? error.message : String(error)
+        );
       });
     } catch (error) {
-      console.debug("Error calling startTask:", error instanceof Error ? error.message : String(error));
+      console.debug(
+        "Error calling startTask:",
+        error instanceof Error ? error.message : String(error)
+      );
     }
   }, []);
-
 
   // Call promotion/record-jump-click API when page loads
   useEffect(() => {
     autoRecordJumpClick();
   }, []);
 
-   // 监听滚动事件，当main模块距离页面顶部小于100px时触发trackFBEvent
+  // 监听滚动事件，当main模块距离页面顶部小于100px时触发trackFBEvent
   useEffect(() => {
     const handleScroll = () => {
       if (hasTrackedViewContent) return; // 如果已经执行过，直接返回
 
-      const mainElement = document.getElementById('main-content');
+      const mainElement = document.getElementById("main-content");
       if (mainElement) {
         const rect = mainElement.getBoundingClientRect();
         const distanceFromTop = rect.top;
 
         if (distanceFromTop < 100) {
-          trackFBEvent('ViewContent');
+          trackFBEvent("ViewContent");
           setHasTrackedViewContent(true);
         }
       }
     };
 
-    
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     // 初始检查，以防页面加载时就已经满足条件
     handleScroll();
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [hasTrackedViewContent]);
 
   const scrollToAdPreview = () => {
-    const adPreviewElement = document.getElementById('ad-preview');
+    const adPreviewElement = document.getElementById("ad-preview");
     if (adPreviewElement) {
       adPreviewElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-  }
+  };
 
-  const adSets = useMemo(()=>[
-    {
-      platform: "Facebook",
-      platformIcon:
-        "https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/cff515252f51381638fd2b0c460416d19b699f1c?placeholderIfAbsent=true",
-      text: "Facebook Feed",
-      image: "/lovable-uploads/498e0b46-26ba-4ff7-b69e-b29799260ca1.png",
-      mobileImage: "/lovable-uploads/1260d066-5d52-46d0-a544-79976440beaa.png",
-      isCustom: true,
-    },
-    {
-      platform: "Instagram",
-      platformIcon:
-        "https://cdn.lofty.com/image/fs/servicetool/2025712/9/original_36515aff44c0447f.png",
-      text: "Instagram Feed",
-      image: "/lovable-uploads/65c1ff62-09c1-4d69-9d3b-d5eaab84aa7e.png",
-      mobileImage: "/lovable-uploads/22160aea-926a-4f27-8853-050716218fc5.png",
-      isCustom: true,
-    },
-    {
-      platform: "Facebook",
-      platformIcon:
-        "https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/cff515252f51381638fd2b0c460416d19b699f1c?placeholderIfAbsent=true",
-      text: "Facebook Story",
-      image: "/lovable-uploads/facebook-story-preview.png",
-      mobileImage: "/lovable-uploads/facebook-story-mobile.png",
-      isCustom: true,
-    },
-    {
-      platform: "Instagram",
-      platformIcon:
-        "https://cdn.lofty.com/image/fs/servicetool/2025712/9/original_36515aff44c0447f.png",
-      text: "Instagram Post",
-      image: "/lovable-uploads/instagram-post-preview.png",
-      mobileImage: "/lovable-uploads/instagram-post-mobile.png",
-      isCustom: true,
-    },
-  ], []);
+  const adSets = useMemo(
+    () => [
+      {
+        platform: "Facebook",
+        platformIcon:
+          "https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/cff515252f51381638fd2b0c460416d19b699f1c?placeholderIfAbsent=true",
+        text: "Facebook Feed",
+        image: "/lovable-uploads/498e0b46-26ba-4ff7-b69e-b29799260ca1.png",
+        mobileImage:
+          "/lovable-uploads/1260d066-5d52-46d0-a544-79976440beaa.png",
+        isCustom: true,
+      },
+      {
+        platform: "Instagram",
+        platformIcon:
+          "https://cdn.lofty.com/image/fs/servicetool/2025712/9/original_36515aff44c0447f.png",
+        text: "Instagram Feed",
+        image: "/lovable-uploads/65c1ff62-09c1-4d69-9d3b-d5eaab84aa7e.png",
+        mobileImage:
+          "/lovable-uploads/22160aea-926a-4f27-8853-050716218fc5.png",
+        isCustom: true,
+      },
+      {
+        platform: "Facebook",
+        platformIcon:
+          "https://cdn.builder.io/api/v1/image/assets/b7536598065f4e65a807787a2ac37040/cff515252f51381638fd2b0c460416d19b699f1c?placeholderIfAbsent=true",
+        text: "Facebook Story",
+        image: "/lovable-uploads/facebook-story-preview.png",
+        mobileImage: "/lovable-uploads/facebook-story-mobile.png",
+        isCustom: true,
+      },
+      {
+        platform: "Instagram",
+        platformIcon:
+          "https://cdn.lofty.com/image/fs/servicetool/2025712/9/original_36515aff44c0447f.png",
+        text: "Instagram Post",
+        image: "/lovable-uploads/instagram-post-preview.png",
+        mobileImage: "/lovable-uploads/instagram-post-mobile.png",
+        isCustom: true,
+      },
+    ],
+    []
+  );
 
   const FacebookAdComponent = () => {
     if (viewMode === "mobile") {
@@ -386,20 +427,24 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
             <div className="absolute left-[8px] top-[98px] w-[155px] h-[166px]">
               <div className="w-full h-full bg-[#F8F9FB] border-[0.396px] border-[#E3E3E6] rounded-[6px] overflow-hidden">
                 <div className="relative w-full h-[130px] rounded-t-[5.903px] overflow-hidden">
-              <img
-                src={
-                  selectedPreviewPicture ||
-                  "https://cdn.builder.io/api/v1/image/assets/TEMP/97b02aa4e5f4ffc99b61c6047b9cca274743cb62?width=310"
-                }
-                alt=""
-                className={`w-full h-full object-cover ${
-                  (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
-                }`}
-              />
-              {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
-                <div className="absolute inset-0 bg-black bg-opacity-20 rounded-t-[5.903px]"></div>
-              )}
-            </div>
+                  <img
+                    src={
+                      selectedPreviewPicture ||
+                      "https://cdn.builder.io/api/v1/image/assets/TEMP/97b02aa4e5f4ffc99b61c6047b9cca274743cb62?width=310"
+                    }
+                    alt=""
+                    className={`w-full h-full object-cover ${
+                      !selectedPreviewPicture ||
+                      selectedPreviewPicture.indexOf("cdn.builder.io") > -1
+                        ? "filter blur-[2px]"
+                        : ""
+                    }`}
+                  />
+                  {(!selectedPreviewPicture ||
+                    selectedPreviewPicture.indexOf("cdn.builder.io") > -1) && (
+                    <div className="absolute inset-0 bg-black bg-opacity-20 rounded-t-[5.903px]"></div>
+                  )}
+                </div>
                 <div className="absolute left-[5px] top-[136px] w-[145px] h-[24px]">
                   <div className="w-[102px] h-[24px] flex flex-col gap-[1.107px]">
                     <div className="text-[6px] font-bold text-black leading-[7.379px]">
@@ -563,10 +608,14 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
               }
               alt="Modern white house with pool"
               className={`w-full h-full object-cover ${
-                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
+                !selectedPreviewPicture ||
+                selectedPreviewPicture.indexOf("cdn.builder.io") > -1
+                  ? "filter blur-[2px]"
+                  : ""
               }`}
             />
-            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
+            {(!selectedPreviewPicture ||
+              selectedPreviewPicture.indexOf("cdn.builder.io") > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20 rounded"></div>
             )}
           </div>
@@ -787,10 +836,14 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
-                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
+                !selectedPreviewPicture ||
+                selectedPreviewPicture.indexOf("cdn.builder.io") > -1
+                  ? "filter blur-[2px]"
+                  : ""
               }`}
             />
-            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
+            {(!selectedPreviewPicture ||
+              selectedPreviewPicture.indexOf("cdn.builder.io") > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             )}
           </div>
@@ -1033,10 +1086,14 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
               }
               alt="Lakefront homes with reflection"
               className={`w-full h-full object-cover ${
-                (!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) ? 'filter blur-[2px]' : ''
+                !selectedPreviewPicture ||
+                selectedPreviewPicture.indexOf("cdn.builder.io") > -1
+                  ? "filter blur-[2px]"
+                  : ""
               }`}
             />
-            {(!selectedPreviewPicture || selectedPreviewPicture.indexOf('cdn.builder.io') > -1) && (
+            {(!selectedPreviewPicture ||
+              selectedPreviewPicture.indexOf("cdn.builder.io") > -1) && (
               <div className="absolute inset-0 bg-black bg-opacity-20"></div>
             )}
           </div>
@@ -1126,26 +1183,74 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
   const currentSet = adSets[currentSetIndex];
 
   return (
-    <div key={refreshKey} className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20">
+    <div
+      key={refreshKey}
+      className="flex flex-col overflow-hidden items-stretch bg-[#EBEFFC] max-md:pb-20"
+    >
       <PurchaseNotification listingCity={listingCity} theme={theme} />
-      {theme === 'christmas' ? <HeroChristmas /> : <Hero
-        page={page}
-        listingId={listingId}
-        onAddressSelect={handleAddressSelect}
-        onScrollToAdPreview={scrollToAdPreview}
-        onCityUpdate={handleCityUpdate}
-      />}
+      {theme === "christmas" ? (
+        <HeroChristmas
+          discountRate={discountRate}
+          listingId={listingId}
+          onAddressSelect={handleAddressSelect}
+          onScrollToAdPreview={scrollToAdPreview}
+          onCityUpdate={handleCityUpdate}
+        />
+      ) : (
+        <Hero
+          page={page}
+          listingId={listingId}
+          onAddressSelect={handleAddressSelect}
+          onScrollToAdPreview={scrollToAdPreview}
+          onCityUpdate={handleCityUpdate}
+        />
+      )}
 
-      <main id="main-content" className={`relative border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center flex w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl ${theme === 'christmas' ? 'mt-[60px]' : 'mt-[20px]'}`}>
-        {theme === 'christmas' && <div className="max-md:hidden">
-          <img className="absolute" style={{left: -60, top: -60, height: 266.5 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_666250352b02442f.png" />
-          <img className="absolute" style={{right: -60, top: -60, height: 266.5 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_27e938e72a76426c.png" />
-          <img className="absolute" style={{left: '50%', top: -60, width: 322, marginLeft: -161 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_a4ee81d54db14a79.png" />
-          <img className="absolute" style={{left: '50%', top: 45, width: 60, marginLeft: -75 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_f32cf710146d4dae.png" />
-          <img className="absolute" style={{left: -50, top: 460, width: 87 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_d50042aefc834cac.png" />
-          <img className="absolute" style={{right: -60, top: 720, width: 105 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_5f907eeb8f744214.png" />
-          <img className="absolute" style={{left: -60, top: 1200, width: 112 }} src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_bb8cc63f963e48d8.png" />
-        </div>}
+      <main
+        id="main-content"
+        className={`relative border shadow-[0px_0px_5px_0px_rgba(32,36,55,0.05)] bg-white self-center flex w-full max-w-[1240px] flex-col items-center py-[45px] border-solid border-[#EBECF1] max-md:max-w-full mb-[20px] max-[1240px]:mt-0 max-[1240px]:pt-0 max-md:mt-[20px] max-md:pb-[20px] max-md:mx-4 max-md:rounded-xl ${
+          theme === "christmas" ? "mt-[60px]" : "mt-[20px]"
+        }`}
+      >
+        {theme === "christmas" && (
+          <div className="max-md:hidden">
+            <img
+              className="absolute"
+              style={{ left: -60, top: -60, height: 266.5 }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_666250352b02442f.png"
+            />
+            <img
+              className="absolute"
+              style={{ right: -60, top: -60, height: 266.5 }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_27e938e72a76426c.png"
+            />
+            <img
+              className="absolute"
+              style={{ left: "50%", top: -60, width: 322, marginLeft: -161 }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_a4ee81d54db14a79.png"
+            />
+            <img
+              className="absolute"
+              style={{ left: "50%", top: 45, width: 60, marginLeft: -75 }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_f32cf710146d4dae.png"
+            />
+            <img
+              className="absolute"
+              style={{ left: -50, top: 460, width: 87 }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_d50042aefc834cac.png"
+            />
+            <img
+              className="absolute"
+              style={{ right: -60, top: 720, width: 105 }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_5f907eeb8f744214.png"
+            />
+            <img
+              className="absolute"
+              style={{ left: -60, top: 1200, width: 112 }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_bb8cc63f963e48d8.png"
+            />
+          </div>
+        )}
         <div className="w-full max-w-[1140px] max-md:max-w-full max-md:px-4">
           <div className="gap-5 flex max-md:flex-col items-stretch max-md:gap-8">
             {!isMobile && (
@@ -1258,7 +1363,10 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
                         "https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2Ffd9b86fe9ff04d7b96f4de286f95e680?format=webp&width=800"
                       }
                       viewMode={viewMode}
-                      isSelectedProperty={!!selectedPreviewPicture && selectedPreviewPicture.indexOf('cdn.builder.io') === -1}
+                      isSelectedProperty={
+                        !!selectedPreviewPicture &&
+                        selectedPreviewPicture.indexOf("cdn.builder.io") === -1
+                      }
                     />
                   ) : (
                     <img
@@ -1303,25 +1411,44 @@ const Index = ({ page, theme, promoEmail, promoCode, discountRate, promoActive, 
             setCongratulationsEmail(email);
             setIsCongratulationsModalOpen(true);
             refreshWithKey();
-            await promise
-            reloadPromo()
+            await promise;
+            reloadPromo();
           }}
           updateAdInfo={(data) => {
             setIsEditingAd(!data.done);
-            setSelectedPreviewPicture(data?.imageUrl)
+            setSelectedPreviewPicture(data?.imageUrl);
           }}
           theme={theme}
         />
       </main>
 
-      {theme === 'christmas' && <div className="relative pt-[30px] md:pt-[60px] z-2">
-        <img className="absolute w-[140px] bottom-[-30px] md:w-[275px] md:bottom-[-60px] left-[0px]" src="https://cdn.lofty.com/image/fs/servicetool/2025125/7/original_b342fc84cf354efb.png" />
-        <img className="absolute h-[136px] bottom-[-10px] md:h-[300px] md:bottom-[-20px] right-[0px]" src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_b16fd5d5246b46d8.png" />
-        <div className="christmas-bg relative z-[1] max-md:hidden h-[56px]" style={{backgroundImage: 'url(https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_403cb61744034f1f.png)'}}></div>
-        <div className="md:hidden relative z-[1] h-[28px] christmas-bg" style={{backgroundImage: `url(https://cdn.lofty.com/image/fs/servicetool/2025125/9/original_4d99efd856d346d6.png)`}}></div>
-      </div>}
+      {theme === "christmas" && (
+        <div className="relative pt-[30px] md:pt-[60px] z-2">
+          <img
+            className="absolute w-[140px] bottom-[-30px] md:w-[275px] md:bottom-[-60px] left-[0px]"
+            src="https://cdn.lofty.com/image/fs/servicetool/2025125/7/original_b342fc84cf354efb.png"
+          />
+          <img
+            className="absolute h-[136px] bottom-[-10px] md:h-[300px] md:bottom-[-20px] right-[0px]"
+            src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_b16fd5d5246b46d8.png"
+          />
+          <div
+            className="christmas-bg relative z-[1] max-md:hidden h-[56px]"
+            style={{
+              backgroundImage:
+                "url(https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_403cb61744034f1f.png)",
+            }}
+          ></div>
+          <div
+            className="md:hidden relative z-[1] h-[28px] christmas-bg"
+            style={{
+              backgroundImage: `url(https://cdn.lofty.com/image/fs/servicetool/2025125/9/original_4d99efd856d346d6.png)`,
+            }}
+          ></div>
+        </div>
+      )}
       <ClientTestimonials />
-      {page === 'listing' && <FrequentlyAskedQuestions />}
+      {page === "listing" && <FrequentlyAskedQuestions />}
       <ContactFooter theme={theme} />
 
       {/* Zoom Modal */}

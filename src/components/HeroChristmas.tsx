@@ -1,18 +1,43 @@
 import React, { useState } from "react";
 import { FixedNavigation } from "./FixedNavigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import PropertySetup from "./PropertySetup";
 
-interface HeroProps {}
+interface HeroProps {
+  discountRate: number;
+  listingId?: string | null;
+  onAddressSelect?: (addressData: any) => void;
+  onScrollToAdPreview?: () => void;
+  onCityUpdate?: (city: string | null) => void;
+}
 
-export const HeroChristmas: React.FC<HeroProps> = ({}) => {
+export const HeroChristmas: React.FC<HeroProps> = ({
+  discountRate,
+  listingId,
+  onAddressSelect,
+  onCityUpdate,
+  onScrollToAdPreview,
+}) => {
   const isMobile = useIsMobile();
 
   return (
     <>
       <FixedNavigation transparent={false} />
       <section className="flex w-full flex-col items-stretch pt-[200px] max-md:max-w-full max-md:pt-[115px] bg-[#b6432c] relative overflow-hidden">
-        <div className="christmas-bg fixed z-[50] pointer-events-none top-[125px] h-[134px] max-md:hidden" style={{backgroundImage: 'url(https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_a3801fe44af7402e.png)'}}></div>
-        <div className="christmas-bg fixed z-[50] pointer-events-none top-[115px] h-[59px] md:hidden" style={{backgroundImage: 'url(https://cdn.lofty.com/image/fs/servicetool/2025125/8/original_208909809652498e.png)'}}></div>
+        <div
+          className="christmas-bg fixed z-[50] pointer-events-none top-[125px] h-[134px] max-md:hidden"
+          style={{
+            backgroundImage:
+              "url(https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_a3801fe44af7402e.png)",
+          }}
+        ></div>
+        <div
+          className="christmas-bg fixed z-[50] pointer-events-none top-[115px] h-[59px] md:hidden"
+          style={{
+            backgroundImage:
+              "url(https://cdn.lofty.com/image/fs/servicetool/2025125/8/original_208909809652498e.png)",
+          }}
+        ></div>
         <div className="flex w-full max-w-[900px] mx-auto max-md:max-w-full flex-1 justify-center items-center flex-col">
           <div
             className="max-md:block text-white py-2 px-4 inline-block max-md:mt-[55px]"
@@ -35,8 +60,43 @@ export const HeroChristmas: React.FC<HeroProps> = ({}) => {
               </h2>
             </div>
           </div>
-          <div className="christmas-middle h-[173px] max-md:h-[117px]"></div>
-          <div className="md:hidden h-[28px] christmas-bg" style={{backgroundImage: `url(https://cdn.lofty.com/image/fs/servicetool/2025125/9/original_4d99efd856d346d6.png)`}}></div>
+          <div className="christmas-middle h-[173px] max-md:h-[117px]">
+            <img
+              className="absolute w-[60px] ml-[-100px] md:w-[90px] md:ml-[-142px]"
+              style={{ top: 10, left: "50%" }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_e3f1928e1db7446d.png"
+            ></img>
+            <div className="text-center font-bold pt-[23px] text-[18px] md:pt-[32px] md:text-[26px]">
+              <span
+                style={{
+                  background:
+                    "linear-gradient(180deg, #E84B2C 0%, #CB6C23 100%)",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                Save{" "}
+              </span>
+              <span
+                className="text-[28px] md:text-[40px]"
+                style={{
+                  fontStyle: "italic",
+                  background:
+                    "linear-gradient(180deg, #E10505 0%, #CB6C23 100%)",
+                  backgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                {discountRate * 100}%
+              </span>
+            </div>
+          </div>
+          <div
+            className="md:hidden h-[28px] christmas-bg"
+            style={{
+              backgroundImage: `url(https://cdn.lofty.com/image/fs/servicetool/2025125/9/original_4d99efd856d346d6.png)`,
+            }}
+          ></div>
           <div className="w-full flex items-center justify-center gap-[108px] mb-[40px] max-md:gap-[10px] max-md:mb-[0px] max-md:py-[20px] max-md:bg-white max-md:mt-[-1px]">
             <div className="flex items-center gap-4 text-sm">
               <div
@@ -139,7 +199,13 @@ export const HeroChristmas: React.FC<HeroProps> = ({}) => {
             </div>
           </div>
         </div>
-        <div className="christmas-bg relative max-md:hidden h-[56px] z-[1]" style={{ backgroundImage: 'url(https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_403cb61744034f1f.png)'}}></div>
+        <div
+          className="christmas-bg relative max-md:hidden h-[56px] z-[1]"
+          style={{
+            backgroundImage:
+              "url(https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_403cb61744034f1f.png)",
+          }}
+        ></div>
         <img
           className="absolute max-md:hidden"
           style={{ left: 0, bottom: 0, height: 273 }}
@@ -150,6 +216,15 @@ export const HeroChristmas: React.FC<HeroProps> = ({}) => {
           style={{ right: 0, bottom: 0, height: 163 }}
           src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_650d559ec7ad4b2a.png"
         />
+        <div className="bg-white mt-[-1px] px-[15px] md:hidden">
+          <PropertySetup
+            listingId={listingId}
+            onAddressSelect={onAddressSelect}
+            onScrollToAdPreview={onScrollToAdPreview}
+            onCityUpdate={onCityUpdate}
+            onMethodsReady={() => {}}
+          />
+        </div>
       </section>
       <style jsx>{`
         .christmas-bg {
@@ -161,10 +236,10 @@ export const HeroChristmas: React.FC<HeroProps> = ({}) => {
         .christmas-middle {
           position: relative;
           width: 100%;
-          background-image: url(https://cdn.lofty.com/image/fs/servicetool/2025125/8/original_adc78ece1a65425f.png);
+          background-image: url(https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_01686c4c94d94df5.png);
+          background-size: auto 100%;
           background-position: center;
           background-repeat: no-repeat;
-          background-size: auto 100%;
         }
         .bg-gradient-to-r {
           background: linear-gradient(150.22deg, #ea6122 7.91%, #fba936 92.15%);
