@@ -784,7 +784,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
             ) : (
               <div className="space-y-6">
                 {/* Preview Overview Card */}
-                <div className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-xl border-2 border-blue-100 shadow-lg">
+                <div className={`relative overflow-hidden ${theme === 'christmas' ? '' : 'border-blue-100 bg-gradient-to-br'} from-blue-50 via-white to-purple-50 rounded-xl border-2 shadow-lg`} style={theme === 'christmas' ? { background: 'linear-gradient(129.92deg, rgba(241, 113, 113, 0.05) 1.89%, rgba(32, 12, 93, 0.05) 98.75%)', borderColor: 'rgba(240, 69, 76, 0.2)' } : undefined}>
                   {/* Header with icon */}
                   <div className="flex items-center gap-3 p-6 pb-4">
                     <div className={`w-10 h-10 ${ theme === 'christmas' ? 'bg-[#c24b33]' : 'bg-blue-500'} rounded-full flex items-center justify-center`}>

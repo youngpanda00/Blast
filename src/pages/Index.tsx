@@ -1260,6 +1260,7 @@ const Index = ({
                 onScrollToAdPreview={scrollToAdPreview}
                 onCityUpdate={handleCityUpdate}
                 onMethodsReady={setChildMethods}
+                theme={theme}
               />
             )}
 

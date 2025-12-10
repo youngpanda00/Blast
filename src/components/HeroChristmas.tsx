@@ -97,7 +97,7 @@ export const HeroChristmas: React.FC<HeroProps> = ({
               backgroundImage: `url(https://cdn.lofty.com/image/fs/servicetool/2025125/9/original_4d99efd856d346d6.png)`,
             }}
           ></div>
-          <div className="w-full flex items-center justify-center gap-[108px] mb-[40px] max-md:gap-[10px] max-md:mb-[0px] max-md:py-[20px] max-md:bg-white max-md:mt-[-1px]">
+          <div className="w-full flex items-center justify-center gap-[108px] mb-[40px] max-md:gap-[40px] max-md:mb-[0px] max-md:py-[20px] max-md:bg-white max-md:mt-[-1px]">
             <div className="flex items-center gap-4 text-sm">
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center max-md:hidden"
@@ -120,11 +120,11 @@ export const HeroChristmas: React.FC<HeroProps> = ({
                 </svg>
               </div>
               <span className="font-medium text-white max-md:text-[#fb501c]">
-                <span className="block text-[20px] font-bold leading-5 mb-[10px]">
+                <span className="block text-[14px] md:text-[20px] font-bold leading-5 mb-[10px]">
                   5X Exposure
                 </span>
                 <span
-                  className="block text-sm font-normal text-center max-md:text-[#515666]"
+                  className="block text-[12px] md:text-[14px] font-normal text-center max-md:text-[#515666]"
                   style={{ opacity: 0.5, lineHeight: "14px" }}
                 >
                   For Listing
@@ -153,11 +153,11 @@ export const HeroChristmas: React.FC<HeroProps> = ({
                 </svg>
               </div>
               <span className="font-medium text-white max-md:text-[#fb501c]">
-                <span className="block text-[20px] font-bold leading-5 mb-[10px]">
+                <span className="block text-[14px] md:text-[20px] font-bold leading-5 mb-[10px]">
                   Save 70%
                 </span>
                 <span
-                  className="block text-sm font-normal text-center max-md:text-[#515666]"
+                  className="block text-[12px] md:text-[14px] font-normal text-center max-md:text-[#515666]"
                   style={{ opacity: 0.5, lineHeight: "14px" }}
                 >
                   On Ad Costs
@@ -186,11 +186,11 @@ export const HeroChristmas: React.FC<HeroProps> = ({
                 </svg>
               </div>
               <span className="font-medium text-white max-md:text-[#fb501c]">
-                <span className="block text-[20px] font-bold leading-5 mb-[10px]">
+                <span className="block text-[14px] md:text-[20px] font-bold leading-5 mb-[10px]">
                   24 Hours
                 </span>
                 <span
-                  className="block text-sm font-normal text-center max-md:text-[#515666]"
+                  className="block text-[12px] md:text-[14px] font-normal text-center max-md:text-[#515666]"
                   style={{ opacity: 0.5, lineHeight: "14px" }}
                 >
                   Go Live
@@ -208,6 +208,16 @@ export const HeroChristmas: React.FC<HeroProps> = ({
         ></div>
         <img
           className="absolute max-md:hidden"
+          style={{ left: 0, top: 150, height: 377 }}
+          src="https://cdn.lofty.com/image/fs/servicetool/20251210/11/original_76f41d8af5b4415f.png"
+        />
+        <img
+          className="absolute max-md:hidden"
+          style={{ right: 0, top: 150, height: 377 }}
+          src="https://cdn.lofty.com/image/fs/servicetool/20251210/11/original_796765fa7ad841bc.png"
+        />
+        <img
+          className="absolute max-md:hidden"
           style={{ left: 0, bottom: 0, height: 273 }}
           src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_fd218713f9cd420a.png"
         />
@@ -216,14 +226,39 @@ export const HeroChristmas: React.FC<HeroProps> = ({
           style={{ right: 0, bottom: 0, height: 163 }}
           src="https://cdn.lofty.com/image/fs/servicetool/2025125/5/original_650d559ec7ad4b2a.png"
         />
-        <div className="bg-white mt-[-1px] px-[15px] md:hidden">
+        <div className="text-center bg-white mt-[-1px] px-[15px] md:hidden max-md:pb-6">
           <PropertySetup
             listingId={listingId}
             onAddressSelect={onAddressSelect}
             onScrollToAdPreview={onScrollToAdPreview}
             onCityUpdate={onCityUpdate}
             onMethodsReady={() => {}}
+            theme={'christmas'}
           />
+
+            {/* Trust indicator */}
+            <div className="mt-6 max-md:mt-4">
+              <div className="space-y-3 max-w-xs mx-auto max-md:flex max-md:flex-col max-md:items-stretch max-md:text-xs max-md:leading-[10px]">
+                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_ea222e03d4ce43dd.png' style={{ width: 12, height: 12}} />
+                  </div>
+                  <span className="text-sm max-md:text-base font-medium">No long-term contracts</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_4e2cd6d815bb4a4a.png' style={{ width: 12, height: 12}} />
+                  </div>
+                  <span className="text-sm max-md:text-base font-medium">Cancel anytime</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
+                    <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_d052b32ec1d64abe.png' style={{ width: 12, height: 12}} />
+                  </div>
+                  <span className="text-sm max-md:text-base font-medium">Results guaranteed</span>
+                </div>
+              </div>
+            </div>
         </div>
       </section>
       <style jsx>{`

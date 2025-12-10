@@ -8,6 +8,7 @@ import { useListingInfo } from "@/hooks/use-listing-info";
 import { useIsMobile } from "../hooks/use-mobile";
 import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 interface PropertySetupProps {
+  theme?: 'christmas'
   listingId?: string | null;
   onAddressSelect?: (addressData: any) => void;
   onCityUpdate?: (city: string | null) => void;
@@ -36,6 +37,7 @@ interface PropertyData {
 }
 
 const PropertySetup: React.FC<PropertySetupProps> = ({
+  theme,
   listingId,
   onAddressSelect: externalOnAddressSelect,
   onScrollToAdPreview,
@@ -301,8 +303,8 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
             </div>
           </div>
           { !hideConfirm && <div className="flex justify-center items-center" style={{gap: '10px', marginTop: isMobile ? '15px' : '30px'}}>
-            <span className="flex justify-center items-center" onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', border: '1px solid #3B5CDE', color: '#3B5CDE', borderRadius: '4px', cursor: 'pointer' }}>Back</span>
-            <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: '#3B5CDE', color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>Confirm</span>
+            <span className="flex justify-center items-center" onClick={() => cancelListing()} style={{ width: '140px', height: '30px',background: '#ffffff', ...(theme === 'christmas' ? { border: '1px solid #fb501c', color:  '#fba936' } : { border: '1px solid #3B5CDE', color:  '#3B5CDE' }), borderRadius: '4px', cursor: 'pointer' }}>Back</span>
+            <span className="flex justify-center items-center" onClick={() => confirmListing(property)} style={{width: '140px', height: '30px', background: (theme === 'christmas' ? 'linear-gradient(150.22deg, #ea6122 7.91%, #fba936 92.15%)' : '#3B5CDE'), color: '#ffffff', borderRadius: '4px', cursor: 'pointer'}}>Confirm</span>
           </div> }
         </div>
       </div>

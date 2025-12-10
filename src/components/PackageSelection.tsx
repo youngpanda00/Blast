@@ -718,7 +718,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         {theme === 'christmas' ? (
           <div className="flex justify-center items-center max-md:hidden">
             <img
-              className="h-[81ox]"
+              className="h-[81px]"
               src="https://cdn.lofty.com/image/fs/servicetool/2025125/6/original_a8832269fe774268.png"
             />
           </div>
@@ -788,7 +788,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                   }}
                   className={`justify-center items-center flex min-h-[30px] font-bold w-[152px] max-md:w-[115px] px-2.5 rounded-[15px] transition-all ${
                     selectedPlan === "one-time"
-                      ? "shadow-[0px_2px_5px_0px_rgba(0,0,0,0.05)] text-[#3B5CDE] bg-white"
+                      ? `shadow-[0px_2px_5px_0px_rgba(0,0,0,0.05)] ${theme === 'christmas' ? 'text-[#f0454c]' : 'text-[#3B5CDE]'} bg-white`
                       : "text-[#797E8B] font-[510]"
                   }`}
                 >
