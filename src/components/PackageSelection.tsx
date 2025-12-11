@@ -488,10 +488,10 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
 
       <div
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
-        className={`relative rounded-[24px] p-4 md:p-[20px] max-md:px-[10px] h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
+        className={`relative rounded-[24px] p-4 md:p-[20px] max-md:px-[10px] h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border flex flex-col justify-between ${
           selectedPackage === pkg.id
-            ? theme === 'christmas' ? "border-[#f0454c]" : "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
-            : "bg-white"
+            ? theme === 'christmas' ? "border-[#f0454c]" : "border-gray-100 bg-gradient-to-br from-blue-500 to-purple-600 text-white"
+            : "border-gray-100 bg-white"
         }`}
       >
 
