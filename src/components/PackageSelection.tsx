@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useImperativeHandle } from "react";
 import { PricingCard } from "./PricingCard";
 import AdPreview from "./AdPreview";
 import { MobileAdConfiguration } from "./MobileAdConfiguration";
@@ -42,7 +42,7 @@ interface AdData {
   done?:boolean
 }
 
-const PackageSelection: React.FC<PackageSelectionProps> = ({
+const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelectionProps>(({
   previewPicture,
   selectedAddressId,
   onOpenCongratulationsModal,
@@ -58,7 +58,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
   discountRate: discountRateProp,
   promoActive: promoActiveProp,
   theme,
-}) => {
+}, ref) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
   );
@@ -338,9 +338,13 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
     }
   };
 
-  const handleCheckout = async () => {
-    await handleCheckoutWithPackage(selectedPackage, adPreviewData);
+  const handleCheckout = () => {
+    void handleCheckoutWithPackage(selectedPackage, adPreviewData);
   };
+
+  useImperativeHandle(ref, ()=>({
+    blastNow: handleCheckout
+  }))
 
   const handlePackageSelect = async (
     packageType: "starter" | "boost" | "growth" | "mastery",
@@ -486,7 +490,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         onClick={() => handleCardClick(pkg.id as "starter" | "boost" | "growth" | "mastery")}
         className={`relative rounded-[24px] p-4 md:p-[20px] max-md:px-[10px] h-[230px] md:h-[290px] overflow-hidden cursor-pointer transition-all hover:shadow-lg border border-gray-100 flex flex-col justify-between ${
           selectedPackage === pkg.id
-            ? "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
+            ? theme === 'christmas' ? "border-[#f0454c]" : "bg-gradient-to-br from-blue-500 to-purple-600 text-white"
             : "bg-white"
         }`}
       >
@@ -495,7 +499,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
         <div className="flex-shrink-0">
           <div className="flex items-center gap-2 mb-3 md:mb-4">
             <h3
-              className={`text-base md:text-lg lg:text-xl font-bold ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+              className={`text-base md:text-lg lg:text-xl font-bold ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white" : "text-gray-900"}`}
             >
               {pkg.name}
             </h3>
@@ -509,7 +513,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
             <div className="flex justify-between text-xs">
               <span
                 className={
-                  selectedPackage === pkg.id
+                  selectedPackage === pkg.id && theme !== 'christmas'
                     ? "text-white/80"
                     : "text-black"
                 }
@@ -517,7 +521,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                 Ads duration
               </span>
               <span
-                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+                className={`font-medium ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white" : "text-gray-900"}`}
               >
                 {pkg.duration}
               </span>
@@ -525,7 +529,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
             <div className="flex justify-between text-xs">
               <span
                 className={
-                  selectedPackage === pkg.id
+                  selectedPackage === pkg.id && theme !== 'christmas'
                     ? "text-white/80"
                     : "text-black"
                 }
@@ -533,7 +537,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                 Estimated views
               </span>
               <span
-                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+                className={`font-medium ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white" : "text-gray-900"}`}
               >
                 {pkg.estimatedViews}
               </span>
@@ -541,7 +545,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
             <div className="flex justify-between text-xs">
               <span
                 className={
-                  selectedPackage === pkg.id
+                  selectedPackage === pkg.id && theme !== 'christmas'
                     ? "text-white/80"
                     : "text-black"
                 }
@@ -549,7 +553,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                 Estimated leads
               </span>
               <span
-                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+                className={`font-medium ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white" : "text-gray-900"}`}
               >
                 {pkg.estimatedLeads}
               </span>
@@ -557,27 +561,27 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
           </div>
 
           {/* Price section for mobile */}
-          <div className={`border-t pt-3 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}>
+          <div className={`border-t pt-3 ${selectedPackage === pkg.id && theme !== 'christmas' ? "border-white/20" : "border-gray-200"}`}>
             <div className="space-y-1">
               {promoActive && (
-                <div className={`${selectedPackage === pkg.id ? "text-white/80" : "text-gray-400"} line-through text-sm`}>
+                <div className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/80" : "text-gray-400"} line-through text-sm`}>
                   {formatMoney(pkg.basePrice)}
                 </div>
               )}
               <div className="flex items-baseline gap-2 flex-nowrap">
                 <span
-                  className={`text-[18px] font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
+                  className={`text-[18px] font-bold ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-[#FFD600]" : "text-gray-900"}`}
                 >
                   {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
                 </span>
                 {promoActive && (
-                  <span className={`${selectedPackage === pkg.id ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-[11px] px-2 py-0.5 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
+                  <span className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-[11px] px-2 py-0.5 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
                 )}
               </div>
               {!promoActive && (
               <div className="mt-1">
                 <span
-                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                  className={`text-sm ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/80" : "text-gray-500"}`}
                 >
                   {paymentText}
                 </span>
@@ -594,7 +598,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
             <div className="flex justify-between text-xs md:text-sm">
               <span
                 className={
-                  selectedPackage === pkg.id
+                  selectedPackage === pkg.id && theme !== 'christmas'
                     ? "text-white/80"
                     : "text-black"
                 }
@@ -602,7 +606,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                 Ads duration
               </span>
               <span
-                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+                className={`font-medium ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white" : "text-gray-900"}`}
               >
                 {pkg.duration}
               </span>
@@ -610,7 +614,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
             <div className="flex justify-between text-xs md:text-sm">
               <span
                 className={
-                  selectedPackage === pkg.id
+                  selectedPackage === pkg.id && theme !== 'christmas'
                     ? "text-white/80"
                     : "text-black"
                 }
@@ -618,7 +622,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                 Estimated views
               </span>
               <span
-                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+                className={`font-medium ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white" : "text-gray-900"}`}
               >
                 {pkg.estimatedViews}
               </span>
@@ -626,7 +630,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
             <div className="flex justify-between text-xs md:text-sm">
               <span
                 className={
-                  selectedPackage === pkg.id
+                  selectedPackage === pkg.id && theme !== 'christmas'
                     ? "text-white/80"
                     : "text-black"
                 }
@@ -634,7 +638,7 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                 Estimated leads
               </span>
               <span
-                className={`font-medium ${selectedPackage === pkg.id ? "text-white" : "text-gray-900"}`}
+                className={`font-medium ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white" : "text-gray-900"}`}
               >
                 {pkg.estimatedLeads}
               </span>
@@ -643,29 +647,29 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
 
           {/* Price section for desktop */}
           <div
-            className={`border-t pt-3 md:pt-4 flex-shrink-0 ${selectedPackage === pkg.id ? "border-white/20" : "border-gray-200"}`}
+            className={`border-t pt-3 md:pt-4 flex-shrink-0 ${selectedPackage === pkg.id && theme !== 'christmas' ? "border-white/20" : "border-gray-200"}`}
           >
             <div className="space-y-1">
               {promoActive && (
-                <div className={`${selectedPackage === pkg.id ? "text-white/70" : "text-gray-400"} line-through text-[24px] mb-[10px]`}>
+                <div className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/70" : "text-gray-400"} line-through text-[24px] mb-[10px]`}>
                   {formatMoney(pkg.basePrice)}
                 </div>
               )}
               <div className="flex items-baseline gap-2 flex-nowrap justify-between">
                 <span
-                  className={`text-2xl ${promoActive?"md:text-[34px]":"md:text-3xl"} font-bold ${selectedPackage === pkg.id ? "text-[#FFD600]" : "text-gray-900"}`}
+                  className={`text-2xl ${promoActive?"md:text-[34px]":"md:text-3xl"} font-bold ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-[#FFD600]" : "text-gray-900"}`}
                 >
                   {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
                 </span>
                 {promoActive && (
-                  <span className={`${selectedPackage === pkg.id ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-xs px-2.5 py-1 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
+                  <span className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-xs px-2.5 py-1 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
                 )}
               </div>
             </div>
             {!promoActive && (
               <div className="mt-1">
                 <span
-                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                  className={`text-sm ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/80" : "text-gray-500"}`}
                 >
                   {paymentText}
                 </span>
@@ -906,6 +910,6 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
       />
     </>
   );
-};
+});
 
 export default PackageSelection;

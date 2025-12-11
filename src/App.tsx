@@ -9,6 +9,7 @@ import PromoBanner from "@/components/PromoBanner";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { useTheme } from "./hooks/use-theme";
+import { useCallback, useRef } from "react";
 
 const PromoModals = {
   ThansGiving: Promo_ThanksGiving_Modal,
@@ -35,6 +36,11 @@ const App = ({ page }: { page?: "listing" }) => {
 
   const PromoModal = PromoModals[promo?.type]
 
+  const packageSelectionRef = useRef<{ blastNow: ()=>void }>(null)
+  const onBlastNow = useCallback(()=>{
+    packageSelectionRef.current?.blastNow()
+  }, [])
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -57,6 +63,7 @@ const App = ({ page }: { page?: "listing" }) => {
               percent={percent}
               expiresAt={promo.expiresAt}
               clearPromo={clearPromo}
+              onBlastNow={onBlastNow}
             />
           </>
         )}
@@ -68,6 +75,7 @@ const App = ({ page }: { page?: "listing" }) => {
           promoActive={!!promo}
           reloadPromo={reloadPromo}
           theme={theme}
+          packageSelectionRef={packageSelectionRef}
         />
       </TooltipProvider>
     </QueryClientProvider>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef, RefObject } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -29,6 +29,7 @@ const Index = ({
   discountRate,
   promoActive,
   reloadPromo,
+  packageSelectionRef,
 }: {
   page?: "listing";
   theme?: "christmas";
@@ -37,6 +38,7 @@ const Index = ({
   discountRate?: number;
   promoActive?: boolean;
   reloadPromo: () => void;
+  packageSelectionRef: RefObject<{ blastNow: ()=>void }>
 }) => {
   const isMobile = useIsMobile();
   const [currentSetIndex, setCurrentSetIndex] = useState(0);
@@ -1420,6 +1422,7 @@ const Index = ({
             setSelectedPreviewPicture(data?.imageUrl);
           }}
           theme={theme}
+          ref={packageSelectionRef}
         />
       </main>
 
