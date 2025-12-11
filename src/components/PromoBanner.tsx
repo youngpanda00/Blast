@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface Props {
   theme?: 'christmas'
@@ -60,6 +61,7 @@ function usePromoCountdown(expiresAt?: number, clearPromo?: ()=>void) {
 export const PromoBanner: React.FC<Props> = ({ theme, visible, percent, expiresAt, clearPromo }) => {
   const timeLeft = usePromoCountdown(expiresAt, clearPromo);
   const actuallyVisible = visible && !timeLeft.expired;
+  const isMobile = useIsMobile();
 
   React.useEffect(() => {
     if (actuallyVisible) {
@@ -85,8 +87,8 @@ export const PromoBanner: React.FC<Props> = ({ theme, visible, percent, expiresA
   const showPair: 'day-hour' | 'hour-min' | 'min-sec' = days > 0 ? 'day-hour' : hours > 0 ? 'hour-min' : 'min-sec';
 
   return (
-    <div id="promo-banner" data-promo-banner className={`fixed left-0 right-0 top-[50px] md:top-[60px] z-40 shadow-lg ${theme === 'christmas' ? 'bg-[#184e02]' : 'bg-gradient-to-r from-[#547AF2] via-[#7A5AF8] to-[#9B5CF6]'}`}>
-      <div className="w-full max-w-[1210px] max-md:px-4 mx-auto text-white pt-[8px] py-[9px] flex items-center gap-3">
+    <div id="promo-banner" data-promo-banner className={`fixed flex left-0 right-0 top-[50px] md:top-[60px] z-40 shadow-lg ${theme === 'christmas' ? 'bg-[#184e02]' : 'bg-gradient-to-r from-[#547AF2] via-[#7A5AF8] to-[#9B5CF6]'}`} style={{paddingLeft: isMobile ? 0 : '100px'}}>
+      <div className="w-full max-md:px-4 mx-auto text-white pt-[8px] py-[9px] flex items-center gap-3">
         {
           theme === 'christmas' ? <>
           <div className="flex max-md:flex-col items-center gap-[2px] md:gap-[10px]">
@@ -127,6 +129,13 @@ export const PromoBanner: React.FC<Props> = ({ theme, visible, percent, expiresA
           )}
 
         </div>
+      </div>
+      <div className="flex items-center justify-center max-md:hidden" style={{position: 'relative', width: '280px', marginRight: '50px'}}>
+        <div style={{ marginTop: '10px', width: '60px', height: '38px', background: 'url(https://cdn.lofty.com/image/fs/servicetool/20251211/5/original_4c46519d48504a00.png) no-repeat top / 100%'}}></div>
+        <div className='flex items-center justify-center' style={{width: '180px', height: '36px', fontSize: '14px', fontWeight: '700', cursor: 'pointer', borderRadius: '100px', gap: '10px', color: '#ffffff', background: "linear-gradient(90.11deg, #FFBE44 -3.33%, #FA7E20 100.86%)", boxShadow: '0px 10px 30px 0px rgba(255, 68, 2, 0.2)'}}>Launch Your Ad 
+          <img src="https://cdn.lofty.com/image/fs/servicetool/20251211/5/original_7e737a618fd2498a.png" alt="" style={{width: '12px', height: '12px'}} />
+        </div>
+        <div style={{ marginTop: '15px', width: '59px', height: '38px', background: 'url(https://cdn.lofty.com/image/fs/servicetool/20251211/5/original_d06c534e61f444b3.png) no-repeat top / 100%'}}></div>
       </div>
     </div>
   );
