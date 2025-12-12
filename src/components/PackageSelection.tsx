@@ -156,14 +156,14 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
       });
 
       // 如果没有选房源，滚动到PropertySetup模块并对输入框添加突出动画
-      const propertySetupSection = document.querySelector('[data-section="property-setup"]');
+      const propertySetupSection = document.querySelectorAll('[data-section="property-setup"]');
 
-      if (propertySetupSection) {
+      if (propertySetupSection.length) {
         // 平滑滚动到PropertySetup模块
-        propertySetupSection.scrollIntoView({
+        propertySetupSection.forEach(elem=>elem.scrollIntoView({
           behavior: 'smooth',
           block: 'center'
-        });
+        }));
 
         // 延迟动画，等���滚动完成
         setTimeout(() => {
