@@ -30,6 +30,7 @@ interface PackageSelectionProps {
   promoCode?: string;
   discountRate?: number;
   promoActive?: boolean;
+  onScrollToForm?:() => void;
   onOpenCongratulationsModal: (email: string, promise?: Promise<void>) => void;
   theme?: 'christmas'
 }
@@ -58,6 +59,7 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
   discountRate: discountRateProp,
   promoActive: promoActiveProp,
   theme,
+  onScrollToForm
 }, ref) => {
   const [selectedPlan, setSelectedPlan] = useState<"one-time" | "monthly">(
     "one-time",
@@ -113,10 +115,10 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
     if (listingId) return listingId;
 
     // In development, provide a fallback to allow testing
-    if (process.env.NODE_ENV === 'development') {
-      console.warn("No listing ID available - using development fallback");
-      return "dev-sample-listing-id";
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   console.warn("No listing ID available - using development fallback");
+    //   return "dev-sample-listing-id";
+    // }
 
     return null;
   };
@@ -155,74 +157,7 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
         currentUrl: window.location.href
       });
 
-      // 如果没有选房源，滚动到PropertySetup模块并对输入框添加突出动画
-      const propertySetupSection = document.querySelectorAll('[data-section="property-setup"]');
-
-      if (propertySetupSection.length) {
-        // 平滑滚动到PropertySetup模块
-        propertySetupSection.forEach(elem=>elem.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        }));
-
-        // 延迟动画，等���滚动完成
-        setTimeout(() => {
-          // 查找地址输入框 - 优��使用ID，备用placeholder定位
-          const addressInput = (document.querySelector('#address-search-input') ||
-                               document.querySelector('input[placeholder="Enter the property address"]')) as HTMLInputElement;
-          // 查��包含输入框的容器（带渐变背景的div）
-          const addressContainer = addressInput?.closest('.p-4.rounded-xl') as HTMLElement;
-
-          if (addressInput && addressContainer) {
-            // 聚焦到输入框
-            addressInput.focus();
-
-            // 对容器添加突出动画效果
-            const originalTransform = addressContainer.style.transform;
-            const originalBoxShadow = addressContainer.style.boxShadow;
-            const originalTransition = addressContainer.style.transition;
-
-            // 应���突出效果
-            addressContainer.style.transition = 'all 0.5s ease';
-            addressContainer.style.transform = 'scale(1.08)';
-            addressContainer.style.boxShadow = '0 15px 35px rgba(102, 126, 234, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.8)';
-            addressContainer.style.zIndex = '50';
-
-            // 给输入框添加脉冲效果
-            addressInput.style.transition = 'all 0.5s ease';
-            addressInput.style.boxShadow = '0 0 0 3px rgba(59, 92, 222, 0.3)';
-
-            // 添加轻微的晃���动画
-            addressContainer.style.animation = 'gentle-shake 0.5s ease-in-out';
-
-            // 创建晃动动画的CSS keyframes（如果不存在）
-            if (!document.querySelector('#gentle-shake-style')) {
-              const style = document.createElement('style');
-              style.id = 'gentle-shake-style';
-              style.textContent = `
-                @keyframes gentle-shake {
-                  0%, 100% { transform: scale(1.08) translateX(0); }
-                  25% { transform: scale(1.08) translateX(-2px); }
-                  75% { transform: scale(1.08) translateX(2px); }
-                }
-              `;
-              document.head.appendChild(style);
-            }
-
-            // 3.5秒后恢复原状
-            setTimeout(() => {
-              addressContainer.style.transform = originalTransform || '';
-              addressContainer.style.boxShadow = originalBoxShadow || '0 10px 25px rgba(102, 126, 234, 0.3)';
-              addressContainer.style.transition = originalTransition || '';
-              addressContainer.style.zIndex = '';
-              addressContainer.style.animation = '';
-
-              addressInput.style.boxShadow = '';
-              addressInput.style.transition = '';
-            }, 3500);
-          }
-        }, 900); // 稍微延长等待时间确保滚动完成
-      }
+      onScrollToForm()
 
       // Show toast notification for missing address
       const showToastNotification = () => {

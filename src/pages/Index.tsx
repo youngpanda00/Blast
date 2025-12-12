@@ -1409,6 +1409,7 @@ const Index = ({
           discountRate={discountRate}
           promoActive={promoActive}
           onScrollToAdPreview={scrollToAdPreview}
+          onScrollToForm={childMethods?.scrollToForm}
           updateIsEditingAd={setIsEditingAd}
           onOpenCongratulationsModal={async (email, promise) => {
             setCongratulationsEmail(email);
