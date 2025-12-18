@@ -217,17 +217,17 @@ All colors MUST be HSL.
 }
 @media (min-width: 1500px) and (max-width: 1999px) {
   .special-dialog.special-dialog{
-    transform: translate(-50%, -50%) scale(1.4);
+    transform: translate(-50%, -50%) scale(1.2);
   }
 }
 @media (min-width: 2000px) and (max-width: 2399px) {
   .special-dialog.special-dialog{
-    transform: translate(-50%, -50%) scale(1.8);
+    transform: translate(-50%, -50%) scale(1.4);
   }
 }
 @media (min-width: 2400px) {
   .special-dialog.special-dialog{
-    transform: translate(-50%, -50%) scale(2.2);
+    transform: translate(-50%, -50%) scale(1.6);
   }
 }
 
