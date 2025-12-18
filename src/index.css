@@ -202,6 +202,32 @@ All colors MUST be HSL.
   }
 }
 
+@media (max-width:768px) {
+    .special-dialog.special-dialog.special-dialog {
+      width: calc(100% - 30px);
+      height: auto;
+      min-height: auto;
+      min-width: 320px;
+    }
+}
+
 .special-dialog.special-dialog{
   max-width: none;
+  width: 600px;
 }
+@media (min-width: 1500px) and (max-width: 1999px) {
+  .special-dialog.special-dialog{
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+}
+@media (min-width: 2000px) and (max-width: 2399px) {
+  .special-dialog.special-dialog{
+    transform: translate(-50%, -50%) scale(1.8);
+  }
+}
+@media (min-width: 2400px) {
+  .special-dialog.special-dialog{
+    transform: translate(-50%, -50%) scale(2.2);
+  }
+}
+
