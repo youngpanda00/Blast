@@ -307,7 +307,7 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
       // On mobile, select package and trigger checkout
       await handlePackageSelect(packageType);
       // Use packageType directly instead of selectedPackage state
-      await handleCheckoutWithPackage(packageType, adPreviewData);
+      // await handleCheckoutWithPackage(packageType, adPreviewData);
     } else {
       // On desktop, just select the package
       await handlePackageSelect(packageType);
