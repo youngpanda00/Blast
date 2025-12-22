@@ -59,17 +59,6 @@ export const usePromoCode = () => {
         setLoading(true);
         setError(null);
         const valid = await loadPromo(code, popup)
-        if (!valid && code) {
-          toast({
-            variant: "destructive",
-            title: "Invalid Promo Code",
-            description: (
-              <span>
-                The promo code <b>{String(code).toUpperCase()}</b> is invalid or has expired. You may proceed at the standard price. <br />Contact <a className="underline" style={{color:'#3B5CDE'}} href="mailto:marketing@blast.lofty.com">marketing@blast.lofty.com</a> for available promotions.
-              </span>
-            ),
-          });
-        }
         if (valid && !dismissed) setModalOpen(true);
       } catch (e) {
         setError(e?.message || 'validate failed');
