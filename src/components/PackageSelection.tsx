@@ -574,24 +574,15 @@ const PackageSelection: React.FC<PackageSelectionProps> = ({
                 )}
               </div>
               {!promoActive && (
-              <div className="mt-1">
-                <span
-                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
-                >
-                  {paymentText}
-                </span>
-              </div>
-            )}
+                <div className="mt-1">
+                  <span
+                    className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
+                  >
+                    {paymentText}
+                  </span>
+                </div>
+              )}
             </div>
-            {!promoActive && (
-              <div className="mt-1">
-                <span
-                  className={`text-sm ${selectedPackage === pkg.id ? "text-white/80" : "text-gray-500"}`}
-                >
-                  {paymentText}
-                </span>
-              </div>
-            )}
           </div>
         </div>
 
