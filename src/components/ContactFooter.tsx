@@ -142,6 +142,10 @@ export const ContactFooter: React.FC = () => {
           </svg>
         </a>
       </div>
+      <div className="flex flex-col items-center justify-center mt-[30px] gap-[11px]">
+        <img src="https://cdn.lofty.com/image/fs/servicetool/202615/12/original_b2082defe9a34dd0.png" className="w-[90px]" />
+        <div className="font-[15px] color-[#ffffff]">Facebook Group</div>
+      </div>
     </footer>
   );
 };
