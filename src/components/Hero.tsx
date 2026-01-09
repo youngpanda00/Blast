@@ -46,7 +46,7 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
               <div className="hidden max-md:block">
                 <h1 className="text-[36px] max-sm:text-[31px] font-bold text-white tracking-[-1px] max-sm:tracking-[0px] leading-[1.1] mb-4">
                   <span className="max-sm:hidden">1-Click Listing to Leads – No Extra Work, Faster Closings</span>
-                  <span className="hidden max-sm:block">
+                  <span className="hidden max-sm:block max-sm:text-[28px]">
                     1-Click Listing to Leads
                     <br />
                     No Extra Work
@@ -137,7 +137,7 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
                   <TrendingUp className="w-4 h-4 text-blue-600" />
                 </div>
                 <span className="font-medium text-gray-700 max-md:text-center max-md:leading-tight max-md:whitespace-normal whitespace-nowrap">
-                  <span className="max-md:block max-md:text-[16px] max-md:font-bold max-md:leading-8 max-md:text-[#3b5cde]">5X Exposure</span>
+                  <span className="max-md:block max-sm:text-[14px] max-md:text-[16px] max-md:font-bold max-md:leading-8 max-md:text-[#3b5cde]">5X Exposure</span>
                   <span className="max-md:block max-md:text-sm max-md:font-normal">For Listing</span>
                 </span>
               </div>
@@ -146,7 +146,7 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
                   <Zap className="w-4 h-4 text-purple-600" />
                 </div>
                 <span className="font-medium text-gray-700 max-md:text-center max-md:leading-tight max-md:whitespace-normal whitespace-nowrap">
-                  <span className="max-md:block max-md:text-[16px] max-md:font-bold max-md:leading-8 max-md:text-[#3b5cde]">Save 70%</span>
+                  <span className="max-md:block max-sm:text-[14px] max-md:text-[16px] max-md:font-bold max-md:leading-8 max-md:text-[#3b5cde]">Save 70%</span>
                   <span className="max-md:block max-md:text-sm max-md:font-normal">On Ad Costs</span>
                 </span>
               </div>
@@ -157,7 +157,7 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
                   </svg>
                 </div>
                 <span className="font-medium text-gray-700 max-md:text-center max-md:leading-tight max-md:whitespace-normal whitespace-nowrap">
-                  <span className="max-md:block max-md:text-[16px] max-md:font-bold max-md:leading-8 max-md:text-[#3b5cde]">24 Hours</span>
+                  <span className="max-md:block max-sm:text-[14px] max-md:text-[16px] max-md:font-bold max-md:leading-8 max-md:text-[#3b5cde]">24 Hours</span>
                   <span className="max-md:block max-md:text-sm max-md:font-normal">Go Live</span>
                 </span>
               </div>
@@ -179,23 +179,23 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
             {/* Trust indicator */}
             <div className="mt-6 max-md:mt-4">
               <div className="space-y-3 max-w-xs mx-auto max-md:flex max-md:flex-col max-md:items-stretch max-md:text-xs max-md:leading-[10px]">
-                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
+                <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 300, marginLeft: '50px', marginRight: 'auto'}}>
                   <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
                     <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_ea222e03d4ce43dd.png' style={{ width: 12, height: 12}} />
                   </div>
-                  <span className="text-sm max-md:text-base font-medium">No long-term contracts</span>
+                  <span className="text-sm max-sm:text-[14px] max-md:text-base font-medium">No long-term contracts</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
                   <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
                     <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_4e2cd6d815bb4a4a.png' style={{ width: 12, height: 12}} />
                   </div>
-                  <span className="text-sm max-md:text-base font-medium">Cancel anytime</span>
+                  <span className="text-sm max-sm:text-[14px] max-md:text-base font-medium">Cancel anytime</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
                   <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
                     <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_d052b32ec1d64abe.png' style={{ width: 12, height: 12}} />
                   </div>
-                  <span className="text-sm max-md:text-base font-medium">Results guaranteed</span>
+                  <span className="text-sm max-sm:text-[14px] max-md:text-base font-medium">Results guaranteed</span>
                 </div>
               </div>
             </div>
