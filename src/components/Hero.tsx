@@ -183,19 +183,19 @@ export const Hero: React.FC<HeroProps> = ({ page, listingId, onAddressSelect, on
                   <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
                     <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_ea222e03d4ce43dd.png' style={{ width: 12, height: 12}} />
                   </div>
-                  <span className="text-sm max-md:text-base font-medium">No long-term contracts</span>
+                  <span className="text-sm max-sm:text-[14px] max-md:text-base font-medium">No long-term contracts</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
                   <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
                     <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_4e2cd6d815bb4a4a.png' style={{ width: 12, height: 12}} />
                   </div>
-                  <span className="text-sm max-md:text-base font-medium">Cancel anytime</span>
+                  <span className="text-sm max-sm:text-[14px] max-md:text-base font-medium">Cancel anytime</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600 hover:text-gray-800 transition-colors duration-200" style={{ width: 220, marginLeft: 'auto', marginRight: 'auto'}}>
                   <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center" style={{ background: '#4975f5'}}>
                     <img src='https://cdn.lofty.com/image/fs/servicetool/2025824/8/original_d052b32ec1d64abe.png' style={{ width: 12, height: 12}} />
                   </div>
-                  <span className="text-sm max-md:text-base font-medium">Results guaranteed</span>
+                  <span className="text-sm max-sm:text-[14px] max-md:text-base font-medium">Results guaranteed</span>
                 </div>
               </div>
             </div>
