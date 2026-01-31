@@ -72,10 +72,15 @@ export const FixedNavigation: React.FC<{ transparent?: boolean }> = ({ transpare
         <div className="flex items-center justify-center mr-8 max-md:mr-0 max-md:h-full">
           <a href={loftyHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center max-md:h-full" onClick={(e) => { handleNavClick(e, 'NavLogo') }}>
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2F8160475584d34b939ff2d1d5611f94b6%2F0325b400e1904671b7c00a9f4f5084b6?format=webp&width=800"
-              className={`h-8 transition-all duration-300 max-md:h-6 ${
-                isTransparent ? 'brightness-0 invert' : ''
-              }`}
+              style={{ display: isAtTop ? 'block' : 'none' }}
+              src="https://cdn.lofty.com/image/fs/servicetool/2026117/7/original_3e36cc934ebd4bbc.png"
+              className="h-8 max-md:h-6"
+              alt="Lofty Blast Logo"
+            />
+            <img
+              style={{ display: isAtTop ? 'none' : 'block' }}
+              src="https://cdn.builder.io/api/v1/image/assets/8160475584d34b939ff2d1d5611f94b6/0325b400e1904671b7c00a9f4f5084b6?format=webp&width=800%22"
+              className="h-8 max-md:h-6"
               alt="Lofty Blast Logo"
             />
           </a>
