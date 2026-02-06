@@ -7,6 +7,8 @@ import { Bed, Bath, Square, CheckCircle, Search } from "lucide-react";
 import { useListingInfo } from "@/hooks/use-listing-info";
 import { useIsMobile } from "../hooks/use-mobile";
 import { trackFBEvent, trackMixPanel } from "@/lib/utils";
+import CryptoJS from "crypto-js";
+
 interface PropertySetupProps {
   theme?: 'christmas'
   listingId?: string | null;
@@ -66,43 +68,99 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     cityStateZip?: string;
   } | null>(null);
 
-  const [listingLabels, setListingLabels] = useState<string[]>([
-    "School District",
-    "Water View",
-    "Brand New Home"
-  ]);
+  // const [listingLabels, setListingLabels] = useState<string[]>([
+  //   "School District",
+  //   "Water View",
+  //   "Brand New Home"
+  // ]);
 
-  useEffect(() => {
-    setHideConfirm(false);
-  }, [addressPlace])
 
   const searchParams = new URLSearchParams(window.location.search);
 
-  // Function to fetch listing labels
-  const fetchListingLabels = async (currentListingId: string) => {
-    try {
-      const response = await fetch("/api-blast/listing/labels", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify([currentListingId]),
-      });
+  // Secret key for encryption/decryption
+  const AES_TICKET = 'b688f51628adab851dd54bd036970382';
 
-      if (response.ok) {
-        const result = await response.json();
-        if (result.data && result.data[0] && result.data[0].labels) {
-          const keywords = result.data[0].labels.map(
-            (label: any) => label.keyword || label,
-          );
-          console.log("keywords", keywords);
-          setListingLabels(keywords);
-        }
-      }
+  // Function to encrypt listingId (using ECB mode and Hex output)
+  const encryptListingId = (string: string): string => {
+    if (!string) return '';
+
+    try {
+      const key = CryptoJS.enc.Utf8.parse(AES_TICKET.substring(0, 16));
+      const encrypted = CryptoJS.AES.encrypt(string, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+      });
+      return encrypted.ciphertext.toString(CryptoJS.enc.Hex);
     } catch (error) {
-      console.error("Error fetching listing labels:", error);
+      console.error("Error encrypting listingId:", error);
+      return '';
     }
   };
+
+  console.log('demo listingId encryption ===>>>>', encryptListingId('1175716933'));
+
+  // Function to decrypt listingId from URL (matching the encrypt method)
+  const decryptListingId = (encryptedHexString: string): string => {
+    if (!encryptedHexString) return '';
+
+    try {
+      // Parse the key (first 16 characters)
+      const key = CryptoJS.enc.Utf8.parse(AES_TICKET.substring(0, 16));
+
+      // Parse hex string to WordArray
+      const encryptedWordArray = CryptoJS.enc.Hex.parse(encryptedHexString);
+
+      // Create CipherParams for decryption
+      const cipherParams = CryptoJS.lib.CipherParams.create({
+        ciphertext: encryptedWordArray
+      });
+
+      // Decrypt using ECB mode and Pkcs7 padding (matching encryption)
+      const decrypted = CryptoJS.AES.decrypt(cipherParams, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+      });
+
+      // Convert to UTF8 string
+      const decryptedListingId = decrypted.toString(CryptoJS.enc.Utf8);
+
+      if (!decryptedListingId) {
+        console.warn("Decryption resulted in empty string");
+        return '';
+      }
+
+      return decryptedListingId;
+    } catch (error) {
+      console.error("Error decrypting listingId:", error);
+      return '';
+    }
+  };
+
+  // Function to fetch listing labels
+  // const fetchListingLabels = async (currentListingId: string) => {
+  //   try {
+  //     const response = await fetch("/api-blast/listing/labels", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify([currentListingId]),
+  //     });
+
+  //     if (response.ok) {
+  //       const result = await response.json();
+  //       if (result.data && result.data[0] && result.data[0].labels) {
+  //         const keywords = result.data[0].labels.map(
+  //           (label: any) => label.keyword || label,
+  //         );
+  //         console.log("keywords", keywords);
+  //         setListingLabels(keywords);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching listing labels:", error);
+  //   }
+  // };
 
 
   // Get address information from URL parameters
@@ -110,6 +168,51 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const cityFromUrl = searchParams.get("city") || "San Jose";
   const stateFromUrl = searchParams.get("state") || "CA";
   const zipFromUrl = searchParams.get("zip") || "95125";
+
+  // Get encrypted listingId from URL and decrypt it
+  const encryptedListingId = searchParams.get("listingId") || '';
+  const listingIdFromUrl = decryptListingId(encryptedListingId);
+
+  
+
+  const fetchPropertyDataByListingId = async (listingId: string) => {
+    if (!listingId.trim()) return;
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/listing-crm/listing/blast/searchByAddressV2?listingId=${encodeURIComponent(listingId)}&address=null`,
+        {
+          method: "GET"
+        },
+      );
+      const result = await response.json();
+      setLoading(false);
+
+      if (result.data) {
+        // Handle both single property and array of properties
+        const propertyData = Array.isArray(result.data) ? result.data : [result.data];
+        const property = propertyData[0];
+
+        if (property) {
+          // Set the property as target and show it
+          setAddressPlace(property.fullAddress || property.address || '');
+          setAddressInput(property.fullAddress || property.address || '');
+
+          setProperties([property]);
+          setShowListingsRes(true);
+          setIsShowTargetCard(true);
+          setHideConfirm(true);
+          setTargetPropertyInfo(property);
+          setTargetId(property.id); // listingId
+
+          externalOnAddressSelect?.({ ...property, addressName: property?.fullAddress, isCustomListing: false, previewPicture: property.previewPicture || "https://images.pexels.com/photos/280229/pexels-photo-280229.jpeg" });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching property info by listingId:", error);
+      setLoading(false);
+    }
+  };
 
   const fetchPropertyData = async (address: string) => {
     if (!address.trim()) return;
@@ -194,6 +297,7 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     setTargetPropertyInfo({});
     setIsShowTargetCard(false);
     setIsCustom(false);
+    setHideConfirm(false);
     setLoading(true);
     // setAutoOpen(false);
     fetchPropertyData(address);
@@ -240,11 +344,18 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   }, [onMethodsReady])
 
   // Fetch listing labels when listingId is available
+  // useEffect(() => {
+  //   if (listingId) {
+  //     fetchListingLabels(listingId);
+  //   }
+  // }, [listingId]);
+
+  // Fetch property data when listingId is in URL
   useEffect(() => {
-    if (listingId) {
-      fetchListingLabels(listingId);
+    if (listingIdFromUrl) {
+      fetchPropertyDataByListingId(listingIdFromUrl);
     }
-  }, [listingId]);
+  }, [listingIdFromUrl]);
 
   const renderLoadingCard = () => {
     return (

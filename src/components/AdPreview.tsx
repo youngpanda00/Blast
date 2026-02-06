@@ -446,7 +446,7 @@ const AdPreview: React.FC<AdPreviewProps> = ({
                     </div>
                   </div>
                 ) : (
-                  <h4 className={`font-semibold text-sm mb-2 pr-8 transition-all duration-300 max-md:mb-[10px] max-md:pt-[10px] max-md:pl-4 md:pt-4 md:pb-2 md:pl-4 ${
+                  <h4 className={`relative font-semibold text-sm mb-2 pr-8 transition-all duration-300 max-md:mb-[10px] max-md:pt-[10px] max-md:pl-4 md:pt-4 md:pb-2 md:pl-4 ${
                     highlightedArea === 'headline' || isEditingInline === 'headline'
                       ? 'text-yellow-800 text-base font-bold'
                       : 'text-gray-800'
