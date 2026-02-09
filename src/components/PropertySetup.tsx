@@ -123,12 +123,13 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
 
       console.log('paramsObj ===>>>', paramsObj)
 
-      if (!paramsObj || !paramsObj.listingId) {
+      const id = paramsObj?.listingId || '';
+      if (!id) {
         console.warn("Decryption resulted in empty string");
         return '';
       }
 
-      return paramsObj.listingId;
+      return String(id);
     } catch (error) {
       console.error("Error decrypting listingId:", error);
       return '';
@@ -308,9 +309,11 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     })
   }, [onMethodsReady])
 
-  // Fetch property data when listingId is in URL
+  // Fetch property data when listingId is in URL (ref prevents duplicate calls in StrictMode)
+  const hasFetchedListingRef = useRef(false);
   useEffect(() => {
-    if (listingIdFromUrl) {
+    if (listingIdFromUrl && !hasFetchedListingRef.current) {
+      hasFetchedListingRef.current = true;
       fetchPropertyDataByListingId(listingIdFromUrl);
     }
   }, [listingIdFromUrl]);
