@@ -68,13 +68,6 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
     cityStateZip?: string;
   } | null>(null);
 
-  // const [listingLabels, setListingLabels] = useState<string[]>([
-  //   "School District",
-  //   "Water View",
-  //   "Brand New Home"
-  // ]);
-
-
   const searchParams = new URLSearchParams(window.location.search);
 
   // Secret key for encryption/decryption
@@ -103,10 +96,12 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   // Function to decrypt listingId from URL (matching the encrypt method)
   const decryptListingId = (encryptedHexString: string): string => {
     if (!encryptedHexString) return '';
+    // Validate hex format before attempting decryption
+    if (!/^[0-9a-fA-F]+$/.test(encryptedHexString)) return '';
 
     try {
-      // Parse the key (first 16 characters)
-      const key = CryptoJS.enc.Utf8.parse(AES_TICKET.substring(0, 16));
+      // Parse the full 32-byte key (AES-256)
+      const key = CryptoJS.enc.Utf8.parse(AES_TICKET);
 
       // Parse hex string to WordArray
       const encryptedWordArray = CryptoJS.enc.Hex.parse(encryptedHexString);
@@ -123,57 +118,26 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       });
 
       // Convert to UTF8 string
-      const decryptedListingId = decrypted.toString(CryptoJS.enc.Utf8);
+      const paramsString = decrypted.toString(CryptoJS.enc.Utf8);
+      const paramsObj = JSON.parse(paramsString);
 
-      if (!decryptedListingId) {
+      console.log('paramsObj ===>>>', paramsObj)
+
+      if (!paramsObj || !paramsObj.listingId) {
         console.warn("Decryption resulted in empty string");
         return '';
       }
 
-      return decryptedListingId;
+      return paramsObj.listingId;
     } catch (error) {
       console.error("Error decrypting listingId:", error);
       return '';
     }
   };
 
-  // Function to fetch listing labels
-  // const fetchListingLabels = async (currentListingId: string) => {
-  //   try {
-  //     const response = await fetch("/api-blast/listing/labels", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify([currentListingId]),
-  //     });
-
-  //     if (response.ok) {
-  //       const result = await response.json();
-  //       if (result.data && result.data[0] && result.data[0].labels) {
-  //         const keywords = result.data[0].labels.map(
-  //           (label: any) => label.keyword || label,
-  //         );
-  //         console.log("keywords", keywords);
-  //         setListingLabels(keywords);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching listing labels:", error);
-  //   }
-  // };
-
-
-  // Get address information from URL parameters
-  const addressFromUrl = searchParams.get("address");
-  const cityFromUrl = searchParams.get("city") || "San Jose";
-  const stateFromUrl = searchParams.get("state") || "CA";
-  const zipFromUrl = searchParams.get("zip") || "95125";
-
   // Get encrypted listingId from URL and decrypt it
-  const encryptedListingId = searchParams.get("listingId") || '';
-  const listingIdFromUrl = decryptListingId(encryptedListingId);
-
+  const encryptedParam = searchParams.get("param") || '';
+  const listingIdFromUrl = React.useMemo(() => decryptListingId(encryptedParam), [encryptedParam]);
   
 
   const fetchPropertyDataByListingId = async (listingId: string) => {
@@ -343,13 +307,6 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
       scrollToForm
     })
   }, [onMethodsReady])
-
-  // Fetch listing labels when listingId is available
-  // useEffect(() => {
-  //   if (listingId) {
-  //     fetchListingLabels(listingId);
-  //   }
-  // }, [listingId]);
 
   // Fetch property data when listingId is in URL
   useEffect(() => {

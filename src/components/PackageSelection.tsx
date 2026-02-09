@@ -148,8 +148,8 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
     if (!encryptedHexString) return '';
 
     try {
-      // Parse the key (first 16 characters)
-      const key = CryptoJS.enc.Utf8.parse(AES_TICKET.substring(0, 16));
+      // Parse the full 32-byte key (AES-256)
+      const key = CryptoJS.enc.Utf8.parse(AES_TICKET);
 
       // Parse hex string to WordArray
       const encryptedWordArray = CryptoJS.enc.Hex.parse(encryptedHexString);
@@ -166,14 +166,15 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
       });
 
       // Convert to UTF8 string
-      const decryptedValue = decrypted.toString(CryptoJS.enc.Utf8);
+      const paramsString = decrypted.toString(CryptoJS.enc.Utf8);
+      const paramsObj = JSON.parse(paramsString);
 
-      if (!decryptedValue) {
+      if (!paramsObj || !paramsObj.leadEmail) {
         console.warn("Decryption resulted in empty string");
         return '';
       }
 
-      return decryptedValue;
+      return paramsObj.leadEmail;
     } catch (error) {
       console.error("Error decrypting email:", error);
       return '';
@@ -280,9 +281,9 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
       body: startParams,
     });
 
-    const emailInUrl = searchParams.get("email");
-    if (emailInUrl) {
-      promoEmail = decryptEmail(emailInUrl);
+    const encryptedParam = searchParams.get("param");
+    if (encryptedParam) {
+      promoEmail = decryptEmail(encryptedParam);
     }
     
     const packageInfo = {
@@ -303,10 +304,9 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
         .then(async (res) => {
           console.log("res", res);
           const email = res?.email || "";
-          // 清空URL里面的email和listingId参数
+          // 清空URL里面的param参数
           const newSearchParams = new URLSearchParams(window.location.search);
-          newSearchParams.delete("email");
-          newSearchParams.delete("listingId");
+          newSearchParams.delete("param");
           const newUrl = newSearchParams.toString()
             ? `${window.location.pathname}?${newSearchParams.toString()}`
             : window.location.pathname;
