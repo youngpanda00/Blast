@@ -15,6 +15,7 @@ import { useIsMobile } from "../hooks/use-mobile";
 import { StickyCTA } from "./StickyCTA";
 import { trackFBEvent, trackMixPanel } from "@/lib/utils";
 import { saveStepWithRetry, showErrorNotification, getUserFriendlyErrorMessage } from "@/utils/checkoutApi";
+import CryptoJS from "crypto-js";
 
 interface PackageSelectionProps {
   previewPicture?: string | null;
@@ -35,6 +36,7 @@ interface PackageSelectionProps {
   theme?: 'christmas'
 }
 
+const AES_TICKET = 'b688f51628adab851dd54bd036970382';
 interface AdData {
   imageUrl?: string | null;
   headline?: string | null;
@@ -140,9 +142,42 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
       );
       return;
     }
+  };
 
-    const paymentMode =
-      selectedPlan === "one-time" ? "ONE_TIME_CHARGE" : "RECURRING_CHARGE";
+  const decryptEmail= (encryptedHexString: string): string => {
+    if (!encryptedHexString) return '';
+
+    try {
+      // Parse the key (first 16 characters)
+      const key = CryptoJS.enc.Utf8.parse(AES_TICKET.substring(0, 16));
+
+      // Parse hex string to WordArray
+      const encryptedWordArray = CryptoJS.enc.Hex.parse(encryptedHexString);
+
+      // Create CipherParams for decryption
+      const cipherParams = CryptoJS.lib.CipherParams.create({
+        ciphertext: encryptedWordArray
+      });
+
+      // Decrypt using ECB mode and Pkcs7 padding (matching encryption)
+      const decrypted = CryptoJS.AES.decrypt(cipherParams, key, {
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.Pkcs7
+      });
+
+      // Convert to UTF8 string
+      const decryptedValue = decrypted.toString(CryptoJS.enc.Utf8);
+
+      if (!decryptedValue) {
+        console.warn("Decryption resulted in empty string");
+        return '';
+      }
+
+      return decryptedValue;
+    } catch (error) {
+      console.error("Error decrypting email:", error);
+      return '';
+    }
   };
 
   const handleCheckoutWithPackage = async (packageType: "starter" | "boost" | "growth" | "mastery", adPreviewData: AdData) => {
@@ -244,6 +279,11 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
       },
       body: startParams,
     });
+
+    const emailInUrl = searchParams.get("email");
+    if (emailInUrl) {
+      promoEmail = decryptEmail(emailInUrl);
+    }
     
     const packageInfo = {
       currentListingId,
@@ -263,6 +303,14 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
         .then(async (res) => {
           console.log("res", res);
           const email = res?.email || "";
+          // 清空URL里面的email和listingId参数
+          const newSearchParams = new URLSearchParams(window.location.search);
+          newSearchParams.delete("email");
+          newSearchParams.delete("listingId");
+          const newUrl = newSearchParams.toString()
+            ? `${window.location.pathname}?${newSearchParams.toString()}`
+            : window.location.pathname;
+          window.history.replaceState({}, '', newUrl);
           onOpenCongratulationsModal(email, res.promise);
         })
         .catch(() => {

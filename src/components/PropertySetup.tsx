@@ -81,23 +81,24 @@ const PropertySetup: React.FC<PropertySetupProps> = ({
   const AES_TICKET = 'b688f51628adab851dd54bd036970382';
 
   // Function to encrypt listingId (using ECB mode and Hex output)
-  const encryptListingId = (string: string): string => {
-    if (!string) return '';
+  // const encryptListingId = (string: string): string => {
+  //   if (!string) return '';
 
-    try {
-      const key = CryptoJS.enc.Utf8.parse(AES_TICKET.substring(0, 16));
-      const encrypted = CryptoJS.AES.encrypt(string, key, {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7
-      });
-      return encrypted.ciphertext.toString(CryptoJS.enc.Hex);
-    } catch (error) {
-      console.error("Error encrypting listingId:", error);
-      return '';
-    }
-  };
+  //   try {
+  //     const key = CryptoJS.enc.Utf8.parse(AES_TICKET.substring(0, 16));
+  //     const encrypted = CryptoJS.AES.encrypt(string, key, {
+  //       mode: CryptoJS.mode.ECB,
+  //       padding: CryptoJS.pad.Pkcs7
+  //     });
+  //     return encrypted.ciphertext.toString(CryptoJS.enc.Hex);
+  //   } catch (error) {
+  //     console.error("Error encrypting listingId:", error);
+  //     return '';
+  //   }
+  // };
 
-  console.log('demo listingId encryption ===>>>>', encryptListingId('1175716933'));
+  // console.log('demo listingId encryption ===>>>>', encryptListingId('1175716933'));
+  // console.log('demo listingId encryption ===>>>>', encryptListingId('qqtest130@chime.me'));
 
   // Function to decrypt listingId from URL (matching the encrypt method)
   const decryptListingId = (encryptedHexString: string): string => {
