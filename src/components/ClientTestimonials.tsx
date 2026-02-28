@@ -5,82 +5,29 @@ import { useIsMobile } from "../hooks/use-mobile";
 
 const testimonials = [
   { 
-    name: "Alexander Reid",
-    date: "Jan 15, 2025 at 08:17 AM",
+    name: "Michelle Quackenbush",
     content:
-      "Listing Blast automates my ad setup in seconds, saving me hours every week. 😎🚀",
-    likes: "320",
+      "“The ad stats help me present to my sellers, <span class='special-text-color'>building trust</span>. I've sold homes through Listing Blast. If you haven't tried it, I suggest it!”",
     avatar:
-      "https://cdn.lofty.com/image/fs/servicetool/2025712/3/original_4755f70050e7481c.png",
-    hasLikeButton: true,
-    hasCommentButton: false,
+      "https://cdn.lofty.com/image/fs/servicetool/2026228/8/original_c6cbb731cf114c52.jpg",
+    videoUrl: ''
   },
   {
-    name: "Laurie Deckert",
-    date: "Feb 28, 2025 at 02:45 PM",
+    name: "Scott Connors",
     content:
-      "Listing Blast instantly expands my listings’ reach on Facebook and Instagram, connecting me with more motivated buyers.",
-    likes: "277",
+      "“In 3 clicks, I create ads - and in <span class='special-text-color'>just a few days</span>, I generate 25 leads with Listing Blast!”",
     avatar:
-      "https://cdn.lofty.com/image/fs/servicetool/2025712/3/original_7987ceec89d74490.png",
-    hasLikeButton: true,
-    hasCommentButton: false,
+      "https://cdn.lofty.com/image/fs/servicetool/2026228/8/original_602564aa973b43ae.jpg",
+    videoUrl: ''
   },
   {
-    name: "Daniel Gandee",
-    date: "Mar 08, 2025 at 11:22 AM",
+    name: "Molly Armando",
     content:
-      "Listing Blast effortlessly drove high-quality leads and saved me time—it was a breeze to set up.",
-    likes: "189",
+      "“Listing Blast has really become <span class='special-text-color'>one of the easiest ways</span> for me to stay consistent with my marketing while still keeping my business moving forward.”",
     avatar:
-      "https://cdn.lofty.com/image/fs/servicetool/2025712/3/original_ad6e788d40a04fdf.png",
-    hasLikeButton: true,
-    hasCommentButton: false,
-  },
-  {
-    name: "Jeff McIntyre",
-    date: "Apr 22, 2025 at 07:30 PM",
-    content:
-      "Listing Blast expanded my reach instantly 😊—I’m connecting with more buyers every day.",
-    likes: "143",
-    avatar:
-      "https://cdn.lofty.com/image/fs/servicetool/2025714/7/original_2249eef0c7434aac.png",
-    hasLikeButton: true,
-    hasCommentButton: false,
-  },
-  {
-    name: "Kerri Kilgore & Owen Davies",
-    date: "May 05, 2025 at 10:05 AM",
-    content:
-      "Listing Blast provides cost-effective marketing with impressive engagement and no budget strain.",
-    likes: "95",
-    avatar:
-      "https://cdn.lofty.com/image/fs/servicetool/2025712/3/original_d7c5938cd53a4118.png",
-    hasLikeButton: true,
-    hasCommentButton: false,
-  },
-  {
-    name: "Josh Cotton",
-    date: "May 30, 2025 at 03:50 PM",
-    content:
-      "Listing Blast was easy to set up and immediately generated a surge of leads and buyers. 🔥",
-    likes: "210",
-    avatar:
-      "https://cdn.lofty.com/image/fs/servicetool/2025714/7/original_7d2729e6da0f437a.png",
-    hasLikeButton: true,
-    hasCommentButton: false,
-  },
-  {
-    name: "Blaine Cruse",
-    date: "June 24 at 10:01 PM",
-    content:
-      "Facebook ads are tricky to manage, so I’ve stuck with Lofty—and this time, it really paid off. My latest ad hit a $3.97 CPL, the best I’ve ever seen! 🔥🔥",
-    likes: "334",
-    avatar:
-      "https://cdn.lofty.com/image/fs/servicetool/2025714/7/original_b5a1d0ca4ee74031.png",
-    hasLikeButton: true,
-    hasCommentButton: false,
-  },
+      "https://cdn.lofty.com/image/fs/servicetool/2026228/6/original_75dce805e5344ea8.jpg",
+    videoUrl: ''
+  }
 ];
 
 export const ClientTestimonials: React.FC = () => {
@@ -90,6 +37,7 @@ export const ClientTestimonials: React.FC = () => {
   const isMobile = useIsMobile();
   const cardWidth = isMobile ? 280 : 410; // Mobile: 260px card + 20px gap, Desktop: 390px card + 20px gap
   const totalCards = testimonials.length;
+  const showNavigation = totalCards > 3;
   const containerRef = useRef<HTMLDivElement>(null);
   const autoplayTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -119,6 +67,7 @@ export const ClientTestimonials: React.FC = () => {
 
   // Handle infinite loop transitions
   useEffect(() => {
+    if (!showNavigation) return;
     if (currentIndex <= 0) {
       // If we've gone before the first duplicate set, jump to the last set
       setTimeout(() => {
@@ -132,7 +81,7 @@ export const ClientTestimonials: React.FC = () => {
         setCurrentIndex(currentIndex - totalCards);
       }, 300);
     }
-  }, [currentIndex, totalCards]);
+  }, [currentIndex, totalCards, showNavigation]);
 
   // Re-enable transitions after jumping
   useEffect(() => {
@@ -146,7 +95,7 @@ export const ClientTestimonials: React.FC = () => {
 
   // Auto-play functionality
   useEffect(() => {
-    if (!isPaused) {
+    if (!isPaused && showNavigation) {
       autoplayTimerRef.current = setInterval(() => {
         autoNext();
       }, 4000); // Auto-advance every 4 seconds
@@ -158,7 +107,7 @@ export const ClientTestimonials: React.FC = () => {
         autoplayTimerRef.current = null;
       }
     };
-  }, [currentIndex, isPaused]);
+  }, [currentIndex, isPaused, showNavigation]);
 
   // Resume autoplay after user interaction pause
   useEffect(() => {
@@ -190,35 +139,41 @@ export const ClientTestimonials: React.FC = () => {
           onMouseLeave={() => setIsPaused(false)}
         >
           {/* Navigation buttons */}
-          <button
-            onClick={handlePrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:relative xl:left-auto xl:top-auto xl:transform-none xl:opacity-100 max-md:hidden"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft className="w-6 h-6 text-gray-600" />
-          </button>
+          {showNavigation && (
+            <button
+              onClick={handlePrevious}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:relative xl:left-auto xl:top-auto xl:transform-none xl:opacity-100 max-md:hidden"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-600" />
+            </button>
+          )}
 
           {/* Testimonials container */}
           <div className="overflow-hidden xl:flex-1 relative">
-            <button
-              onClick={handleNext}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:hidden max-md:hidden"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-600" />
-            </button>
+            {showNavigation && (
+              <button
+                onClick={handleNext}
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 opacity-40 hover:opacity-100 hover:bg-gray-50 transition-all xl:hidden max-md:hidden"
+                aria-label="Next testimonial"
+              >
+                <ChevronRight className="w-6 h-6 text-gray-600" />
+              </button>
+            )}
             <div
               ref={containerRef}
-              className={`flex gap-[20px] ${isTransitioning ? "transition-transform duration-300 ease-in-out" : ""}`}
-              style={{
-                transform: `translateX(-${currentIndex * cardWidth}px)`,
-              }}
+              className={`flex gap-[20px] ${!showNavigation ? "justify-center" : ""} ${showNavigation && isTransitioning ? "transition-transform duration-300 ease-in-out" : ""}`}
+              style={
+                showNavigation
+                  ? { transform: `translateX(-${currentIndex * cardWidth}px)` }
+                  : undefined
+              }
             >
-              {extendedTestimonials.map((testimonial, index) => (
+              {(showNavigation ? extendedTestimonials : testimonials).map((testimonial, index) => (
                 <div
                   key={`${index}-${testimonial.name}`}
-                  className="flex-shrink-0 w-[240px] md:w-[390px]"
-                  style={{ height: "210px" }}
+                  className="flex-shrink-0 w-[400px] md:w-[400px]"
+                  style={{ height: "250px" }}
                 >
                   <TestimonialCard {...testimonial} />
                 </div>
@@ -226,13 +181,15 @@ export const ClientTestimonials: React.FC = () => {
             </div>
           </div>
 
-          <button
-            onClick={handleNext}
-            className="hidden xl:block bg-white shadow-lg rounded-full p-2 opacity-100 hover:bg-gray-50 transition-all"
-            aria-label="Next testimonial"
-          >
-            <ChevronRight className="w-6 h-6 text-gray-600" />
-          </button>
+          {showNavigation && (
+            <button
+              onClick={handleNext}
+              className="hidden xl:block bg-white shadow-lg rounded-full p-2 opacity-100 hover:bg-gray-50 transition-all"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-600" />
+            </button>
+          )}
         </div>
       </div>
     </section>

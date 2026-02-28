@@ -215,6 +215,14 @@ All colors MUST be HSL.
   max-width: none;
   width: 600px;
 }
+.special-text-color {
+  background: linear-gradient(90deg, #F55B00 16.98%, #FCBF5C 80.74%, #FFCF4C 98.09%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
 @media (min-width: 1500px) and (max-width: 1999px) {
   .special-dialog.special-dialog{
     transform: translate(-50%, -50%) scale(1.2);
