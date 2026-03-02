@@ -10,7 +10,7 @@ const testimonials = [
       "“The ad stats help me present to my sellers, <span class='special-text-color'>building trust</span>. I've sold homes through Listing Blast. If you haven't tried it, I suggest it!”",
     avatar:
       "https://cdn.lofty.com/image/fs/servicetool/2026228/8/original_c6cbb731cf114c52.jpg",
-    videoUrl: ''
+    videoUrl: 'https://cdn.lofty.com/doc/fs/servicetool/202632/2/2728df00c1694026/michelle_video.mov'
   },
   {
     name: "Scott Connors",
@@ -18,7 +18,7 @@ const testimonials = [
       "“In 3 clicks, I create ads - and in <span class='special-text-color'>just a few days</span>, I generate 25 leads with Listing Blast!”",
     avatar:
       "https://cdn.lofty.com/image/fs/servicetool/2026228/8/original_602564aa973b43ae.jpg",
-    videoUrl: ''
+    videoUrl: 'https://cdn.lofty.com/doc/fs/servicetool/202632/2/b5083fae75384164/scott_video.mov'
   },
   {
     name: "Molly Armando",
@@ -26,7 +26,7 @@ const testimonials = [
       "“Listing Blast has really become <span class='special-text-color'>one of the easiest ways</span> for me to stay consistent with my marketing while still keeping my business moving forward.”",
     avatar:
       "https://cdn.lofty.com/image/fs/servicetool/2026228/6/original_75dce805e5344ea8.jpg",
-    videoUrl: ''
+    videoUrl: 'https://static.chimeroi.com/servicetool-temp/2026-3-2/2/9e5576d0085045e1_f2f869d7821740ea_MollyArmando_video.mov'
   }
 ];
 
@@ -36,6 +36,7 @@ export const ClientTestimonials: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = useIsMobile();
   const cardWidth = isMobile ? 280 : 410; // Mobile: 260px card + 20px gap, Desktop: 390px card + 20px gap
+  const cardHeight = 270; // Mobile vertical: 250px card + 20px gap
   const totalCards = testimonials.length;
   const showNavigation = totalCards > 3;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -162,17 +163,17 @@ export const ClientTestimonials: React.FC = () => {
             )}
             <div
               ref={containerRef}
-              className={`flex gap-[20px] ${!showNavigation ? "justify-center" : ""} ${showNavigation && isTransitioning ? "transition-transform duration-300 ease-in-out" : ""}`}
+              className={`flex gap-[20px] max-md:flex-col max-md:items-center ${!showNavigation ? "justify-center" : ""} ${showNavigation && isTransitioning ? "transition-transform duration-300 ease-in-out" : ""}`}
               style={
                 showNavigation
-                  ? { transform: `translateX(-${currentIndex * cardWidth}px)` }
+                  ? { transform: isMobile ? `translateY(-${currentIndex * cardHeight}px)` : `translateX(-${currentIndex * cardWidth}px)` }
                   : undefined
               }
             >
               {(showNavigation ? extendedTestimonials : testimonials).map((testimonial, index) => (
                 <div
                   key={`${index}-${testimonial.name}`}
-                  className="flex-shrink-0 w-[400px] md:w-[400px]"
+                  className="flex-shrink-0 w-[400px] md:w-[400px] max-md:w-full"
                   style={{ height: "250px" }}
                 >
                   <TestimonialCard {...testimonial} />
