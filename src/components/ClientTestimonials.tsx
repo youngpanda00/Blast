@@ -31,7 +31,7 @@ const testimonials = [
 ];
 
 export const ClientTestimonials: React.FC = () => {
-  const [currentIndex, setCurrentIndex] = useState(7); // Start at the second set (original)
+  const [currentIndex, setCurrentIndex] = useState(3); // Start at Michelle in the second set (original)
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = useIsMobile();
