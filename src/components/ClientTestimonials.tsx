@@ -35,12 +35,13 @@ export const ClientTestimonials: React.FC = () => {
   const [isTransitioning, setIsTransitioning] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const isMobile = useIsMobile();
-  const cardWidth = isMobile ? 280 : 410; // Mobile: 260px card + 20px gap, Desktop: 390px card + 20px gap
-  const cardHeight = 270; // Mobile vertical: 250px card + 20px gap
+  const cardWidth = isMobile ? 340 : 410; // Mobile: 330px card + 10px gap, Desktop: 390px card + 20px gap
   const totalCards = testimonials.length;
-  const showNavigation = totalCards > 3;
+  const showNavigation = isMobile || totalCards > 3;
   const containerRef = useRef<HTMLDivElement>(null);
   const autoplayTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   // Create extended array with duplicates for infinite scrolling
   const extendedTestimonials = [
@@ -96,7 +97,7 @@ export const ClientTestimonials: React.FC = () => {
 
   // Auto-play functionality
   useEffect(() => {
-    if (!isPaused && showNavigation) {
+    if (!isPaused && showNavigation && !isMobile) {
       autoplayTimerRef.current = setInterval(() => {
         autoNext();
       }, 4000); // Auto-advance every 4 seconds
@@ -122,20 +123,21 @@ export const ClientTestimonials: React.FC = () => {
   }, [isPaused]);
 
   return (
-    <section className="bg-white max-md:bg-[#121233] flex w-full flex-col items-center justify-center py-20 px-25 max-md:px-4 max-md:py-12">
+    <section className="bg-white flex w-full flex-col items-center justify-center py-20 px-25 max-md:py-12" style={{padding: '40px 0 40px 15px' }}>
       <div className="flex w-full max-w-[1240px] flex-col items-center max-md:max-w-full">
-        <h2 className="text-[34px] leading-none text-center text-gray-900 max-md:text-white font-medium mb-5 max-md:text-[24px] max-md:mb-4">
+        <h2 className="text-[34px] leading-none text-center text-gray-900 font-medium mb-5 max-md:text-[24px]" style={{marginBottom: isMobile ? '10px': '14px' }}>
           What Our Clients Say
         </h2>
 
-        <p className="text-gray-600 max-md:text-[#bcbec0] text-center font-normal leading-[23px] max-w-full max-md:text-sm max-md:leading-[20px]">
-          With our constant innovations, <br className="max-md:block hidden" />
+        <p className="text-center font-normal leading-[23px] max-w-full max-md:text-sm max-md:leading-[20px]" style={{paddingRight: '15px', color: isMobile ? 'rgba(0, 0, 0, 1)' : 'rgba(81, 86, 102, 1)', fontSize: isMobile ? '14px': '16px'}}>
+          With our constant innovations,
           LoftyBlast listen to what our users say.
         </p>
 
         {/* User testimonials section with navigation */}
         <div
-          className="relative w-full mt-10 xl:flex xl:items-center xl:gap-8 max-md:mt-8"
+          className="relative w-full mt-10 xl:flex xl:items-center xl:gap-8"
+          style={{marginTop: isMobile ? '20px' : '40px'}}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
@@ -163,18 +165,26 @@ export const ClientTestimonials: React.FC = () => {
             )}
             <div
               ref={containerRef}
-              className={`flex gap-[20px] max-md:flex-col max-md:items-center ${!showNavigation ? "justify-center" : ""} ${showNavigation && isTransitioning ? "transition-transform duration-300 ease-in-out" : ""}`}
+              className={`flex gap-[20px] max-md:gap-[10px] ${!showNavigation ? "justify-center" : ""} ${showNavigation && isTransitioning ? "transition-transform duration-300 ease-in-out" : ""}`}
               style={
                 showNavigation
-                  ? { transform: isMobile ? `translateY(-${currentIndex * cardHeight}px)` : `translateX(-${currentIndex * cardWidth}px)` }
+                  ? { transform: `translateX(-${currentIndex * cardWidth}px)` }
                   : undefined
               }
+              onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+              onTouchMove={(e) => { touchEndX.current = e.touches[0].clientX; }}
+              onTouchEnd={() => {
+                const delta = touchStartX.current - touchEndX.current;
+                if (Math.abs(delta) > 50) {
+                  if (delta > 0) { handleNext(); } else { handlePrevious(); }
+                }
+              }}
             >
               {(showNavigation ? extendedTestimonials : testimonials).map((testimonial, index) => (
                 <div
                   key={`${index}-${testimonial.name}`}
-                  className="flex-shrink-0 w-[400px] md:w-[400px] max-md:w-full"
-                  style={{ height: "250px" }}
+                  className="flex-shrink-0 w-[400px] md:w-[400px] max-md:w-[330px]"
+                  style={{ height: isMobile ? "206px" : "250px" }}
                 >
                   <TestimonialCard {...testimonial} />
                 </div>
