@@ -62,7 +62,8 @@ export const FixedNavigation: React.FC<{ transparent?: boolean }> = ({ transpare
   const isTransparent = transparent && isAtTop
 
   const loftyDomain = window.location.hostname.includes('prerelease') || window.location.hostname.includes('localhost') ? 'prerelease.lofty.com' : 'lofty.com';
-  const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://${loftyDomain}/?fromblast=1&sourceDomain=${window.location.hostname}&utm_source=${encodeURIComponent(utmSource)}` : `https://${loftyDomain}/?fromblast=1&sourceDomain=${window.location.hostname}`;
+  const sourceDomain = window.location.hostname.includes('localhost') ? 'prerelease.loftyblastads.com' : window.location.hostname;
+  const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://${loftyDomain}/?fromblast=1&sourceDomain=${sourceDomain}&utm_source=${encodeURIComponent(utmSource)}` : `https://${loftyDomain}/?fromblast=1&sourceDomain=${sourceDomain}`;
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 bg-white px-[22px] max-md:px-4 h-[60px] max-md:h-[50px] flex items-center border-b border-gray-100 transition-all duration-300 ${
