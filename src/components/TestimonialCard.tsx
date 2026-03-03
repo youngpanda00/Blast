@@ -42,12 +42,12 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
         </div>
         <div className="flex flex-col relative" style={{ height: '100%' }}>
           <img style={{ width: isMobile ? '86px' : '117px', height: isMobile ? '16px' : '22px', margin: '16px auto 10px 20px' }} src="https://cdn.lofty.com/image/fs/servicetool/2026228/6/original_2e5a571ff4de47cc.png" alt="lofty blast logo" className="w-full h-full object-contain" />
-          <div className="flex flex-row justify-center items-center" style={{ padding: isMobile ? '0 20px 0 20px' : '0 30px 0 24px', gap: isMobile ? '20px' : '30px', height: '100%' }}>
+          <div className="flex flex-row justify-center items-center" style={{ padding: isMobile ? '0 20px 0 30px' : '0 30px 0 24px', gap: isMobile ? '20px' : '30px', height: '100%' }}>
             <div className="flex flex-col justify-center items-center relative" style={{ height: isMobile ? '112px' : '144px', justifyContent: 'flex-start'  }}>
               <div className="flex justify-center items-center" style={{ background: 'linear-gradient(90deg, #F55B00 16.98%, #FCBF5C 80.74%, #FFCF4C 98.09%)', borderRadius: '50%', width: isMobile ? '90px' : '120px', height: isMobile ? '90px' : '120px' }}>
                 <img style={{ minWidth: isMobile ? '82px' : '110px', minHeight: isMobile ? '82px' : '110px', width: isMobile ? '82px' : '110px', height: isMobile ? '82px' : '110px', borderRadius: '50%', zIndex: '10' }} src={avatar} alt="user avatar" className="w-full h-full object-contain" />
               </div>
-              <div className="text-white font-bold text-center absolute" style={{ lineHeight: '1.5', marginTop: '10px', whiteSpace: 'nowrap', fontSize : isMobile? '9px': '12px', bottom: isMobile ? '0' : '-2px', left: 0, right: 0 }}>{name}</div>
+              <div className="text-white font-bold text-center absolute" style={{ lineHeight: '1.5', marginTop: '10px', whiteSpace: 'nowrap', fontSize : isMobile? '10px': '12px', bottom: isMobile ? '0' : '-2px', left: name === 'Michelle Quackenbush' ?  (isMobile ? '-13px' : '-8px') : 0, right: 0 }}>{name}</div>
             </div>
             <div className="text-white text-sm font-normal" style={{ fontSize: isMobile ? '14px':'16px', lineHeight: '1.4', marginBottom: '20px', display: '-webkit-box', WebkitLineClamp: 8, WebkitBoxOrient: 'vertical', overflow: 'hidden', fontWeight: 'bold', fontFamily: 'Manrope' }} dangerouslySetInnerHTML={{ __html: content }} />
           </div>
