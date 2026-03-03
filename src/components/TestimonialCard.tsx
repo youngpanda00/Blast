@@ -34,7 +34,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
     <>
       <div
         className="flex flex-col relative"
-        style={{ width: '100%', height: '100%',  background: "linear-gradient(90deg, #3B5CDE 0%, #7340D8 100%)" }}
+        style={{ width: '100%', height: '100%',  background: "linear-gradient(90deg, rgba(59, 92, 222, 0.8) 0%, rgba(115, 64, 216, 0.8) 100%)" }}
       >
         <img style={{ width: '100%', height: '100%', objectFit: 'cover', zIndex: 10, opacity: 0.2 }} src="https://cdn.lofty.com/image/fs/servicetool/2026228/5/original_8bc2b13de4a44b74.png" alt="Testimonial bg" className="w-full h-full object-cover absolute top-0 left-0" />
         <div className="w-full h-full object-cover absolute flex items-center justify-center cursor-pointer transition-colors" style={{ width: isMobile ? '46px' : '54px', height: isMobile ? '46px' : '54px', background: isHovered ? 'rgba(81,96,102,1)' : 'rgba(81,96,102,0.6)', zIndex: 11, top: '50%', left: '50%', transform: 'translate(-50%, -50%)', borderRadius: '50%' }} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} onClick={() => handleVideoClick()}>
@@ -49,7 +49,7 @@ export const TestimonialCard: React.FC<TestimonialCardProps> = ({
               </div>
               <div className="text-white font-bold text-center" style={{ lineHeight: '1.5', marginTop: '10px', whiteSpace: 'nowrap', fontSize : isMobile? '10px': '12px' }}>{name}</div>
             </div>
-            <div className="text-white text-sm font-normal" style={{ fontSize: isMobile ? '14px':'16px', lineHeight: '1.4', marginBottom: '20px', display: '-webkit-box', WebkitLineClamp: 8, WebkitBoxOrient: 'vertical', overflow: 'hidden' }} dangerouslySetInnerHTML={{ __html: content }} />
+            <div className="text-white text-sm font-normal" style={{ fontSize: isMobile ? '14px':'16px', lineHeight: '1.4', marginBottom: '20px', display: '-webkit-box', WebkitLineClamp: 8, WebkitBoxOrient: 'vertical', overflow: 'hidden', fontWeight: 'bold' }} dangerouslySetInnerHTML={{ __html: content }} />
           </div>
         </div>
       </div>
