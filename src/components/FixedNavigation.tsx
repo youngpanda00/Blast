@@ -61,7 +61,7 @@ export const FixedNavigation: React.FC<{ transparent?: boolean }> = ({ transpare
 
   const isTransparent = transparent && isAtTop
 
-  const loftyDomain = window.location.hostname.includes('prerelease') ? 'prerelease.lofty.com' : 'lofty.com';
+  const loftyDomain = window.location.hostname.includes('prerelease') || window.location.hostname.includes('localhost') ? 'prerelease.lofty.com' : 'lofty.com';
   const loftyHref = utmSource && utmSource.trim().length > 0 ? `https://${loftyDomain}/?fromblast=1&sourceDomain=${window.location.hostname}&utm_source=${encodeURIComponent(utmSource)}` : `https://${loftyDomain}/?fromblast=1&sourceDomain=${window.location.hostname}`;
 
   return (
