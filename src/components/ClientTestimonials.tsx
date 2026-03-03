@@ -171,7 +171,7 @@ export const ClientTestimonials: React.FC = () => {
                   ? { transform: `translateX(-${currentIndex * cardWidth}px)` }
                   : undefined
               }
-              onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+              onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; touchEndX.current = e.touches[0].clientX; }}
               onTouchMove={(e) => { touchEndX.current = e.touches[0].clientX; }}
               onTouchEnd={() => {
                 const delta = touchStartX.current - touchEndX.current;
