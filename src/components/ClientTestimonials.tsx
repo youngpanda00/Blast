@@ -123,7 +123,7 @@ export const ClientTestimonials: React.FC = () => {
   }, [isPaused]);
 
   return (
-    <section className="bg-white flex w-full flex-col items-center justify-center py-20 px-25 max-md:py-12" style={{padding: '40px 0 40px 15px' }}>
+    <section className="bg-white flex w-full flex-col items-center justify-center py-20 px-25 max-md:py-12" style={{padding: isMobile ? '40px 0 40px 15px' : '120px 0' }}>
       <div className="flex w-full max-w-[1240px] flex-col items-center max-md:max-w-full">
         <h2 className="text-[34px] leading-none text-center text-gray-900 font-medium mb-5 max-md:text-[24px]" style={{marginBottom: isMobile ? '10px': '14px' }}>
           What Our Clients Say
