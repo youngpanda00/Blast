@@ -76,7 +76,7 @@ export const CongratulationsModal: React.FC<CongratulationsModalProps> = ({
             <Button
               className="bg-[#3B5CDE] hover:bg-[#3B5CDE]/90 text-white px-8 py-3 text-sm font-medium"
               onClick={() => {
-                window.location.href = "/campaign?type=listingblast";
+                window.location.href = "/campaign?tab=listing";
               }}
               style={{width: '290px', height: '44px', borderRadius: '4px'}}
             >
