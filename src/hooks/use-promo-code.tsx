@@ -12,7 +12,8 @@ export interface PromoState {
 
 const PromoTypes = {
   THANKSGIVING20: 'ThansGiving',
-  CHRISTMAS20: 'Christmas'
+  CHRISTMAS20: 'Christmas',
+  SCOTT15: 'Scott'
 }
 
 export const usePromoCode = () => {
