@@ -48,12 +48,21 @@ export const PromoPop: React.FC<Props> = ({ open, onOpenChange, percent }) => {
               100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
             }
             .animate-confetti-screen { animation: confetti-screen 2.4s ease-in forwards; }
+            @media (min-width: 1500px) and (max-width: 1999px) {
+              .promo-pop-content { transform: translate(-50%, -50%) scale(1.2); }
+            }
+            @media (min-width: 2000px) and (max-width: 2399px) {
+              .promo-pop-content { transform: translate(-50%, -50%) scale(1.4); }
+            }
+            @media (min-width: 2400px) {
+              .promo-pop-content { transform: translate(-50%, -50%) scale(1.6); }
+            }
           `}</style>
         </>,
         document.body
       )}
 
-      <DialogContent className="max-md:max-w-[340px] md:max-w-[600px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
+      <DialogContent className="promo-pop-content max-md:max-w-[340px] md:max-w-[600px] p-0 overflow-hidden border-0 shadow-2xl rounded-2xl">
         <div className="relative bg-white">
           {/* Header background */}
           <div
