@@ -7,7 +7,7 @@ export interface PromoState {
   expiresAt: number; // ms epoch
   code: string | null;
   popup: boolean
-  type: 'ThansGiving' | 'Christmas' | 'Default'
+  type: 'ThansGiving' | 'Christmas' | 'Default' | 'Scott'
 }
 
 const PromoTypes = {

@@ -5,10 +5,12 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 interface Props {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  discountRate?: number; // e.g. 20
+  percent: number; // e.g. 20
+  expiresAt?: number;
+  onSubmitEmail?: (email: string) => void;
 }
 
-export const PromoPop: React.FC<Props> = ({ open, onOpenChange, discountRate = 20 }) => {
+export const PromoPop: React.FC<Props> = ({ open, onOpenChange, percent }) => {
   const pieces = useMemo(() => Array.from({ length: 60 }).map((_, i) => ({
     left: Math.random() * 100,
     delay: Math.random() * 1.2,
@@ -75,7 +77,7 @@ export const PromoPop: React.FC<Props> = ({ open, onOpenChange, discountRate = 2
             HOT DEAL ALERT!
           </h3>
           <div className="text-center text-transparent bg-clip-text bg-gradient-to-l from-[#853ce2] to-[#4f6ce1] text-[44px] max-md:text-[24px] font-bold mt-5">
-            <span>{discountRate}% OFF</span> YOUR TOTAL
+            <span>{percent}% OFF</span> YOUR TOTAL
           </div>
 
           <div className="flex items-center justify-center">
