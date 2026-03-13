@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "./pages/Index";
 import { usePromoCode } from "@/hooks/use-promo-code";
 import PromoDefaultModal from "@/components/PromoModal";
+import PromoPopScott from "@/components/PromoPop"
 import Promo_ThanksGiving_Modal from "@/components/Promo_ThanksGiving_Modal";
 import Promo_Christmas_Modal from "@/components/Promo_Christmas_Modal";
 import PromoBanner from "@/components/PromoBanner";
@@ -15,6 +16,7 @@ const PromoModals = {
   ThansGiving: Promo_ThanksGiving_Modal,
   Christmas: Promo_Christmas_Modal,
   Default: PromoDefaultModal,
+  Scott: PromoPopScott
 };
 
 const queryClient = new QueryClient();
