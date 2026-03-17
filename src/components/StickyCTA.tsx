@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useScroll } from "@/hooks/use-scroll";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronUp, Zap } from "lucide-react";
+import { trackMixPanel, trackFBEvent } from "@/lib/utils";
 
 interface StickyCTAProps {
   onCtaClick: () => void;
@@ -107,7 +108,13 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
             </div>
             <button
               onClick={() => {
-                window.trackBlastNow?.("ListingBlastSP_checkout_bottom_popup");
+                trackMixPanel("click", {
+                  page_name: "ListingBlastSP",
+                  feature_name: "ListingBlast",
+                  click_item: "blastnow_CTA",
+                  click_action: "proceed to checkout"
+                });
+                trackFBEvent('blastnow_CTA');
                 onCtaClick();
               }}
               className={`bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-full font-medium shadow-lg active:scale-95 transition-all duration-500 flex items-center gap-2 ${
@@ -193,7 +200,13 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
 
             <button
               onClick={() => {
-                window.trackBlastNow?.("ListingBlastSP_checkout_bottom_popup");
+                trackMixPanel("click", {
+                  page_name: "ListingBlastSP",
+                  feature_name: "ListingBlast",
+                  click_item: "blastnow_CTA",
+                  click_action: "proceed to checkout"
+                });
+                trackFBEvent('blastnow_CTA');
                 onCtaClick();
               }}
               className={`w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-3 px-4 rounded-xl font-medium shadow-lg hover:shadow-xl active:scale-95 transition-all duration-500 flex items-center justify-center gap-2 ${

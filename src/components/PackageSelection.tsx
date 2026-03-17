@@ -868,7 +868,16 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
 
         <div className="relative flex w-[782px] max-md:w-full max-w-full flex-col items-stretch font-bold text-center mt-[70px] max-md:mt-[25px] max-md:mb-[35px] max-md:px-6">
           <button
-            onClick={handleCheckout}
+            onClick={ () => {
+              trackMixPanel("click", {
+                page_name: "ListingBlastSP",
+                feature_name: "ListingBlast",
+                click_item: "blastnow_CTA",
+                click_action: "proceed to checkout"
+              });
+              trackFBEvent('blastnow_CTA');
+              handleCheckout();
+            }}
             id="btn-blast-now"
             className={`self-center flex h-[44px] w-[320px] max-w-full items-center justify-center text-[16px] text-white font-medium transition-all px-5 py-4 rounded-[75px] max-md:px-5 max-md:pl-5 max-md:pb-4 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 ${theme === 'christmas' ? '': 'animate-pulse-scale'}`}
             style={{
