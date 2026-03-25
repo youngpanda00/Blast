@@ -37,19 +37,30 @@ const usePartnerLink = () => {
     const linkId = new URLSearchParams(window.location.search).get("linkId");
     if (!linkId) return;
 
+    const removeLinkIdFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      params.delete("linkId");
+      const newSearch = params.toString();
+      history.replaceState(null, "", newSearch ? `?${newSearch}` : window.location.pathname);
+    };
+
     const run = async () => {
       let rate = 0;
       if (getCookie("_UI")) { // log in
-        const eligRes = await fetch(`/partner/discount/eligibility`, { method: 'GET' });
+        const eligRes = await fetch(`/api-blast/partner/discount/eligibility`, { method: 'GET' });
         const result = await eligRes.json();
         if (result.data?.eligible) {
           rate = result.data?.discountRate;
+        } else {
+          removeLinkIdFromUrl();
         }
       } else {
-        const resolveRes = await fetch(`/public/partner/link/resolve?linkId=${encodeURIComponent(linkId)}`, { method: 'GET' });
+        const resolveRes = await fetch(`/api-blast/public/partner/link/resolve?linkId=${encodeURIComponent(linkId)}`, { method: 'GET' });
         const result2 = await resolveRes.json();
         if (result2.data?.valid) {
           rate = result2.data?.discountRate;
+        } else {
+          removeLinkIdFromUrl();
         }
       }
       setPartnerDiscountRate(rate);
