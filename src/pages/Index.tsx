@@ -20,6 +20,7 @@ import { InstagramPostComponent } from "@/components/InstagramPostComponent";
 import { trackFBEvent } from "@/lib/utils";
 import { autoRecordJumpClick } from "@/utils/recordJumpClick";
 import { HeroChristmas } from "@/components/HeroChristmas";
+import PartnerDiscount from "@/components/PartnerDiscount";
 
 const Index = ({
   page,
@@ -1184,6 +1185,8 @@ const Index = ({
 
   const currentSet = adSets[currentSetIndex];
 
+  const linkId = new URLSearchParams(window.location.search).get("linkId");
+
   return (
     <div
       key={refreshKey}
@@ -1206,6 +1209,11 @@ const Index = ({
           onScrollToAdPreview={scrollToAdPreview}
           onCityUpdate={handleCityUpdate}
         />
+      )}
+
+      {/* partnerDiscount 模块 */}
+      {linkId && discountRate && discountRate > 0 && (
+        <PartnerDiscount discountRate={discountRate} />
       )}
 
       <main

@@ -82,6 +82,8 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
   const [shouldHighlightMobileConfig, setShouldHighlightMobileConfig] = useState(false);
   const isMobile = useIsMobile();
 
+  const linkId = new URLSearchParams(window.location.search).get("linkId");
+
   const [adPreviewData, setAdPreviewData] = useState<AdData | null>(null);
 
   const [hasValidListingId, setHasValidListingId] = useState('');
@@ -367,6 +369,7 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
   // Promo visibility and discount (passed from parent)
   const promoActive = Boolean(promoActiveProp);
   const discountRate = Number(discountRateProp ?? 0);
+  const showLinkDiscount = Boolean(linkId) && discountRate > 0;
   const formatMoney = (n:number) => `$${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
 
   // Package data
@@ -546,22 +549,31 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
           {/* Price section for mobile */}
           <div className={`border-t pt-3 ${selectedPackage === pkg.id && theme !== 'christmas' ? "border-white/20" : "border-gray-200"}`}>
             <div className="space-y-1">
-              {promoActive && (
+              {(promoActive || showLinkDiscount) && (
                 <div className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/80" : "text-gray-400"} line-through text-sm`}>
                   {formatMoney(pkg.basePrice)}
                 </div>
               )}
               <div className="flex items-baseline gap-2 flex-nowrap">
                 <span
-                  className={`text-[18px] font-bold ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-[#FFD600]" : "text-gray-900"}`}
+                  className={`text-[18px] font-bold ${
+                    showLinkDiscount
+                      ? "text-[#16A34A]"
+                      : selectedPackage === pkg.id && theme !== 'christmas'
+                        ? "text-[#FFD600]"
+                        : "text-gray-900"
+                  }`}
                 >
-                  {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
+                  {(promoActive || showLinkDiscount) ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
                 </span>
                 {promoActive && (
                   <span className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-[11px] px-2 py-0.5 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
                 )}
+                {showLinkDiscount && (
+                  <span className="self-center whitespace-nowrap text-[11px] px-2 py-0.5 rounded-full bg-[#16A34A] text-white">-{Math.round(discountRate * 100)}%</span>
+                )}
               </div>
-              {!promoActive && (
+              {!(promoActive || showLinkDiscount) && (
               <div className="mt-1">
                 <span
                   className={`text-sm ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/80" : "text-gray-500"}`}
@@ -633,23 +645,32 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
             className={`border-t pt-3 md:pt-4 flex-shrink-0 ${selectedPackage === pkg.id && theme !== 'christmas' ? "border-white/20" : "border-gray-200"}`}
           >
             <div className="space-y-1">
-              {promoActive && (
+              {(promoActive || showLinkDiscount) && (
                 <div className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/70" : "text-gray-400"} line-through text-[24px] mb-[10px]`}>
                   {formatMoney(pkg.basePrice)}
                 </div>
               )}
               <div className="flex items-baseline gap-2 flex-nowrap justify-between">
                 <span
-                  className={`text-2xl ${promoActive?"md:text-[34px]":"md:text-3xl"} font-bold ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-[#FFD600]" : "text-gray-900"}`}
+                  className={`text-2xl ${(promoActive || showLinkDiscount) ? "md:text-[34px]" : "md:text-3xl"} font-bold ${
+                    showLinkDiscount
+                      ? "text-[#16A34A]"
+                      : selectedPackage === pkg.id && theme !== 'christmas'
+                        ? "text-[#FFD600]"
+                        : "text-gray-900"
+                  }`}
                 >
-                  {promoActive ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
+                  {(promoActive || showLinkDiscount) ? formatMoney(Math.max(0, pkg.basePrice * (1 - discountRate))) : formatMoney(pkg.basePrice)}
                 </span>
                 {promoActive && (
                   <span className={`${selectedPackage === pkg.id && theme !== 'christmas' ? "bg-white/95 text-[#515666]" : "bg-[#E7F8ED] text-[#16A34A]"} whitespace-nowrap text-xs px-2.5 py-1 rounded-full`}>Save {formatMoney(pkg.basePrice * discountRate)}</span>
                 )}
+                {showLinkDiscount && (
+                  <span className="self-center whitespace-nowrap text-xs px-2.5 py-1 rounded-full bg-[#16A34A] text-white">-{Math.round(discountRate * 100)}%</span>
+                )}
               </div>
             </div>
-            {!promoActive && (
+            {!(promoActive || showLinkDiscount) && (
               <div className="mt-1">
                 <span
                   className={`text-sm ${selectedPackage === pkg.id && theme !== 'christmas' ? "text-white/80" : "text-gray-500"}`}

@@ -10,7 +10,7 @@ import PromoBanner from "@/components/PromoBanner";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { useTheme } from "./hooks/use-theme";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const PromoModals = {
   ThansGiving: Promo_ThanksGiving_Modal,
@@ -21,8 +21,51 @@ const PromoModals = {
 
 const queryClient = new QueryClient();
 
+const getCookie = (name: string): string => {
+  const match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+  return match ? decodeURIComponent(match[1]) : "";
+};
+
+const usePartnerLink = () => {
+  const [partnerDiscountRate, setPartnerDiscountRate] = useState<number>(0);
+  const initialized = useRef(false);
+
+  useEffect(() => {
+    if (initialized.current) return;
+    initialized.current = true;
+
+    const linkId = new URLSearchParams(window.location.search).get("linkId");
+    if (!linkId) return;
+
+    const run = async () => {
+      let rate = 0;
+      if (getCookie("_UI")) { // log in
+        const eligRes = await fetch(`/partner/discount/eligibility`, { method: 'GET' });
+        const result = await eligRes.json();
+        if (result.data?.eligible) {
+          rate = result.data?.discountRate;
+        }
+      } else {
+        const resolveRes = await fetch(`/public/partner/link/resolve?linkId=${encodeURIComponent(linkId)}`, { method: 'GET' });
+        const result2 = await resolveRes.json();
+        if (result2.data?.valid) {
+          rate = result2.data?.discountRate;
+        }
+      }
+      setPartnerDiscountRate(rate);
+    };
+
+    run().catch((e) => {
+      console.debug("Partner link error:", e?.message);
+    });
+  }, []);
+
+  return partnerDiscountRate;
+};
+
 const App = ({ page }: { page?: "listing" }) => {
   const theme = useTheme()
+  const partnerDiscountRate = usePartnerLink();
   const {
     promo,
     clearPromo,
@@ -37,6 +80,8 @@ const App = ({ page }: { page?: "listing" }) => {
   const bannerVisible = Boolean(promo?.valid);
 
   const PromoModal = PromoModals[promo?.type]
+
+  const linkId = new URLSearchParams(window.location.search).get("linkId");
 
   const packageSelectionRef = useRef<{ blastNow: ()=>void }>(null)
   const onBlastNow = useCallback(()=>{
@@ -73,7 +118,7 @@ const App = ({ page }: { page?: "listing" }) => {
           page={page}
           promoEmail={submittedEmail || ""}
           promoCode={promo?.code || ""}
-          discountRate={promo?.discountRate ?? 0}
+          discountRate={partnerDiscountRate > 0 ? partnerDiscountRate : (!linkId ? promo?.discountRate ?? 0 : 0)}
           promoActive={!!promo}
           reloadPromo={reloadPromo}
           theme={theme}
