@@ -1212,7 +1212,7 @@ const Index = ({
       )}
 
       {/* partnerDiscount 模块 */}
-      {linkId && discountRate && discountRate > 0 && (
+      {!!linkId && !!discountRate && discountRate > 0 && (
         <PartnerDiscount discountRate={discountRate} />
       )}
 
