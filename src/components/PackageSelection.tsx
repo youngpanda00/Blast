@@ -652,7 +652,7 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
               )}
               <div className="flex items-baseline gap-2 flex-nowrap justify-between">
                 <span
-                  className={`text-2xl ${(promoActive || showLinkDiscount) ? "md:text-[34px]" : "md:text-3xl"} font-bold ${
+                  className={`text-2xl ${(promoActive || showLinkDiscount) ? "md:text-[30px]" : "md:text-3xl"} font-bold ${
                     showLinkDiscount
                       ? "text-[#16A34A]"
                       : selectedPackage === pkg.id && theme !== 'christmas'
