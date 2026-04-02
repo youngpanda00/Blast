@@ -46,7 +46,9 @@ const usePartnerLink = () => {
 
     const run = async () => {
       let rate = 0;
-      if (getCookie("_UI")) { // log in
+      const hasLogin = getCookie("_UI")
+      console.log('hasLogin ===>>>', hasLogin)
+      if (hasLogin) { // log in
         const eligRes = await fetch(`/api-blast/partner/discount/eligibility`, { method: 'GET' });
         const result = await eligRes.json();
         if (result.data?.eligible) {
