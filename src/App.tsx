@@ -28,13 +28,15 @@ const getCookie = (name: string): string => {
 
 const usePartnerLink = () => {
   const [partnerDiscountRate, setPartnerDiscountRate] = useState<number>(0);
-  const initialized = useRef(false);
+  const prevLinkIdRef = useRef<string | null | undefined>(undefined);
 
-  useEffect(() => {
-    if (initialized.current) return;
-    initialized.current = true;
-
+  const run = useCallback(async () => {
     const linkId = new URLSearchParams(window.location.search).get("linkId");
+
+    if (linkId === prevLinkIdRef.current) return;
+    prevLinkIdRef.current = linkId;
+
+    setPartnerDiscountRate(0);
     if (!linkId) return;
 
     const removeLinkIdFromUrl = () => {
@@ -44,12 +46,12 @@ const usePartnerLink = () => {
       history.replaceState(null, "", newSearch ? `?${newSearch}` : window.location.pathname);
     };
 
-    const run = async () => {
+    try {
       let rate = 0;
-      const hasLogin = getCookie("_UI")
-      console.log('hasLogin ===>>>', hasLogin)
-      if (hasLogin) { // log in
-        const eligRes = await fetch(`/api-blast/partner/discount/eligibility`, { method: 'GET' });
+      const hasLogin = getCookie("_UI");
+      console.log('hasLogin ===>>>', hasLogin);
+      if (hasLogin) {
+        const eligRes = await fetch(`/api-blast/partner/discount/eligibility?referralLinkId=${linkId}`, { method: 'GET' });
         const result = await eligRes.json();
         if (result.data?.eligible) {
           rate = result.data?.discountRate;
@@ -66,12 +68,33 @@ const usePartnerLink = () => {
         }
       }
       setPartnerDiscountRate(rate);
+    } catch (e: any) {
+      console.debug("Partner link error:", e?.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    run();
+
+    window.addEventListener("popstate", run);
+
+    const origReplace = history.replaceState.bind(history);
+    history.replaceState = (...args: Parameters<typeof history.replaceState>) => {
+      origReplace(...args);
+      run();
+    };
+    const origPush = history.pushState.bind(history);
+    history.pushState = (...args: Parameters<typeof history.pushState>) => {
+      origPush(...args);
+      run();
     };
 
-    run().catch((e) => {
-      console.debug("Partner link error:", e?.message);
-    });
-  }, []);
+    return () => {
+      window.removeEventListener("popstate", run);
+      history.replaceState = origReplace;
+      history.pushState = origPush;
+    };
+  }, [run]);
 
   return partnerDiscountRate;
 };
