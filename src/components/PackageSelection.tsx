@@ -918,6 +918,7 @@ const PackageSelection = React.forwardRef<{ blastNow: ()=>void }, PackageSelecti
         selectedPlan={selectedPlan}
         isVisible={!isLoading}
         promoActive={promoActive}
+        showLinkDiscount={showLinkDiscount}
         discountRate={discountRate}
         theme={theme}
       />

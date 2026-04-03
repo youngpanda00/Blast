@@ -10,6 +10,7 @@ interface StickyCTAProps {
   selectedPlan?: string;
   isVisible?: boolean;
   promoActive?: boolean;
+  showLinkDiscount?:boolean;
   discountRate?: number; // 0-1
   theme?: "christmas";
 }
@@ -20,6 +21,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
   selectedPlan = "monthly",
   isVisible = true,
   promoActive = false,
+  showLinkDiscount = false,
   discountRate = 0,
   theme,
 }) => {
@@ -45,7 +47,7 @@ export const StickyCTA: React.FC<StickyCTAProps> = ({
 
   const base = basePriceMap[selectedPackage];
   const dr = Math.max(0, Math.min(1, Number(discountRate || 0)));
-  const finalPrice = promoActive ? Math.max(0, base * (1 - dr)) : base;
+  const finalPrice = (promoActive || showLinkDiscount) ? Math.max(0, base * (1 - dr)) : base;
   const formattedPrice = formatMoney(finalPrice);
   const savedPrice = formatMoney(base - finalPrice);
 
