@@ -54,7 +54,7 @@ const usePartnerLink = () => {
         const eligRes = await fetch(`/api-blast/partner/discount/eligibility?referralLinkId=${linkId}`, { method: 'GET' });
         const result = await eligRes.json();
         if (result.data?.eligible) {
-          rate = result.data?.discountRate;
+          rate = (result.data?.discountRate || 0) / 100;
         } else {
           removeLinkIdFromUrl();
         }
@@ -62,7 +62,7 @@ const usePartnerLink = () => {
         const resolveRes = await fetch(`/api-blast/public/partner/link/resolve?linkId=${encodeURIComponent(linkId)}`, { method: 'GET' });
         const result2 = await resolveRes.json();
         if (result2.data?.valid) {
-          rate = result2.data?.discountRate;
+          rate = (result2.data?.discountRate || 0) / 100;
         } else {
           removeLinkIdFromUrl();
         }
